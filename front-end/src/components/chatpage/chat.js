@@ -11,14 +11,22 @@ constructor(props){
 
 }
 
+
+
 render(){
-    const {Sider} = Layout;
+    const {Sider,Content} = Layout;
 
     return(
+        <Layout className = {styles.container__layout}>
         <Sider width = {325}  className = {styles.sidebar}>
         <Profilepicture/>
         <Friendslist/>
         </Sider>
+        <Content>
+
+
+        </Content>
+        </Layout>
             )
     }
 }

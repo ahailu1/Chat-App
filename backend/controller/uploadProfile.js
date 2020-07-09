@@ -20,7 +20,7 @@ const uploadPic = async (req, res) => {
     if (err) throw err;
   });
   res.set('Content-Type', 'image/png');
-  res.send(buffer);
+  res.send(buffer.toString('base64'));
 };
 
 module.exports = {

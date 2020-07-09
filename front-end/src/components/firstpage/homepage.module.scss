@@ -41,15 +41,14 @@
         background-color: #001529;
         clip-path: polygon(0 0, 100% 0, 100% 77%, 0% 100%);
 
-        /*
+        
         background-color: #001529;
         display: flex;
-        background-image: url('../../images/port.svg');
-        background-size: 40%;
-        background-repeat: no-repeat;
-        background-origin: border-box;
+        background-image: url('../../images/mybackground.svg');
+        background-size: cover;
+        background-attachment: fixed;
         background-position: bottom 0% right 62%;
-        */
+
         height: 90vh;
         justify-content: center;
 
