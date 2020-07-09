@@ -1,0 +1,52 @@
+.container{
+    display: flex;
+    flex-direction: column;   
+    width: 40%;
+    padding: 4rem 2rem 2rem 2rem;
+    background-color: #001529;
+    align-items: center;
+    border: solid whitesmoke;
+    height: 65%;
+
+&__username{
+    padding: 1rem;
+    border: none;
+}
+&__password{
+    padding: 1rem;
+    outline: none;
+    border: none;
+}
+&__header{
+    color: white;
+    justify-content: center;
+    display: flex;
+    font-size: 1.25rem;
+    padding: 0 0 0 0.5rem;
+}
+}
+.container__password{
+
+}
+
+.input{
+    &__username{
+        border-radius: 0.25rem;
+        padding: 0.35rem;
+
+        border: solid #001529 0.5px;
+        &:focus{
+            outline: solid cyan 0.5px;
+            border: none;
+        }
+    }
+    &__password{
+        padding: 0.35rem;
+        border: solid #001529 0.5px;
+        border-radius: 0.25rem;
+
+    &:focus{
+        border: none;
+        outline: solid cyan 0.5px;
+    }}
+}

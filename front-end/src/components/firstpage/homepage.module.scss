@@ -1,0 +1,67 @@
+
+
+.container{
+    &__header{
+        display: flex;
+        text-align: left;
+        padding: 6rem 0 0 5rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-size: 3rem;
+        color:#bd0000;
+        width: 50%;
+        flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    & p{
+        color: white;
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 1.5rem;
+    }}
+@keyframes popout {
+    0%{
+        transform: scale(0.5)
+    }
+    50%{
+        transform: scale(0.75)
+    }
+    100%{
+        transform: scale(1)
+    }
+}
+
+    &__form{
+        display: flex;
+        width: 80%;
+        justify-content: center;
+        padding-top: 5rem;
+    }
+    &__row{
+        background-color: #001529;
+        clip-path: polygon(0 0, 100% 0, 100% 77%, 0% 100%);
+
+        /*
+        background-color: #001529;
+        display: flex;
+        background-image: url('../../images/port.svg');
+        background-size: 40%;
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-position: bottom 0% right 62%;
+        */
+        height: 90vh;
+        justify-content: center;
+
+    }
+    &__column{
+        display: flex;
+        justify-content: center;
+    
+    &__two{
+        display: flex;
+        padding: 1rem;
+        justify-content: space-evenly;
+    }
+    }
+}

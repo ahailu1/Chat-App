@@ -1,0 +1,20 @@
+.sidebar{
+    height: 25rem;
+    width: 35rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.avatar{
+    margin-top: 3rem;
+}
+
+.container{
+&__upload{
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+}

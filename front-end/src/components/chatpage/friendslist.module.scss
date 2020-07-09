@@ -1,0 +1,9 @@
+.tab{
+    color: white;
+    font-weight: 700;
+border-bottom: orange;
+
+&:focus{
+    color: red;
+}
+}
