@@ -37,7 +37,7 @@ render(){
                             }
                 >
                     {this.state.requests !== null && this.state.requests.map((el, index) => {
-                        return <Friendrequests username = {el} key = {index} />
+                        return <Friendrequests username = {el} key = {index} createChat = {this.props.createChat}  />
                     })}
             </TabPane>
             <TabPane key = "2" tab = {

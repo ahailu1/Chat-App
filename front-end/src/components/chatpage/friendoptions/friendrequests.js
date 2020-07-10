@@ -19,7 +19,7 @@ const toggleOff = () => {
 
             <div className = {styles.container__icon}>
             
-            <div className = {styles.icon} ><MessageFilled/></div>
+            <div className = {styles.icon} onClick = { () => { props.createChat(props.username) }} ><MessageFilled/></div>
             <div className = {styles.icon}> <LockFilled/></div>
                 <div className = {`${styles.icon} ${state && styles.toggled}`}> 
                 <DeleteFilled onClick = {toggle} className = {styles.ok}/>

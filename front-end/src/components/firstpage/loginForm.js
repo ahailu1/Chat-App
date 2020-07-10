@@ -21,11 +21,15 @@ class Loginform extends React.Component{
             method: 'POST',
             url: 'http://localhost:5000/',
             data: {
-            username: e.target.username.value,
-            password: e.target.password.value,
+                login__user: true,
+            username__login: e.target.username.value,
+            password__login: e.target.password.value,
             },
         }
         const request = await axios(data);
+        if(request.status !== 200){
+            
+        }
         console.log(request);
         }
 

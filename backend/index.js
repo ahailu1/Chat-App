@@ -20,18 +20,15 @@ app.use(homeRoute);
 app.use('/chat', chat);
 app.use('/chat/friendslist', friendsList);
 
-
 io.on('connection', (socket) => {
   socket.on('message', ({ room, message, sender, recipient, time }) => {
-    console.log(recipient);
+    console.log(message);
     let response = {
       sender,
       time,
       message,
     };
     io.emit(room, response);
-    console.log(time);
-    socket.emit(recipient, message);
     console.log(message);
     socket.on('disconnect', () => {
       io.emit(recipient, 'a user has left the chat');

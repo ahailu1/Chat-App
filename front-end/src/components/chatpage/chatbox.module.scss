@@ -1,0 +1,36 @@
+.container{
+&__chatbox{
+    border: solid red 0.5px;
+    height: 25rem;
+    display: inline-flex;
+    width: 35%;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+&__message{
+    width: 100%;
+    display: flex;
+}
+&__input{
+    width: 75%;
+}
+&__button{
+    flex-grow: 1;
+
+}
+}
+.button{
+    width: 100%;
+    height: 100%;
+}
+.input{
+    padding: 0.5rem;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+}
+.form{
+    width: 100%;
+}
