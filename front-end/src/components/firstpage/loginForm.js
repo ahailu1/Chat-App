@@ -2,6 +2,8 @@ import React from 'react';
 import {Row, Col, Form, Input, Button} from 'antd';
 import styles from './Loginform.module.scss';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
+import {history, withRouter} from 'react-router-dom';
 class Loginform extends React.Component{
     constructor(props){
         super(props);
@@ -27,10 +29,15 @@ class Loginform extends React.Component{
             },
         }
         const request = await axios(data);
-        if(request.status !== 200){
-            
+
+        if(request.status == 200){
+            let data = request.data;   
+            this.props.handleLogin(data);
+        
+            this.props.history.push(`/chat/${request.data.username}`);
+
+        } else {
         }
-        console.log(request);
         }
 
     render(){
@@ -55,4 +62,4 @@ class Loginform extends React.Component{
 
 }
 
-export default Loginform;
+export default withRouter(Loginform);

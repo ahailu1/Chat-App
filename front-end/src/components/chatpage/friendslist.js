@@ -15,7 +15,9 @@ constructor(props){
 
 getRequests = async () => {
 console.log('got');
-    const request = await axios.get('http://localhost:5000/chat/friendslist/getfriends/test123');
+    const {username} = this.props.userData;
+    console.log(username);
+    const request = await axios.get(`http://localhost:5000/chat/friendslist/getfriends/${username}`);
     const data = request.data;
     this.setState({requests:data});
 

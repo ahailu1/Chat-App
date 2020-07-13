@@ -14,6 +14,9 @@ constructor(props){
         name: null,
 
     }
+
+
+
 }
 
 render(){
@@ -44,7 +47,7 @@ render(){
             </div>
 
     <div className = {styles.container__form}>
-   <Loginform/>
+   <Loginform props = {this.props} handleLogin = {this.props.handleLogin}/>
    <Createaccount/>
    </div>
 </Col>
