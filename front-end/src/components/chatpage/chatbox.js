@@ -70,7 +70,11 @@ return(
         <div className = {styles.sent}> 
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${index % 2 != 0 && styles.toggled}`} key = {index} >
+       
+        
+            
             <div> <h1>{el}</h1></div>
+            { this.props.initMessage != '' && <div>{this.props.initMessage}</div> }    
             <div>hello</div>
         </div>
     })

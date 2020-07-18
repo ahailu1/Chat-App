@@ -15,7 +15,8 @@ class Chat extends React.Component{
     super(props);
     this.state = {
         initChat: [],
-        users: []
+        users: [],
+        initMessage: '',
         }
 
     this.createChat = this.createChat.bind(this);
@@ -25,28 +26,28 @@ componentDidMount = () => {
     console.log('sadasddsasda');
     this.createSocket();
 }
-// if the recipient of create chat is the same as my username
 
 createSocket = () => {
     const socket = io('http://localhost:5000');
     const cookie = new Cookies();
     const userData = cookie.get('userData');
-    const {username} = userData
+    const {username} = userData;
     socket.on(username, (data) => {
         console.log('hello');
         console.log(data.sender);
         if(!this.state.initChat.includes(data.sender)){
             
-            this.createChat(data.sender)
+            this.createChat(data.sender, data.message);
+
         } else {
-            console.log('nope');
+
         }
 
     });
 }
 
 
-createChat = (friendname) => {
+createChat = (friendname, initialMessage = '') => {
     const cookie = new Cookies();
     const userData = cookie.get('userData');
     const {username} = userData;
@@ -54,6 +55,7 @@ createChat = (friendname) => {
         sender: username,
         recipient: friendname,
         messages: [],
+        initialMessage:[],
     }
 
     if(this.state.initChat.includes(friendname)){
@@ -64,7 +66,8 @@ createChat = (friendname) => {
         arr.push(userObject);
         return{
             users: arr,
-            initChat: prev.initChat.concat(friendname)
+            initChat: prev.initChat.concat(friendname),
+            initMessage: initialMessage 
             }
         });
     }
@@ -77,7 +80,7 @@ render(){
     const socket = io('http://localhost:5000');
     return(
         <Layout className = {styles.container__layout}>
-        <Sider width = {325}  className = {styles.sidebar}>
+        <Sider width = {340}  className = {styles.sidebar}>
         <Profilepicture userData = {userData}/>
         <Friendslist createChat = {this.createChat} userData = {userData}/>
         </Sider>
@@ -85,7 +88,7 @@ render(){
             
         {
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
-            return <Chatbox socket = {socket} userData = {userData} friendName = {el} key = {index} createChat = {this.createChat}/>
+            return <Chatbox socket = {socket} userData = {userData} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
 
         })
         }

@@ -1,0 +1,41 @@
+.container{
+    display: flex;
+flex-direction: column;
+&__friendname{
+    display: flex;
+    width: 100%;
+    font-size:1.75rem;
+    color: white;
+    padding: 0.5rem;
+    justify-content: space-around;
+    align-items: center;
+    flex-grow: 1;
+& h1{
+    width: 50%;
+    color: white;
+    font-size: 1rem;
+}
+}
+&__button{
+    display: flex;
+    justify-content: flex-end;
+}
+}
+.button{
+    font-size: 1.2rem;
+    height: 2rem;
+    width: 3rem;
+    margin: 0.5rem 1rem 0.5rem 1rem;
+&:hover{
+    background-color: red;
+    color: white;
+    border: none;
+}
+}
+
+.iconaz{
+    &:hover{
+        color: red;
+        background-color: red;
+    }
+}

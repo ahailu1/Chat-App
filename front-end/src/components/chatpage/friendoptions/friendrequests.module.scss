@@ -1,4 +1,7 @@
 .ok{
+&:hover{
+
+}    
 }
 
 .container{
@@ -11,10 +14,27 @@ position: relative;
     position: absolute;
     padding-top: 1rem;
     display: flex;
-    right:1rem;
+    right:0.5rem;
+    &__alternative{
+        left: -2rem;
+        top: -15%;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        position: absolute;
+        &__display{
+            margin-top: 0.25rem;
+            display: flex;
+        }
+    &.toggled{
+        opacity: 1;
+        transition: all ease-in-out 0.5s;
+
+    }
+}
 }
 &__username{
-    width: 40%;
+    width: 30%;
     font-size: 1.15rem;
     display: flex;
     align-items: center;
@@ -23,23 +43,76 @@ position: relative;
 }
 &__icon{
     align-items: center;
-    width: 50%;
+    width: 55%;
     justify-content: space-between;
     color:white;
     font-size: 1.75rem;
     display: flex;
+
 &.toggled{
     margin-top: 2rem;
 
     display: flex;
     flex-direction: column;
+}
+&__alternative{
+    position: relative;
+&:hover{
+    color: red;
 }}
+&__istoggled{
+    opacity: 1;
+    height: 100%;
+    width: 100%;
+
+&.toggled{
+    transition: all ease-in-out 0.25s;
+opacity: 0;
+}
+}
+
+}
+
 }
 .icon{
-&:hover{
-color: red;
-}}
+    &__delete{
+        &:hover{
+            color: red;
+        }
+    }
+    &:hover{
+        color: red;
+    }
+    &__alternative{
+        position: relative;
+        opacity: 1;
 
+    &.toggled{
+        opacity: 0;
+        transition: all ease-in-out 0.25s;
+    }
+
+}
+}
 .button{
     margin-right: 1rem;
+    &__alternative{
+        margin-right: 0.5rem;
+    
+    &:hover{
+        background-color: red;
+        color: white;
+        outline: white;
+        border: none;
+    }
+}
+&:hover{
+    color: white;
+    border: white;
+    background-color: red;
+}
+}
+
+.confirm{
+    font-size: 1rem;
 }

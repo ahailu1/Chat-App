@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const fetch = require('node-fetch');
 const socketio = require('socket.io');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -20,14 +21,17 @@ app.use(homeRoute);
 app.use('/chat', chat);
 app.use('/chat/friendslist', friendsList);
 
-io.on('connection', (socket) => {
+io.on('connect', (socket) => {
   socket.on('message', ({ room, message, sender, recipient, time }) => {
     console.log(message);
     let response = {
+      room,
       sender,
       time,
       message,
+      recipient,
     };
+    console.log(response);
     io.emit(room, response);
     console.log(message);
     socket.on('disconnect', () => {
