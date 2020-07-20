@@ -58,8 +58,9 @@ const confirmRequest = async (username, friendname) => {
   return results;
 };
 const getFriendsList = async (username) => {
-  const query = 'SELECT friendname from friend_status WHERE username = $1 and state = $2';  
-  const values = [username, 3];
+  const query = `SELECT friendname from friend_status WHERE username = $1 and state = $2 
+  UNION SELECT username from friend_status where friendname = $3 and state = $4`;
+  const values = [username, 3, username, 3];
   const results = await connection.query(query, values);
   const friendsList = results.rows;
   console.log(friendsList);

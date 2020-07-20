@@ -11,21 +11,22 @@ class Chatbox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: []
+            messages: [],
+            initMessage: false,
+            toggled: false
         }
         this.getMessage = this.getMessage.bind(this);
 
 
     }
     componentDidMount = () => {
-        console.log('hello');
          this.getMessage();
     }
 
 getMessage = () => {
 const {username} = this.props.userData;
  this.props.socket.on(username, (data) => {
-if(data.sender == this.props.friendName) {
+if(data.sender == this.props.friendName ) {
     this.setState( (prev) => {
         let newMsg = prev.messages.concat(data.message);
         return {
@@ -34,6 +35,15 @@ if(data.sender == this.props.friendName) {
     })
 }
 });
+if(this.props.initMessage != false){
+    this.setState((prev) => {
+        let myMsg = prev.messages.concat(this.props.initMessage);
+        return {
+            messages: myMsg
+        }
+    })
+}
+
 }
 
 
@@ -65,7 +75,8 @@ render() {
 
 return(
 
-    <div className = {styles.container__chatbox}>
+    <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
+        <div>hello</div>
         <div className = {styles.container__sent}> 
         <div className = {styles.sent}> 
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
@@ -74,12 +85,11 @@ return(
         
             
             <div> <h1>{el}</h1></div>
-            { this.props.initMessage != '' && <div>{this.props.initMessage}</div> }    
-            <div>hello</div>
         </div>
     })
     }
     </div>
+    
     </div>
 
 

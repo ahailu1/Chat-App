@@ -1,13 +1,17 @@
 .container{
 &__chatbox{
-    margin-right: 2rem;
-    border: solid #00182e 2px;
+    margin: 2rem 1rem 2rem 1rem;
+    border: solid #00182e 7px;
+
     height: 25rem;
     display: inline-flex;
-    width: 35%;
+    width: 40%;
 flex-direction: column;
 justify-content: space-between;
-}
+border-radius: 0.65rem;
+&.toggled{
+    display: none;
+}}
 &__message{
     width: 100%;
     display: flex;
@@ -47,14 +51,15 @@ justify-content: space-between;
     border-radius: 0.35rem;
     color: white;
     background-color: #0065c4;
-    font-size: 0.75rem;
+    font-size: 0.55rem;
     display: flex;
     flex-direction: column;
     &.toggled{
     margin: 0.5rem 0 0.5rem 1.25rem;
     width: 85%;
     background-color:#77bdff;
-}}
+}
+}
 
 .container__sent{
 width: 100%;

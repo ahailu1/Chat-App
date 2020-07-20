@@ -10,7 +10,17 @@ router.post('/', async (req, res, next) => {
     next('route');
   } else {
     let isValidated = await authenticate(req, res);
-    res.send(isValidated);
+    if (isValidated.authenticated === true) {
+      const {username} = isValidated;
+      console.log(isValidated);
+      const token = await jwt.sign({ user: username }, 'secret-key');
+      res.status(200).json({ username,
+        token,
+        authenticated: true,
+      });
+    } else {
+      res.status(422).send({ isValidated });
+    }
   }
 });
 router.post('/', async (req, res, next) => {

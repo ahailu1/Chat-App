@@ -34,7 +34,7 @@ const getMyFriends = async (req, res) => {
 const pendingRequests = async (req, res) => {
   const { username } = req.params;
   const results = await getPending(username);
-  let pending = results.map(el => {
+  let pending = results.map((el) => {
     return el.friendname;
   });
   return pending;

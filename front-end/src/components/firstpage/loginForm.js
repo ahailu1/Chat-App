@@ -33,7 +33,6 @@ class Loginform extends React.Component{
         if(request.status == 200){
             let data = request.data;   
             this.props.handleLogin(data);
-        
             this.props.history.push(`/chat/${request.data.username}`);
 
         } else {

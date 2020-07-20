@@ -55,7 +55,6 @@ notifications = async () => {
     deletePending = async (friendname) => {
         const {username} = this.props.userData;
         const request = await axios.get(`http://localhost:5000/chat/friendslist/deletepending/${username}/${friendname}`);
-        
         await this.getPending();
     }
     getPending = async () => {
@@ -67,13 +66,43 @@ notifications = async () => {
             console.log(data);
             this.setState({pending:data});
         }
-    
+    confirmFriend = (friendName) => {
+        const {username} = this.props.userData;
+        axios.get(`http://localhost:5000/chat/friendslist/confirm/${username}/${friendName}`).then(data => {
+            this.setState((prev) =>{
+                const notifications = prev.notifications.filter((el) => {
+                    return el != friendName 
+                });
+                const friends = prev.friends.concat(friendName);
+                    return {
+                        notifications: notifications,
+                        friends: friends
+                    }
+                })
+        }).catch(er => {
+            alert('friend not added');
+        });
+       
+    }
+
         addFriend = async (e) => {
             const friendName = this.state.value;
             const {username} = this.props.userData;
-            const request = await axios.get(`http://localhost:5000/chat/friendslist/addfriend/${username}/${friendName}`);
-
-            console.log(friendName);
+            this.setState((prev) => {
+                if(prev.notifications.includes(friendName)) {
+                    alert('name taken')
+                } else if (prev.pending.includes(friendName)){
+                    alert('name is pending')
+                } else if(prev.friends.includes(friendName)) {
+                    alert('name already added');
+                } else {
+                    axios.get(`http://localhost:5000/chat/friendslist/addfriend/${username}/${friendName}`);
+                    return {
+                        value: '',
+                        pending: prev.pending.concat(friendName),
+                    }
+                }
+            })
                     }
 
 
@@ -93,10 +122,10 @@ render(){
             >
             <div className = {styles.container__addfriend}>
             <input type = 'text' name = 'addfriend' className = {styles.input} value = {this.state.value} onChange = {this.handleChange} />
-            <Button htmlType = 'submit' type = 'primary' className = {styles.button} onClick = {this.addFriend}>Add Friend </Button>
+            <Button htmlType = 'submit' type = 'primary' className = {styles.button} onClick = {this.addFriend} disabled = {this.state.value == '' ? true : false}>Add Friend </Button>
             </div>
                     {this.state.friends.length > 0  && this.state.friends.map((el, index) => {
-                        return <Friendrequests friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} displayIcon = {<LockFilled/> } />
+                        return <Friendrequests friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} displayIcon = {<LockFilled/> } toggled = {this.props.toggled} />
                     })}
             </TabPane>
             <TabPane key = "2" tab = {
@@ -107,7 +136,7 @@ render(){
                             }
                 >
                             {this.state.notifications.map((el, index) => {
-                                return <Friendrequests friendname = {el} key = {index} displayIcon = { <CheckCircleOutlined className = {styles.iconaz} />} createChat = {() => { this.props.createChat(el)}}/>
+                                return <Friendrequests myFunc = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} displayIcon = { <CheckCircleOutlined className = {styles.iconaz} />} createChat = {() => { this.props.createChat(el)}}/>
                             })}
             </TabPane>
             <TabPane key = "3" tab = {

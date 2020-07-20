@@ -1,8 +1,11 @@
 const { check, validationResult, match } = require('express-validator');
 const { createUser, getUser } = require('../models/createUser');
-
+let isAuthenticated = {
+  authenticated: false,
+  data: null,
+}
 let authenticate = async (req, res) => {
-  let { username, password} = req.body;
+  let { username, password, confirm__password} = req.body;
   let myResults;
   check('username').isLength({ min: 5 }).withMessage('Username must be at Least 5 Characters').isLength({ max: 20 })
     .withMessage('max length is 20 characters')
@@ -14,24 +17,32 @@ let authenticate = async (req, res) => {
     .run(req);
   check('confirm__password').equals(password).withMessage('Password do not match').run(req);
   const userquery = await getUser(username);
-  console.log(userquery);
   const error = validationResult(req);
-  console.log(error);
   const obj = {
     value: username,
     msg: 'Username is taken',
     param: 'username',
     location: 'body',
   };
-  if (userquery) {
+  console.log(userquery);
+  if (userquery !== false) {
     error.errors.push(obj);
   }
   if (error.isEmpty()) {
-    await createUser(username, password);
-    res.status(200).json({ message: 'user created' });
-  } else {
-    return res.status(422).json({ error: error.array() });
+    try {
+      await createUser(username, password); 
+      isAuthenticated.authenticated = true;
+      isAuthenticated.username = username;
+    } catch (e) {
+      isAuthenticated.authenticated = false;
+      console.log(e);
+      isAuthenticated.data = e;
+    }
+  } else { 
+    isAuthenticated.authenticated = false;
+    isAuthenticated.data = error.array();
   }
+  return isAuthenticated;
 };
 
 module.exports = authenticate;

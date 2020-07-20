@@ -48,7 +48,7 @@ render(){
 
     <div className = {styles.container__form}>
    <Loginform props = {this.props} handleLogin = {this.props.handleLogin}/>
-   <Createaccount/>
+   <Createaccount props = {this.props} handleLogin = {this.props.handleLogin}/>
    </div>
 </Col>
 </Row>

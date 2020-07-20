@@ -6,7 +6,7 @@
     background-color: #001529;
     align-items: center;
     border: solid whitesmoke;
-    height: 65%;
+    height: 70%;
 
 &__username{
     padding: 1rem;
@@ -49,4 +49,9 @@
         border: none;
         outline: solid cyan 0.5px;
     }}
+}
+
+.error__input{
+    color: white;
+    font-size: 0.65rem;
 }

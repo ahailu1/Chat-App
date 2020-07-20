@@ -11,10 +11,26 @@ padding: 0.3rem 1rem 0.3rem 0;
 height: 8rem;
 position: relative;
 &__button{
+    flex-direction: column;
     position: absolute;
-    padding-top: 1rem;
     display: flex;
-    right:0.5rem;
+    top: -15%;
+    left: -2rem;
+    opacity: 0;
+    &.toggled{
+        opacity: 1;
+        transition: all ease-in-out 0.5s;
+    }
+ &__delete{
+     position: relative;
+ &:hover{
+     color: red;
+ }
+&__display{
+    margin-top: 0.25rem;
+    display: flex;
+}
+}   
     &__alternative{
         left: -2rem;
         top: -15%;
@@ -76,13 +92,24 @@ opacity: 0;
 }
 .icon{
     &__delete{
+        opacity: 1;
+        position: relative;
         &:hover{
             color: red;
         }
+    
+    &.toggled{
+        opacity: 0;
+    }
     }
     &:hover{
+        cursor: pointer;
         color: red;
+    
     }
+&.toggled{
+    color: red;
+}
     &__alternative{
         position: relative;
         opacity: 1;
@@ -95,7 +122,7 @@ opacity: 0;
 }
 }
 .button{
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     &__alternative{
         margin-right: 0.5rem;
     

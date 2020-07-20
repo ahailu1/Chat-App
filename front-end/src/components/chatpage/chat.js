@@ -17,13 +17,13 @@ class Chat extends React.Component{
         initChat: [],
         users: [],
         initMessage: '',
+        toggled: [],
         }
 
     this.createChat = this.createChat.bind(this);
 }
 
 componentDidMount = () => {
-    console.log('sadasddsasda');
     this.createSocket();
 }
 
@@ -59,7 +59,11 @@ createChat = (friendname, initialMessage = '') => {
     }
 
     if(this.state.initChat.includes(friendname)){
-        alert('chat already started');
+        
+        this.setState( (prev) => { 
+            let newList = prev.toggled.includes(friendname) ? prev.toggled.filter(el => el != friendname) : prev.toggled.concat(friendname);
+            return {toggled: newList}
+        });
     } else {
     this.setState((prev) => {
         const arr = [...prev.initChat];
@@ -80,15 +84,15 @@ render(){
     const socket = io('http://localhost:5000');
     return(
         <Layout className = {styles.container__layout}>
-        <Sider width = {340}  className = {styles.sidebar}>
+        <Sider width = {400}  className = {styles.sidebar}>
         <Profilepicture userData = {userData}/>
-        <Friendslist createChat = {this.createChat} userData = {userData}/>
+        <Friendslist createChat = {this.createChat} userData = {userData} toggled = {this.state.toggled}/>
         </Sider>
         <Content>
-            
+        
         {
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
-            return <Chatbox socket = {socket} userData = {userData} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
+            return <Chatbox socket = {socket} userData = {userData} toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
 
         })
         }
