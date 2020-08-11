@@ -5,7 +5,8 @@ const router = express.Router();
 const path = require('path');
 const authenticate = require('../controller/createuser');
 const loginAuthenticate = require('../controller/loginuser');
-router.post('/', async (req, res, next) => {
+router.post('/api', async (req, res, next) => {
+  console.log(path.join('/', '..'));
   if (req.body.login__user) {
     next('route');
   } else {
@@ -23,7 +24,7 @@ router.post('/', async (req, res, next) => {
     }
   }
 });
-router.post('/', async (req, res, next) => {
+router.post('/api', async (req, res, next) => {
   const { username__login: username, password__login: password } = req.body;
   const test = await loginAuthenticate(username, password);
   if (test) {

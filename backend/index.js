@@ -13,6 +13,7 @@ const server = http.createServer(app);
 const io = socketio(server);
 const friendsList = require('./routes/friendslist');
 //  const sessionInit = require('./middleware/session.js');
+app.set('port', (process.env.Port || 5000));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
@@ -39,4 +40,6 @@ io.on('connect', (socket) => {
     });
   });
 });
-server.listen(process.env.port || 5000);
+server.listen(app.get('port') || 5000, () => {
+  console.log(`server is listening  on ${app.get('port')}`);
+});
