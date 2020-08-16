@@ -3,6 +3,36 @@ const Connection = require('../database/connection');
 const connection = Connection();
 const saltRounds = 5;
 
+
+const getMessages = async(info) => {
+  
+  const { username, friendname } = info;
+  const query = 'SELECT message, sender, recipient, time FROM chat_messages WHERE sender = $1 and recipient = $2 UNION SELECT message,sender,recipient,time FROM chat_messages WHERE sender = $3 and recipient = $4 ORDER BY TIME ASC';
+  const values = [username, friendname, friendname, username];
+  try {
+    const results = await connection.query(query, values);
+    const data = results.rows;
+    return data;
+  } catch (err) {
+    console.log('return messages error');
+    return new Error();
+  }
+};
+
+const addMessage = async (info, time) => {
+  //get info
+  let { sender, recipient, message } = info;
+
+  const { hour, minute, day, year, month, second } = time;
+  const query = 'insert into chat_messages(sender, recipient, message, time) values ($1, $2, $3, make_timestamp($4, $5, $6, $7, $8, $9))';
+  const values = [sender, recipient, message, year, month, day, hour, minute, 0];
+  try {
+    const result = await connection.query(query, values);
+  } catch (err) {
+    throw new Error('connection problem');
+  }
+};
+
 const createUser = async (username, password) => {
   let userPassword = bcrypt.hashSync(password, saltRounds);
   const query = 'insert into users (username, password) VALUES ($1, $2)';
@@ -18,7 +48,6 @@ const getUser = async (username) => {
   const values = [username];
   const result = await connection.query(query, values);
   let { length } = result.rows;
-  console.log(length);
   let userExists;
   if (length > 0) {
     userExists = true;
@@ -39,11 +68,11 @@ const addUser = async (username, friendname) => {
   const values = [username, friendname, 1];
   try {
     await connection.query(query, values);
-  } catch (er) {
+  } catch (err) {
+    console.log('cant add user');
     throw new Error();
   }
 };
-
 const getRequest = async (username) => {
   const query = 'SELECT username from friend_status WHERE friendname = $1 and state = $2';
   const values = [username, 1];
@@ -63,7 +92,6 @@ const getFriendsList = async (username) => {
   const values = [username, 3, username, 3];
   const results = await connection.query(query, values);
   const friendsList = results.rows;
-  console.log(friendsList);
   return friendsList;
 };
 const getPending = async (username) => {
@@ -88,4 +116,6 @@ module.exports = {
   getFriendsList,
   getPending,
   deletePending,
+  addMessage,
+  getMessages,
 };

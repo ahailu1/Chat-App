@@ -16,8 +16,8 @@ const { upload, uploadPic } = require('../controller/uploadProfile');
 router.post('/:username', upload.single('avatar'), async (req, res) => {
   await uploadPic(req, res);
 });
+
 router.get('/:username', getToken, async (req, res, next) => {
-  const infoaz = req.headers.authorization;
   console.log(req.token);
   const err = jwt.verify(req.token, 'secret-key');
   let pathaz = path.resolve('../front-end');

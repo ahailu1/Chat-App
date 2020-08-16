@@ -1,24 +1,44 @@
 
 
 .container{
-    &__header{
+        &__header{
+            @media(min-width: 320px){
         display: flex;
         text-align: left;
         padding: 6rem 0 0 5rem;
         font-weight: 800;
         letter-spacing: 2px;
         text-transform: uppercase;
-        font-size: 3rem;
+        font-size: 1.5rem;
         color:#bd0000;
-        width: 50%;
+        width: 100%;
         flex-direction: column;
     font-family: 'Montserrat', sans-serif;
+            }
+            @media(min-width:768px){
+                font-size: 3rem;
+            }
+            @media(min-width:1024px){
+                width: 40%;
+            }
     & p{
+        @media(min-width: 320px){
         color: white;
         text-transform: capitalize;
-        font-weight: 600;
-        font-size: 1.5rem;
+        font-weight: 500;
+        font-size: 1rem;
+        }
+        @media(min-width: 768px){
+    
+            font-size: 1rem;
+            }
+            @media(min-width: 1024px){
+                font-size: 1.5rem;
+                }
     }}
+
+
+
 @keyframes popout {
     0%{
         transform: scale(0.5)
@@ -32,31 +52,61 @@
 }
 
     &__form{
+        @media(min-width: 320px){
         display: flex;
-        width: 80%;
-        justify-content: center;
-        padding-top: 5rem;
+        width: 100%;
+        padding: 2rem 2rem 2rem 2rem;
+        flex-direction: column;
+        align-items: center;    
+        height: auto;
+
+        }
+        @media(min-width: 768px){
+            flex-direction: row;
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            height: 60%;
+            }
+            @media(min-width: 1024px){
+                width: 60%;
+                height: 70%;
+            }
     }
     &__row{
+        @media(min-width:320px){
         background-color: #001529;
-        clip-path: polygon(0 0, 100% 0, 100% 77%, 0% 100%);
-
-        
-        background-color: #001529;
-        display: flex;
+        border: solid orange;
+            display: flex;
         background-image: url('../../images/mybackground.svg');
         background-size: cover;
         background-attachment: fixed;
-        background-position: bottom 0% right 62%;
-
-        height: 90vh;
+        height: auto;
         justify-content: center;
-
+        }
+        @media (min-width: 768px){
+            border: solid red;
+        }
+        @media (min-width: 1024px){
+            background-attachment: fixed;
+            background-position: bottom 0% right 62%;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+            height: 90vh;
+        }
     }
     &__column{
+
+        @media(min-width:320px){
+        border: solid pink;
         display: flex;
         justify-content: center;
-    
+        flex-wrap: wrap;
+        }
+        @media(min-width:768px){
+            border: solid green;
+            display: flex;
+            justify-content: center;
+            }
     &__two{
         display: flex;
         padding: 1rem;

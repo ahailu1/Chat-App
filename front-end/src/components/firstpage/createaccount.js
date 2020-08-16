@@ -29,7 +29,7 @@ class Createaccount extends React.Component{
           e.preventDefault();
         const data = {
             method: 'POST',
-            url: 'http://localhost:5000/',
+            url: 'http://localhost:5000/api/createaccount',
             data: {
             username: e.target.username.value,
             password: e.target.password.value,
@@ -43,7 +43,8 @@ class Createaccount extends React.Component{
             this.props.history.push(`/chat/${res.data.username}`);
             console.log(res);
          }).catch(err => {
-    console.log(err);            
+             console.log(err.response);
+        
              let error = err.response.data.isValidated.data;
              let [errUsername, errPassword, errConfirmPwd]= [[], [], []];
              console.log(errPassword);
@@ -58,6 +59,7 @@ class Createaccount extends React.Component{
                 }
             })
             this.setState({errConfirmPwd, errUsername, errPassword})
+    
          })        
         }
 

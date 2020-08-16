@@ -1,8 +1,4 @@
 const fs = require('fs');
-
-
-
-
 const config = {
   user: 'alexh',
   host: 'ch86kevt1xeu294g',
@@ -13,8 +9,17 @@ const config = {
 
 const { Pool, Client } = require('pg');
 
+
+
 let connection = () => {
 
+  const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'instantchat',
+    password: 'm3gn16t5k3jti',
+    port: 5432,
+  });
   let client = new Client({
     user: 'postgres',
     host: 'localhost',
@@ -22,9 +27,9 @@ let connection = () => {
     password: 'm3gn16t5k3jti',
     port: 5432,
   });
-  let connect = client.connect();
+  let connect = pool.connect();
 
-  return client;
+  return pool;
 };
 
 module.exports = connection;

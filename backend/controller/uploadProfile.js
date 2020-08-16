@@ -18,7 +18,6 @@ const uploadPic = async (req, res) => {
   const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
   let pathaz = path.resolve('../front-end');
   let check = path.join(pathaz, '/public/images');
-  
   await fs.writeFile(path.join(pathaz, `/public/images/${username}`), buffer, (req, res, err) => {
     if (err) throw err;
   });

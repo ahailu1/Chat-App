@@ -1,30 +1,41 @@
 const cors = require('cors');
 const express = require('express');
+let redis = require('redis');
 const app = express();
-const jwt = require('jsonwebtoken');
 const path = require('path');
-const fetch = require('node-fetch');
 const socketio = require('socket.io');
 const http = require('http');
 const bodyParser = require('body-parser');
 const homeRoute = require('./routes/homeRoute');
 const chat = require('./routes/chat');
+const chatbox = require('./routes/chatbox');
 const server = http.createServer(app);
 const io = socketio(server);
+const { insertMsg } = require('./controller/addFriend');
 const friendsList = require('./routes/friendslist');
+
 //  const sessionInit = require('./middleware/session.js');
+let client = redis.createClient();
 app.set('port', (process.env.Port || 5000));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
-app.use(homeRoute);
+app.use('/api', homeRoute);
 app.use('/chat', chat);
 app.use('/chat/friendslist', friendsList);
+app.use('/chat/chatbox', chatbox);
+
+client.on('connect', () => {
+  console.log('connected redis server');
+});
+
+client.lrange('messagedata', 0, -1, (err, res) => {
+  console.log(res);
+});
 
 io.on('connect', (socket) => {
   socket.on('message', ({ room, message, sender, recipient, time }) => {
-    console.log(message);
     let response = {
       room,
       sender,
@@ -32,9 +43,8 @@ io.on('connect', (socket) => {
       message,
       recipient,
     };
-    console.log(response);
+    insertMsg(response);
     io.emit(room, response);
-    console.log(message);
     socket.on('disconnect', () => {
       io.emit(recipient, 'a user has left the chat');
     });

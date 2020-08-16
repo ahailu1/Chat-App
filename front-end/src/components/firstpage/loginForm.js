@@ -21,7 +21,7 @@ class Loginform extends React.Component{
           e.preventDefault();
         const data = {
             method: 'POST',
-            url: 'http://localhost:5000/',
+            url: 'http://localhost:5000/api/loginuser',
             data: {
                 login__user: true,
             username__login: e.target.username.value,
@@ -31,7 +31,8 @@ class Loginform extends React.Component{
         const request = await axios(data);
 
         if(request.status == 200){
-            let data = request.data;   
+            let data = request.data;
+            console.log(data);   
             this.props.handleLogin(data);
             this.props.history.push(`/chat/${request.data.username}`);
 

@@ -1,13 +1,31 @@
 .container{
+    @media(min-width:320px){
     display: flex;
     flex-direction: column;   
-    width: 40%;
-    padding: 4rem 2rem 2rem 2rem;
-    background-color: #001529;
+    width: 100%;
+    padding: 1.5rem 1rem 1.5rem 1rem;
+    //background-color: #001529;
+    background-color: whitesmoke;
     align-items: center;
-    border: solid whitesmoke;
-    height: 70%;
+    height: auto;
+    border-radius: 1rem;
+    margin: 1rem;
 
+    }
+    @media(min-width:500px){
+        width: 60%;
+        }
+    @media(min-width:768px){
+        display: flex;
+        flex-direction: column;   
+        width: 40%;
+        padding: 4rem 2rem 2rem 2rem;
+        //background-color: #001529;
+        background-color: whitesmoke;
+        align-items: center;
+        border-radius: 1rem;
+     height: 100%;
+    }
 &__username{
     padding: 1rem;
     border: none;
@@ -18,7 +36,8 @@
     border: none;
 }
 &__header{
-    color: white;
+    color: #0061bd;
+    font-weight: 500;
     justify-content: center;
     display: flex;
     font-size: 1.25rem;
@@ -52,6 +71,6 @@
 }
 
 .error__input{
-    color: white;
+    color: navy;
     font-size: 0.65rem;
 }

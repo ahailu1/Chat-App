@@ -1,9 +1,13 @@
 .container__profile{
     flex-direction: column;
     display: flex;
-    border: solid red;
     align-items: center;
 padding: 0.5rem;
 & > button{
     border: solid orange;
 }}
+
+
+.upload__button{
+    margin-top: 2rem;
+}

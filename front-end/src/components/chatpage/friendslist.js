@@ -49,7 +49,6 @@ notifications = async () => {
         const data = request.data;
         console.log(data);
         this.setState({notifications:data});
-    
     }
 
     deletePending = async (friendname) => {

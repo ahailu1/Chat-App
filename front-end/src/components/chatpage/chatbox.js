@@ -4,6 +4,7 @@ import {Button} from 'antd';
 import styles from './chatbox.module.scss'
 import io from 'socket.io-client';
 import UserContext from '../context';
+import axios from 'axios';
 
 class Chatbox extends React.Component {
     static contextType = UserContext;
@@ -13,13 +14,15 @@ class Chatbox extends React.Component {
         this.state = {
             messages: [],
             initMessage: false,
-            toggled: false
+            toggled: false,
+            msgHistory : []
         }
         this.getMessage = this.getMessage.bind(this);
 
 
     }
     componentDidMount = () => {
+        this.getHistory();
          this.getMessage();
     }
 
@@ -28,7 +31,7 @@ const {username} = this.props.userData;
  this.props.socket.on(username, (data) => {
 if(data.sender == this.props.friendName ) {
     this.setState( (prev) => {
-        let newMsg = prev.messages.concat(data.message);
+        let newMsg = prev.messages.concat(data);
         return {
             messages: newMsg
         }
@@ -46,6 +49,18 @@ if(this.props.initMessage != false){
 
 }
 
+getHistory = () => {
+    const { username } = this.props.userData;
+    console.log(username + 'hello');
+let response = axios.get(`http://localhost:5000/chat/chatbox/${username}/${this.props.friendName}`)
+    .then((res) => {
+        this.setState({msgHistory:res.data})
+    })
+    .catch((err) => {
+        console.log(err);
+    })
+}
+
 
 sendMessage = (e) => {
 e.preventDefault();
@@ -53,7 +68,9 @@ const {username} = this.props.userData;
 const friendname = this.props.friendName;
 let message = e.target.message.value;
 const {socket} = this.props;
-const time = new Date().toLocaleString();
+let time = new Date().toLocaleString();
+  console.log(time);
+  
 const data = {
     room: this.props.friendName,
     message: message,
@@ -61,9 +78,11 @@ const data = {
     recipient: friendname,
     time: time,
 }
+// call backend function
+// insert messages into database
 this.setState( (prev) => {
     return{
-        messages: prev.messages.concat(message)
+        messages: prev.messages.concat(data)
     }
 });
 socket.emit('message', data);
@@ -78,13 +97,39 @@ return(
     <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
         <div>hello</div>
         <div className = {styles.container__sent}> 
-        <div className = {styles.sent}> 
-         {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
-        return <div className = {`${styles.message__sent} ${index % 2 != 0 && styles.toggled}`} key = {index} >
-       
         
-            
-            <div> <h1>{el}</h1></div>
+        <div>
+        {this.state.msgHistory.length > 0 && this.state.msgHistory.map ((el, index) => {
+        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName   && styles.toggled}`} key = {index} >
+       
+       <div> 
+            <div> 
+           {el.time}
+       </div>
+       <div>
+           {el.sender}
+           </div>
+       </div>
+            <div>{el.message}</div>
+        </div>
+    })
+    }
+
+
+        </div>
+        <div className = {styles.sent}>
+         {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
+        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName   && styles.toggled}`} key = {index} >
+       
+       <div> 
+            <div> 
+           {el.time}
+       </div>
+       <div>
+           {el.sender}
+           </div>
+       </div>
+            <div>{el.message}</div>
         </div>
     })
     }
