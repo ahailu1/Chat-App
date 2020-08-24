@@ -95,31 +95,30 @@ render() {
 return(
 
     <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
-        <div>hello</div>
         <div className = {styles.container__sent}> 
-        
-        <div>
+        <div className = {styles.container__wrapper}>
+        <div className = {styles.container__history}>
         {this.state.msgHistory.length > 0 && this.state.msgHistory.map ((el, index) => {
-        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName   && styles.toggled}`} key = {index} >
-       
-       <div> 
-            <div> 
-           {el.time}
-       </div>
-       <div>
+        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
+
+       <div className = {styles.container__history__message}> 
+       <div className = {styles.sender}>
            {el.sender}
            </div>
+            
+            <div className = {styles.time}> 
+           {el.time}
+       </div>
        </div>
             <div>{el.message}</div>
         </div>
+        
     })
     }
-
-
         </div>
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
-        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName   && styles.toggled}`} key = {index} >
+        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
        
        <div> 
             <div> 
@@ -134,7 +133,12 @@ return(
     })
     }
     </div>
+    <div>
     
+
+    </div>
+    </div>
+
     </div>
 
 

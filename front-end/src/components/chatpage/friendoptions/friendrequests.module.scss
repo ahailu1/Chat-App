@@ -1,15 +1,15 @@
-.ok{
-&:hover{
 
-}    
-}
 
 .container{
     display: flex;
 justify-content: space-between;
 padding: 0.3rem 1rem 0.3rem 0;
-height: 8rem;
+height: 10rem;
+margin: 1rem 0 1rem 0;
 position: relative;
+&:hover{
+    background-color: #0051bb;
+}
 &__button{
     flex-direction: column;
     position: absolute;
@@ -50,12 +50,29 @@ position: relative;
 }
 }
 &__username{
-    width: 30%;
+    z-index: 2;
+    position: relative;
+    flex-direction: column;
+    width: 35%;
     font-size: 1.15rem;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    height: 100%;
+
+&.toggled::after{
+    content: '';
+    position: absolute;
+    top: 15%;
+    right: 30%;
+    display: flex;
+    background-color: #00d300;
+    z-index: 5;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+}
 }
 &__icon{
     align-items: center;
@@ -142,4 +159,8 @@ opacity: 0;
 
 .confirm{
     font-size: 1rem;
+}
+
+.randomname{
+    border: solid red;
 }

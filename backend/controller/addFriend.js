@@ -27,7 +27,7 @@ const getMyFriends = async (req, res) => {
   const { username } = req.params;
   let results = await getFriendsList(username);
   let friendsList = results.map((el) => {
-    return el.friendname;
+    return { friendname: el.friendname, picture: `${el.friendname}--profilepicture.png` };
   });
   return friendsList;
 };
@@ -54,7 +54,7 @@ const insertMsg = async (data) => {
     day: time[1],
     year: time[2],
     hour: time[3],
-    minute : time[4],
+    minute: time[4],
     second: time[5],
   };
   const res = await addMessage(data, time);

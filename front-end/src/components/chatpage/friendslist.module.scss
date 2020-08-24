@@ -1,14 +1,15 @@
 .tab{
-    color: white;
-    font-weight: 700;
-border-bottom: orange;
+
 
 &:focus{
     background-color: orange;
     color: red;
 }
 }
-
+.container__avatar{
+    width: 6rem;
+    height: 6rem;
+}
 .container__addfriend{
 display: flex;
 flex-direction: column;

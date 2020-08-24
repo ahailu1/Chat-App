@@ -1,7 +1,6 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button} from 'antd';
-import { Tabs } from 'antd';
-import { AppleOutlined, AndroidOutlined, MessageFilled , DeleteFilled,LockFilled, CheckCircleOutlined } from '@ant-design/icons';
+import {Row, Col, Form, Input, Button, Tabs, Avatar, Badge} from 'antd';
+import { AppleOutlined, AndroidOutlined, MessageFilled , DeleteFilled,LockFilled, CheckCircleOutlined, UserOutlined } from '@ant-design/icons';
 import styles from './friendslist.module.scss';
 import axios from 'axios';
 import Friendrequests from './friendoptions/friendrequests';
@@ -14,6 +13,7 @@ constructor(props){
         notifications: [],
         value : '',
         pending: [],
+        loggedIn: []
     }
     this.deletePending = this.deletePending.bind(this);
 }
@@ -21,13 +21,65 @@ componentDidMount = () => {
     this.getFriends();
     this.getPending();
     this.notifications();
+    this.getOnline();
 }
 
 handleChange = (e) => {
 const value = e.target.value;
     this.setState({value: value});
 }
+getOnline = () => {
+    let {username} = this.props.userData;
+    let socket = this.props.socket;
+    let data = {
+        username: username,
+        online: true
+    }
 
+    socket.emit('login', data);
+    //send data upon login
+    //
+    socket.on('login', (cb) => {
+        cb.name = 'hello';
+    let {username} = cb;
+    //if user is logged in already, send a message to login
+    //if i am logged in already and i receive a message
+    if (this.state.loggedIn.indexOf(username) == -1) {
+        console.log('iamherebud');
+console.log(this.state.loggedIn);
+    this.setState((prev) => {
+       let islogged = this.state.loggedIn.concat(username);
+        return { 
+           loggedIn: islogged
+       }
+    });
+    socket.on('disconnect', () => {
+        let logout = {
+            offline: true,
+            username: username
+        }
+        socket.emit('logout', logout);
+    });
+    console.log(this.state.loggedIn)
+}
+console.log(this.state.loggedIn);
+
+socket.on('logout', data => {
+    console.log(data + 'is here');
+   let newList =  this.state.loggedIn.filter( (el) => { return el !== data.username });
+   this.setState({loggedIn: newList});
+   console.log(newList);   
+});
+});
+}
+
+getDiv = (props) => {
+    console.log(props)
+    return ( <div>
+        hello world
+    </div>
+    )
+}
 
 getFriends = async () => {
 console.log('got');
@@ -90,7 +142,7 @@ notifications = async () => {
             this.setState((prev) => {
                 if(prev.notifications.includes(friendName)) {
                     alert('name taken')
-                } else if (prev.pending.includes(friendName)){
+                } else if (this.state.pending.includes(friendName)){
                     alert('name is pending')
                 } else if(prev.friends.includes(friendName)) {
                     alert('name already added');
@@ -124,7 +176,10 @@ render(){
             <Button htmlType = 'submit' type = 'primary' className = {styles.button} onClick = {this.addFriend} disabled = {this.state.value == '' ? true : false}>Add Friend </Button>
             </div>
                     {this.state.friends.length > 0  && this.state.friends.map((el, index) => {
-                        return <Friendrequests friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} displayIcon = {<LockFilled/> } toggled = {this.props.toggled} />
+                        return <Friendrequests userData = {this.props.userData} friendname = {el.friendname} loggedIn = {this.state.loggedIn} key = {index} createChat = { () => { this.props.createChat(el.friendname) }} displayIcon = {<LockFilled/> } toggled = {this.props.toggled} avatar = {() => {
+                                return  <Avatar shape = 'circle' size = 'large' src = {`/images/${el.picture}`} className = {styles.container__avatar} className = {`${styles.avatar}`} />
+                                       
+                        }} />
                     })}
             </TabPane>
             <TabPane key = "2" tab = {
@@ -134,8 +189,11 @@ render(){
                 </span>
                             }
                 >
+                    <getDiv>
+                        helloasdas
+                    </getDiv>
                             {this.state.notifications.map((el, index) => {
-                                return <Friendrequests myFunc = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} displayIcon = { <CheckCircleOutlined className = {styles.iconaz} />} createChat = {() => { this.props.createChat(el)}}/>
+                                return <Friendrequests myFunc = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} displayIcon = { <CheckCircleOutlined className = {styles.iconaz} />} avatar = {false} createChat = {() => { this.props.createChat(el)}}/>
                             })}
             </TabPane>
             <TabPane key = "3" tab = {
@@ -147,7 +205,7 @@ render(){
                             onClick = {this.getPending}
                 >
                     {this.state.pending.map( (el, index) => {
-                        return <Friendrequests friendname = {el} myFunc = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}}/>;
+                        return <Friendrequests friendname = {el} myFunc = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {false}/>;
                     })}
             </TabPane>
         </Tabs>

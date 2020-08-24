@@ -1,19 +1,39 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './friendrequests.module.scss'
 import { MessageFilled , DeleteFilled,LockFilled } from '@ant-design/icons';
 import {Button} from 'antd';
-const Friendrequest = (props) => {
-const [state, myfunc] = useState(false);
-const [icon, toggleIcon] = useState(false);
-const [chat, toggleChat] = useState(false);
 
-const toggle = () => {
+
+
+const Friendrequest = (props) => {
+    const [state, myfunc] = useState(false);
+const [icon, toggleIcon] = useState(false);
+    const [chat, toggleChat] = useState(false);
+const [online, isOnline] = useState([]); 
+
+useEffect(() => {
+const list = props.loggedIn;
+isOnline(list);
+console.log(list);
+}, [online])
+
+    const toggle = () => {
     console.log(state);
     myfunc(!state);
 };
 const toggleOff = () => {
     myfunc(false);
 };
+
+const toggleOnline = (props) => {
+
+}
+
+const myContainer = () => {
+    let {loggedIn, friendname, ...props} = props;
+
+
+}
 
 const iconOn = () => {
     console.log(state);
@@ -28,9 +48,12 @@ const myChat = () => {
     props.createChat();
 }
     return(
-        <div className = {styles.container}>
 
-            <div className = {styles.container__username}>{props.friendname}</div>
+        <div className = {styles.container}>
+            <div className = {`${styles.container__username} ${props.loggedIn.indexOf(props.friendname) !== -1 && styles.toggled}`}>
+                {props.avatar !== false && props.avatar()}
+                {props.friendname}
+                </div>
 
             <div className = {styles.container__icon}>
             

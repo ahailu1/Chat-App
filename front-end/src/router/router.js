@@ -30,15 +30,22 @@ handleLogin = (data) => {
 }
 handleLogout = () => {
     const cookie = new Cookies();
-    cookie.remove('userData');
     let exists = cookie.get('userData');
-    console.log(exists);
+    let {username} = exists;
+    let logout = {
+        offline: true,
+        username: username
+    }
+    const socket = io('http://localhost:5000');
+    socket.emit('logout', logout);
+    cookie.remove('userData');
+    socket.disconnect();
     this.setState(() => {
         return {
             userData: null,
             loggedIn: false
         }
-    })
+    });
 }
 handleAuthentication = () => {
     const cookie = new Cookies();

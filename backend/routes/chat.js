@@ -18,7 +18,6 @@ router.post('/:username', upload.single('avatar'), async (req, res) => {
 });
 
 router.get('/:username', getToken, async (req, res, next) => {
-  console.log(req.token);
   const err = jwt.verify(req.token, 'secret-key');
   let pathaz = path.resolve('../front-end');
   let username = `${req.params.username}--profilepicture.png`;

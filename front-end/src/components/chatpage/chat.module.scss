@@ -1,15 +1,20 @@
 .sidebar{
+    border: solid white 0.5px;
+
     height: auto;
     width: 40rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    z-index: 3;
+    position: relative;
 }
 .avatar{
     margin-top: 3rem;
 }
 
 .container{
+    border: solid white 0.5px;
 
 &__layout{
     min-height: 120vh;
@@ -23,3 +28,48 @@
 }
 
 }
+.tabicon{
+    height: 100%;
+    font-size: 2rem;
+    transition: all ease-in 0.05s;
+    color: #011629;
+&:hover, :active{
+    font-size: 1.5rem;
+    transition: all ease-in 0.05s;
+    color: red;
+}}
+.tab{
+    &__card{
+        background-color: #011629 !important;
+    }
+    &__pane{
+    
+    }
+    &__container{
+        margin-left: -1rem;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+        align-items: center;
+        display: flex;
+}
+    &__name{
+        color:#0b0d1b;
+
+        margin-left: 1rem;
+
+    &:target{
+        color: blue;
+    }}
+    &__icon{
+        height: 100%;
+    }
+}
+.ant-tabs-tab {
+    background-color: red !important;
+    color: #363636 !important;
+  }
+  
+  .ant-tabs-tab-active {
+    color: #363636 !important;
+  }

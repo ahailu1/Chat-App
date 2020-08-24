@@ -76,7 +76,6 @@
     &__row{
         @media(min-width:320px){
         background-color: #001529;
-        border: solid orange;
             display: flex;
         background-image: url('../../images/mybackground.svg');
         background-size: cover;
@@ -85,7 +84,6 @@
         justify-content: center;
         }
         @media (min-width: 768px){
-            border: solid red;
         }
         @media (min-width: 1024px){
             background-attachment: fixed;
@@ -97,13 +95,11 @@
     &__column{
 
         @media(min-width:320px){
-        border: solid pink;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
         }
         @media(min-width:768px){
-            border: solid green;
             display: flex;
             justify-content: center;
             }

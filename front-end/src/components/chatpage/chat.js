@@ -1,7 +1,7 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button, Layout, Avatar, Upload} from 'antd';
+import {Row, Col, Form, Input, Button, Layout, Tabs} from 'antd';
 import styles from './chat.module.scss';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, CloseSquareFilled } from '@ant-design/icons';
 import Profilepicture from './profilepicture';
 import Friendslist from './friendslist';
 import Chatbox from './chatbox';
@@ -18,13 +18,46 @@ class Chat extends React.Component{
         users: [],
         initMessage: '',
         toggled: [],
+        loggedIn: []
         }
 
     this.createChat = this.createChat.bind(this);
+    this.removeTab = this.removeTab.bind(this);
 }
 
 componentDidMount = () => {
     this.createSocket();
+}
+
+createTab = (el) => {
+    console.log('hello tabs');
+    return (
+        <div className = {styles.tab__container}>
+            <span className = {styles.tab__icon}>
+            <CloseSquareFilled className = {styles.tabicon} onClick = { () => { this.removeTab(el) }}/>
+            </span>
+            <span className = {styles.tab__name}>
+            {el}
+            </span>
+            </div>
+    )
+}
+
+removeTab = (name) => {
+
+    this.setState((prev) => {
+        console.log(prev.initChat);
+        let newList = prev.initChat;
+        newList = newList.filter((el) => {
+            return el != name;
+        });
+        return {
+            initChat: newList
+        }
+
+
+    })
+
 }
 
 createSocket = () => {
@@ -32,20 +65,41 @@ createSocket = () => {
     const cookie = new Cookies();
     const userData = cookie.get('userData');
     const {username} = userData;
+    const data = {
+        username,
+        online: true,
+    }
+    socket.emit('login', data);
+    
+    setTimeout(() => {
+    socket.emit('login', data);
+        }, 5000);
+
     socket.on(username, (data) => {
         console.log('hello');
         console.log(data.sender);
-        if(!this.state.initChat.includes(data.sender)){
-            
+        if (!this.state.initChat.includes(data.sender)) { 
             this.createChat(data.sender, data.message);
-
         } else {
 
         }
 
     });
+    //send message that indicates you are logged in
+    // once message is sent sent and received, 
+    //receive message that indicates you are logged in
 }
 
+toggleUser = (friendname) => {
+this.setState((prev) => {
+    let newList = prev.filter((el) => {
+    return el != friendname
+    });
+    return {
+        initChat : newList
+    }
+})
+}
 
 createChat = (friendname, initialMessage = '') => {
     const cookie = new Cookies();
@@ -82,21 +136,25 @@ render(){
     const userData = cookie.get('userData');
     const {Sider,Content} = Layout;
     const socket = io('http://localhost:5000');
+    const { TabPane } = Tabs;
     return(
         <Layout className = {styles.container__layout}>
-        <Sider width = {400}  className = {styles.sidebar}>
+        <Sider width = {450}  className = {styles.sidebar}>
         <Profilepicture userData = {userData}/>
-        <Friendslist createChat = {this.createChat} userData = {userData} toggled = {this.state.toggled}/>
+        <Friendslist createChat = {this.createChat} userData = {userData} toggled = {this.state.toggled} socket = {socket}/>
         </Sider>
         <Content>
-        
+            
+        <Tabs type = 'card' className = {styles.tab__card}>
         {
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
-            return <Chatbox socket = {socket} userData = {userData} toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
-
+           
+            return <TabPane tab = {this.createTab(el) } key = {index}>
+            <Chatbox socket = {socket} userData = {userData} toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
+            </TabPane>
         })
         }
-
+        </Tabs>
         </Content>
         </Layout>
             )

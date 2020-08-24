@@ -46,8 +46,18 @@ io.on('connect', (socket) => {
     insertMsg(response);
     io.emit(room, response);
     socket.on('disconnect', () => {
-      io.emit(recipient, 'a user has left the chat');
+      console.log('im outta here');
     });
+  });
+  socket.on('login', (data) => {
+
+    console.log(data.online);
+    io.emit('login', data);
+  });
+  socket.on('logout', (data) => {
+    console.log(data);
+    console.log('logging out');
+    io.emit('logout', data);
   });
 });
 server.listen(app.get('port') || 5000, () => {
