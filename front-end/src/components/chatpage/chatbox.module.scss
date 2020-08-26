@@ -1,13 +1,30 @@
 .container{
+    &__profile{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 25%;
+        padding: 0.75rem;
+        background-color: #001529;
+        border-radius: 0.65rem;
+
+    }
+    &__chat{
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
 &__chatbox{
-    border: solid red;
+    border: solid white;
     margin: 2rem 1rem 2rem 1rem;
-    height: 25rem;
-    display: inline-flex;
-    width: 80%;
-flex-direction: column;
+    height: 30rem;
+    width: 80%; 
+    display: flex;
 justify-content: space-between;
-border-radius: 0.35rem;
+border-radius: 0.65rem;
 background-color: whitesmoke;
 &.toggled{
     display: none;
@@ -57,28 +74,26 @@ background-color: whitesmoke;
     &.toggled{
     margin: 0.5rem 0 0.5rem 1.25rem;
     width: 85%;
-    background-color: #004c94;
+    background-color: #0084ff;
 }
 }
 
 .container__sent{
-width: 100%;
-height: 100%;
-    display: flex;
-    flex-direction: column-reverse;
-position: relative;
-overflow-y: scroll;
-
+display: flex;
+flex-grow: 1;
 }
 .sent{
+    height: auto;
     width: 100%;
     display: flex;
     flex-direction: column;
 
+
 }
 .container__history{
-    border: solid green;
+
     width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
 &__message{
@@ -88,14 +103,21 @@ overflow-y: scroll;
 }
 
 .container__wrapper{
-    border: solid red;
-
     flex-direction: column;
     display: flex;
-    width: 100%;
     position: absolute;
-    bottom: 0;
-}
+    bottom:0;
+    width: 100%;
+    &0{
+    overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column-reverse;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+        position: relative;
+}}
 
 .sender{
     font-weight: 700;
@@ -109,4 +131,11 @@ overflow-y: scroll;
     font-size: 0.75rem;
     margin: 0 0.5rem 0 0.5rem;
     color: whitesmoke;
+}
+
+
+.contentaz{ 
+    display: flex;
+    border: solid orange;
+    width: 25%;
 }

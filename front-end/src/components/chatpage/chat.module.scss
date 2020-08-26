@@ -71,5 +71,15 @@
   }
   
   .ant-tabs-tab-active {
-    color: #363636 !important;
+    color: orange !important;
   }
+
+.container{
+    &__avatar{
+        display: flex;
+    }
+    &__username{
+        color: white;
+        font-size: 2rem;
+    }
+}

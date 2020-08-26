@@ -16,6 +16,7 @@ constructor(props){
         loggedIn: []
     }
     this.deletePending = this.deletePending.bind(this);
+    this.addFriend = this.addFriend.bind(this);
 }
 componentDidMount = () => {
     this.getFriends();
@@ -139,21 +140,25 @@ notifications = async () => {
         addFriend = async (e) => {
             const friendName = this.state.value;
             const {username} = this.props.userData;
-            this.setState((prev) => {
-                if(prev.notifications.includes(friendName)) {
+                if(this.state.notifications.includes(friendName)) {
                     alert('name taken')
                 } else if (this.state.pending.includes(friendName)){
                     alert('name is pending')
-                } else if(prev.friends.includes(friendName)) {
+                } else if(this.state.friends.includes(friendName)) {
                     alert('name already added');
                 } else {
-                    axios.get(`http://localhost:5000/chat/friendslist/addfriend/${username}/${friendName}`);
-                    return {
-                        value: '',
-                        pending: prev.pending.concat(friendName),
-                    }
+                    axios.get(`http://localhost:5000/chat/friendslist/addfriend/${username}/${friendName}`).then(() => {
+
+                        this.setState((prev) => {
+                            let pending = prev.pending.concat(friendName);
+                            return {
+                                value: '',
+                                pending: pending
+                            }
+                        })                    
+                    })
                 }
-            })
+           
                     }
 
 

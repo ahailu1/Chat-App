@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button, Layout, Tabs} from 'antd';
+import {Layout, Tabs, Avatar} from 'antd';
 import styles from './chat.module.scss';
 import { UploadOutlined, CloseSquareFilled } from '@ant-design/icons';
 import Profilepicture from './profilepicture';
@@ -41,6 +41,19 @@ createTab = (el) => {
             </span>
             </div>
     )
+}
+createProfile = (username) => {
+    console.log(username);
+    return (
+        <>
+        <div className = {styles.container__avatar}>
+            <Avatar shape = 'circle' size = {150} src = {`/images/${username}--profilepicture.png`} />
+        </div>
+        <div className = {styles.container__username}>
+           {username}
+        </div>
+        </>
+        )
 }
 
 removeTab = (name) => {
@@ -150,7 +163,7 @@ render(){
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
            
             return <TabPane tab = {this.createTab(el) } key = {index}>
-            <Chatbox socket = {socket} userData = {userData} toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
+            <Chatbox socket = {socket} userData = {userData} createProfile = {this.createProfile} toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
             </TabPane>
         })
         }

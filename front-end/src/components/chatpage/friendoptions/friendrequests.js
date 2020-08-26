@@ -50,7 +50,7 @@ const myChat = () => {
     return(
 
         <div className = {styles.container}>
-            <div className = {`${styles.container__username} ${props.loggedIn.indexOf(props.friendname) !== -1 && styles.toggled}`}>
+            <div className = {`${styles.container__username}`}>
                 {props.avatar !== false && props.avatar()}
                 {props.friendname}
                 </div>
