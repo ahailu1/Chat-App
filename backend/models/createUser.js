@@ -3,9 +3,54 @@ const Connection = require('../database/connection');
 const connection = Connection();
 const saltRounds = 5;
 
+const friendStatus = async (username) => {
+  let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
+  console.log(username + 'is a retard');
+  let values = [username, username];
+  try {
+    let result = await connection.query(query, values);
+    let myresults = result.rows;
+    console.log(myresults);
+    return myresults;
+  } catch (err) {
+    throw new Error('couldnt fetch');
+  }
+};
 
-const getMessages = async(info) => {
+
+const alterFavourites = async (value, username, friendname, reverse) => {
+// if my username is under the 'friendname' category and my friendname is under the username category, then update username is favourite where username = friendname and friendname == username
+  let queryOne = 'UPDATE friend_status SET username_isfavourite = $1 WHERE friendname = $2 AND username = $3';
+  let queryTwo = 'UPDATE friend_status SET friendname_isfavourite = $1 WHERE username = $2 AND friendname = $3';
+  let query;
+  if (reverse === 1 || reverse === '1') {
+    query = queryOne;
+  } else {
+    query = queryTwo;
+  }
+
+  let values = [value, username, friendname];
   
+  try {
+    await connection.query(query, values);
+  } catch (err) {
+    throw new Error('cannot alter favourites');
+  }
+};
+
+const getAll = async () => {
+  const query = 'SELECT username FROM users';
+  try {
+    const results = await connection.query(query);
+    const data = results.rows;
+    return data;
+  } catch (err) {
+    console.log('return messages erros');
+    return new Error();
+  }
+};
+
+const getMessages = async (info) => {
   const { username, friendname } = info;
   const query = 'SELECT message, sender, recipient, time FROM chat_messages WHERE sender = $1 and recipient = $2 UNION SELECT message,sender,recipient,time FROM chat_messages WHERE sender = $3 and recipient = $4 ORDER BY TIME ASC';
   const values = [username, friendname, friendname, username];
@@ -33,6 +78,18 @@ const addMessage = async (info, time) => {
   }
 };
 
+const declineRequest = async (username, friendname) => {
+
+  const query = 'update friend_status SET state = $1 WHERE username = $2 and friendname = $3';
+  const values = [4, friendname, username];
+  try {
+    console.log('right sdaasdsasdahere');
+    const result = await connection.query(query, values);
+  } catch (er) {
+    throw new Error('could not decline request properly');
+  }
+};
+
 const createUser = async (username, password) => {
   let userPassword = bcrypt.hashSync(password, saltRounds);
   const query = 'insert into users (username, password) VALUES ($1, $2)';
@@ -41,6 +98,54 @@ const createUser = async (username, password) => {
     const result = await connection.query(query, values);
   } catch (err) {
     throw new Error('connection problem');
+  }
+};
+let createLock = async (username, password, friendname, query) => {
+  let num = parseInt(query);
+  console.log(query);
+  console.log(typeof query);
+  let userPassword = bcrypt.hashSync(password, saltRounds);
+  const queryOne = 'update friend_status set username_password = $1 where friendname = $2 AND username = $3';
+  const queryTwo = 'update friend_status set friendname_password = $1 where username = $2 AND friendname = $3';
+  const values = [userPassword, username, friendname];
+  try {
+    if (num === 1) {
+      connection.query(queryOne, values);
+    } else {
+      connection.query(queryTwo, values);
+    }
+  } catch (err) {
+    throw new Error('couldnt set password for some reason');
+  }
+};
+let loginLock = async (username,friendname, query) => {
+  const queryOne = 'select friendname_password from friend_status where username = $1 AND friendname = $2';
+  const queryTwo = 'select username_password from friend_status where username = $2 AND friendname = $1';
+  let select = query === 1 ? queryOne : queryTwo;
+  let values = [username, friendname];
+  try {
+    let res = connection.query(select, values);
+    let rows = res.rows[0];
+    console.log(rows);
+    return rows;
+  } catch (e) {
+    throw new Error('something happened');
+  }
+}
+
+let removeLock = async (username, friendname,password, query) => {
+  let userPassword = bcrypt.hashSync(password, saltRounds);
+  const queryOne = 'update friend_status set username_password = $1 where friendname = $2';
+  const queryTwo = 'update friend_status set friendname_password = $1 where username = $2';
+  const values = [null, username, friendname];
+  try {
+    if (query == 1 || '1') {
+      connection.query(queryOne, values);
+    } else {
+      connection.query(queryTwo, values);
+    }
+  } catch (err) {
+    throw new Error('couldnt set password for some reason');
   }
 };
 const getUser = async (username) => {
@@ -63,6 +168,7 @@ const getPassword = async (username) => {
   let { password } = result.rows[0];
   return password;
 };
+
 const addUser = async (username, friendname) => {
   const query = 'insert into friend_status (username, friendname, state) VALUES ($1, $2, $3)';
   const values = [username, friendname, 1];
@@ -73,34 +179,14 @@ const addUser = async (username, friendname) => {
     throw new Error();
   }
 };
-const getRequest = async (username) => {
-  const query = 'SELECT username from friend_status WHERE friendname = $1 and state = $2';
-  const values = [username, 1];
-  const results = await connection.query(query, values);
-  const list = results.rows;
-  return list;
-};
+
 const confirmRequest = async (username, friendname) => {
   const query = 'UPDATE friend_status SET state = $1 WHERE username = $2 and friendname = $3';
   const values = [3, friendname, username];
   const results = await connection.query(query, values);
   return results;
 };
-const getFriendsList = async (username) => {
-  const query = `SELECT friendname from friend_status WHERE username = $1 and state = $2 
-  UNION SELECT username from friend_status where friendname = $3 and state = $4`;
-  const values = [username, 3, username, 3];
-  const results = await connection.query(query, values);
-  const friendsList = results.rows;
-  return friendsList;
-};
-const getPending = async (username) => {
-  const query = 'SELECT friendname from friend_status WHERE username = $1 and state = $2';
-  const values = [username, 1];
-  const results = await connection.query(query, values);
-  const list = results.rows;
-  return list;
-};
+
 const deletePending = async (username, friendname) => {
   const query = 'Delete FROM friend_status WHERE username = $1 and friendname = $2 and state = $3';
   const values = [username, friendname, 1];
@@ -111,11 +197,15 @@ module.exports = {
   getUser,
   getPassword,
   addUser,
-  getRequest,
   confirmRequest,
-  getFriendsList,
-  getPending,
   deletePending,
   addMessage,
   getMessages,
+  getAll,
+  declineRequest,
+  alterFavourites,
+  friendStatus,
+  removeLock,
+  createLock,
+  loginLock,
 };

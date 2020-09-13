@@ -10,6 +10,12 @@
         border-radius: 0.65rem;
 
     }
+    &__username{
+        font-size: 1.25rem;
+        margin-top: 0.5rem;
+        color: white;
+        font-family: montserrat, sans-serif;
+    }
     &__chat{
         flex-grow: 1;
         display: flex;

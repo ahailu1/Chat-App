@@ -1,39 +1,44 @@
+
+
 .tab{
-
-
-&:focus{
-    background-color: orange;
-    color: red;
-}
-}
-.container__avatar{
-    width: 6rem;
-    height: 6rem;
-}
-.container__addfriend{
-display: flex;
-flex-direction: column;
-}
-
-.input{
-    height: 2rem;
-    width: 80%;
-    margin: 0 1rem 0 1rem;
-    border-top: none;
-    border-right: none;
-    border-left: none;
-
-    border-bottom: solid rgb(0, 183, 255);
-    outline: none;
-}
-.button{
-    margin: 1rem 0 0 1rem;
-    width: 50%;
-}
-
-.iconaz{
+color: white;
 &:hover{
+    color: orange;
+}
+}
+
+.icon{
+    &__container{
+        border: solid red;
+        display: flex;
+        height: 100%;
+        justify-content: space-between;
+    &__star{
+        flex-grow: 1;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        border: solid orange;
+    }
+}
+&__button{
+    &__container{
+        display: none;
+    &.toggled{
+        display: flex;
+    }}
+
+}
+}
+
+.myicon{
+    color: white;
+    font-size: 1.75rem;
+    &.toggled{
+        display: none;
+        color: orange;
+    }
+    &:hover{
         color: red;
-        background-color: red;
     }
 }

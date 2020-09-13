@@ -1,4 +1,4 @@
-const { deletePending, getPending, addUser, getRequest, confirmRequest, getFriendsList, getMessages, addMessage } = require('../models/createUser');
+const { deletePending, addUser, confirmRequest, getMessages, addMessage } = require('../models/createUser');
 
 const addFriend = async (req, res) => {
 /* pending_first_second == 1
@@ -11,33 +11,10 @@ block_both == 6
   const { username, friendname } = req.params;
   const response = await addUser(username, friendname);
 };
-
-const getFriendRequests = async (req, res) => {
-  const { username } = req.params;
-  let items = await getRequest(username);
-  items = items.map(el => { return el.username; });
-  return items;
-};
 const confirmFriend = async (req, res) => {
   const { username, friendname } = req.params;
   const response = await confirmRequest(username, friendname);
   return 'success';
-};
-const getMyFriends = async (req, res) => {
-  const { username } = req.params;
-  let results = await getFriendsList(username);
-  let friendsList = results.map((el) => {
-    return { friendname: el.friendname, picture: `${el.friendname}--profilepicture.png` };
-  });
-  return friendsList;
-};
-const pendingRequests = async (req, res) => {
-  const { username } = req.params;
-  const results = await getPending(username);
-  let pending = results.map((el) => {
-    return el.friendname;
-  });
-  return pending;
 };
 const removePending = async (req, res) => {
   const { username, friendname } = req.params;
@@ -61,10 +38,7 @@ const insertMsg = async (data) => {
 };
 module.exports = {
   addFriend,
-  getMyFriends,
-  getFriendRequests,
   confirmFriend,
-  pendingRequests,
   removePending,
   insertMsg,
 };

@@ -14,7 +14,6 @@ class Loginform extends React.Component{
     }
     userInput = (e) => {
         let item = e.target.name;
-        console.log(item);
         }
         
         handleForm = async (e) => {

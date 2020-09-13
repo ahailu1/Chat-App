@@ -5,6 +5,7 @@ const router = express.Router();
 const path = require('path');
 const authenticate = require('../controller/createuser');
 const loginAuthenticate = require('../controller/loginuser');
+const {getAll} = require('../models/createUser');
 const getToken = require('../middleware/session');
 router.post('/createaccount', async (req, res, next) => {
   let isValidated = await authenticate(req, res);
@@ -47,5 +48,15 @@ router.get('/authenticate', getToken, async (req, res, next) => {
     }
   });
 });
+router.get('/allusers', async (req, res) => {
+  console.log('rgiht here asshole');
+  try {
+    console.log('rgiht here asshole');
+  let list = await getAll();
+  res.status(200).send(list);
+  } catch(err) {
+    res.status(422);
+  }  
+})
 
 module.exports = router;

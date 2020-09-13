@@ -1,7 +1,4 @@
-.icon{
-    font-size: 15rem;
-    color: orange;
-}
+
 .container{
     margin: 1.5rem 1rem 0 0;
     box-shadow: grey 0 0 3px 1px;
@@ -12,19 +9,40 @@
     align-items: center;
     &__icon{
         border-right: solid white 0.5px;
-        font-size: 5rem;
+        font-size: 4rem;
         color: #001529;
+        animation: moveicon infinite 3s ease-in-out;
+    @keyframes moveicon {
+        
+        0%{ color: red;
+            transform: rotate(90deg)
+        }
+        25%{
+            transform: rotate(180deg)
+
+        }
+        50%{
+            transform: rotate(270deg)
+
+        }
+        100%{
+            transform: rotate(540deg)
+        }
+    }
     }
     &__text{
         text-align: center;
-        color:white;
 
     }
 }
 .heading{
+    font-family: montserrat, sans-serif;
     color:#001529;
     font-size: 1.25rem;
 }
 .paragraph{
+    color:#001529;
+    padding: 0.5rem;
+
     font-size: 0.75rem;
 }

@@ -1,26 +1,49 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {Router, BrowserRouter, Switch, Route, history, withRouter, Redirect} from 'react-router-dom';
+import {Router, BrowserRouter, Switch, Route, Redirect, Link} from 'react-router-dom';
+import {Menu} from 'antd';
 import Cookies from 'universal-cookie';
 import Homepage from '../components/firstpage/homepage';
-import Header from '../components/header/header';
 import Chat from '../components/chatpage/chat';
-import {UserProvider} from '../components/context';
 import io from 'socket.io-client';
 import axios from 'axios';
+import Navbar from '../components/header/header';
 export default class App extends React.Component {  
     constructor(props){
         super(props);
         this.state = {
             userData: null,
-            loggedIn: false
+            loggedIn: false,
+            users: []
         }
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
     }
 
     componentDidMount = () => {
+        this.getUsers();
         this.handleAuthentication();
+    }
+
+    getUsers = () => {
+        axios.get('http://localhost:5000/api/allusers').then(res => {
+        let source = {'value': 'anything'};
+        let arr = res.data.map((el, index) => {
+            //copy object value
+            let newKey = el;
+            newKey.value = newKey.username;
+            //delete object
+            delete newKey.username;
+            return newKey;
+        });
+        
+       let data = res.data;
+      this.setState({users: data});
+
+
+        }).catch((err) => {
+
+        });
+
     }
 handleLogin = (data) => {
     console.log(data);
@@ -50,7 +73,6 @@ handleLogout = () => {
 handleAuthentication = () => {
     const cookie = new Cookies();
     const userData = cookie.get('userData');
-    console.log(userData);
     if(userData !== undefined) {
         let { token, username } = userData;
     axios.get('http://localhost:5000/api/authenticate', {
@@ -59,13 +81,7 @@ handleAuthentication = () => {
         }
     })
     .then((res) => {
-        console.log(res.status);
-        console.log(this.state.userData);
-        console.log(userData);
       if(res.status == 200) {
-        console.log(userData);
-        console.log(userData + 'hello');
-        console.log(username);
         this.setState( (prev) => {
             return {
                 loggedIn: true,
@@ -97,20 +113,30 @@ handleAuthentication = () => {
 render(){
 
 const socket = io('http://localhost:5000');
+let users = this.state.users;
+let {userData} = this.state;
+let props = this.state;
 return(
     <div>
 
     <BrowserRouter>
-    <Header userData = {this.state.userData} handleLogout = {this.handleLogout} />
     <Switch>
     <Route exact path = '/' 
-    render = { (props) => ( <Homepage {...props} handleLogin = {this.handleLogin}/> ) }
+    render = { (props) => ( <Homepage {...props} handleLogin = {this.handleLogin} render = {(props) => (
+         <Navbar initUser = {false} userData = {this.state.userData} handleLogout = {this.handleLogout} users = {users} render = {(props) => 
+             ( <> 
+             <Menu.Item key="1"><Link  to = '/'>Home</Link></Menu.Item>
+        <Menu.Item key="2"><Link  to = '/chat'>Chat</Link></Menu.Item>
+        <Menu.Item key="3">Search</Menu.Item> 
+        </>) 
+    } />
+    )}/> )}
     >
         {this.state.loggedIn == true && <Redirect to ={ `/chat/${this.state.userData.username}`} /> } 
     </Route>
     <Route path = '/chat/:username/:friendslist?/:friendname?' 
-    render = {(props) => (
-    <Chat {...props}/>
+    render = {(props) => ( 
+    <Chat props = {props} userData = {userData} handleLogout = {this.handleLogout} users = {users}/>
     )}>
     {this.state.loggedIn == false && <Redirect to ={ `/` } /> } 
        

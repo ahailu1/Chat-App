@@ -1,10 +1,10 @@
-import React from 'react';
-import {Row, Col, Form, Input, Button, Layout, Avatar, Upload} from 'antd';
+import React, {Component,PureComponent} from 'react';
+import {Row, Col, Form, Input, Button, Layout, Avatar, Upload, icon} from 'antd';
 import styles from './profilepicture.module.scss';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-class Profilepicture extends React.Component{
+class Profilepicture extends PureComponent{
 constructor(props){
 super(props);
 this.loadProfile = this.loadProfile.bind(this);
@@ -12,17 +12,10 @@ this.loadProfile = this.loadProfile.bind(this);
 this.state = {
     profilepic: null,
     image: null,
-    fileList: [
-      {
-        uid: '',
-        name: '',
-        status: '',
-        url: '',
-      },
-    ],
-  };
+            };
 }
-componentDidMount = () => {
+
+componentDidMount(){
   this.loadProfile();
 }
 
@@ -37,32 +30,44 @@ loadProfile = async () => {
   const data = getPic.data;
 console.log(getPic.status);
 if(getPic.status == 200) {
-  this.setState({profilepic: data});
-  } else {
-    this.setState({profilepic: null});
+
+
+} else {
   }  
+}
+
+handleButton = (e) => {
+e.preventDefault();
+console.log('prevented');
 }
 
 handleChange = async (info) => {
     const formData = new FormData();
     formData.append('avatar', info);
     let {username} = this.props.userData;
-        const fetchRes = await axios.post(`http://localhost:5000/chat/${username}`,formData);
+      axios.post(`http://localhost:5000/chat/${username}`,formData).then(() => {
+        this.loadProfile();
+      })
+
+      //after post              
+      /*
     const data =  fetchRes.data;
     const newBlob = new Blob([data],{type: 'image/png'});
     const image = `data:image/png;base64,${data}`;
     this.setState({profilepic:image});
-}
+      */
+  }
 
 render(){
     return(
         <div className = {styles.container__profile}> 
-        <Avatar size = {150} className = {styles.avatar} src = {`${this.state.profilepic == null ? '/images/default--profilepicture.png' : this.state.profilepic}`} />
-    <Upload name = 'avatar' action = {this.handleChange}> 
+        <Avatar size = {120} className = {styles.avatar} src = {`${this.state.profilepic == null ? '/images/default--profilepicture.png' : this.state.profilepic}`} />
+    <Upload name = 'avatar' action = {this.handleChange} onSubmit = {this.handleButton}> 
     <Button size = "large" className = {styles.upload__button}>
     <UploadOutlined />Upload
     </Button>
     </Upload>
+    <div>hello world</div>
      </div>
     )
 

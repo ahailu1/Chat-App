@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { MessageFilled , DeleteFilled,LockFilled } from '@ant-design/icons';
-import {Button} from 'antd';
+import {Button, Avatar} from 'antd';
 import styles from './chatbox.module.scss'
 import io from 'socket.io-client';
 import UserContext from '../context';
@@ -15,7 +15,8 @@ class Chatbox extends React.Component {
             messages: [],
             initMessage: false,
             toggled: false,
-            msgHistory : []
+            msgHistory : [],
+            friends : []
         }
         this.getMessage = this.getMessage.bind(this);
 
@@ -25,6 +26,33 @@ class Chatbox extends React.Component {
         this.getHistory();
          this.getMessage();
     }
+
+    getFriends = async () => {
+        console.log('got');
+            const {username} = this.props.userData;
+            console.log(username);
+            const request = await axios.get(`http://localhost:5000/chat/friendslist/getfriends/${username}`);
+            const data = request.data;
+            console.log(data);
+            }
+
+
+    createProfile =  (username) => {
+        //const request = await axios.get(`http://localhost:5000/chat/friendslist/getfriends/${username}`);
+        //const data = await request.data;
+        
+        return (
+            <>
+            <div className = {styles.container__avatar}>
+                <Avatar shape = 'circle' size = {150} src = {`/images/${username}--profilepicture.png`} />
+            </div>
+            <div className = {styles.container__username}>
+            </div>
+            </>
+            )
+    }
+
+
 
 getMessage = () => {
 const {username} = this.props.userData;
@@ -140,7 +168,7 @@ return(
     </div>
     </div>
     <div className = {styles.container__profile}>
-    {this.props.createProfile(this.props.friendName)}
+    { this.createProfile(this.props.friendName)}
     </div>
     </div>
 )

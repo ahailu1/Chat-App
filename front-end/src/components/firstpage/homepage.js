@@ -5,7 +5,7 @@ import Loginform from './loginForm';
 import Createaccount from './createaccount';
 import axios from 'axios';
 import Description from './description';
-import { UploadOutlined, WechatOutlined, WechatFilled, TeamOutlined } from '@ant-design/icons';
+import { UploadOutlined, WechatOutlined, WechatFilled, TeamOutlined, LockOutlined, StarOutlined } from '@ant-design/icons';
 
 class Homepage extends React.Component{
 constructor(props){
@@ -22,21 +22,22 @@ constructor(props){
 render(){
     const firstDescription = {
         paragraph: 'this is a description of the title',
-        heading: 'hasadsello',
+        heading: 'Chat with multiple people',
         icon: <WechatFilled/> 
     }
     const secondDescription = {
         paragraph: 'this is a description of the title',
-        heading: 'hasadsello',
-        icon: <TeamOutlined/> 
+        heading: 'Add A lock to your chat',
+        icon: <LockOutlined/> 
     }
     const thirdDescription = {
-        paragraph: 'this is a description of the title',
+        paragraph: 'Saved Chat History',
         heading: 'hasadsello',
         icon: <TeamOutlined/> 
     }
     return (
   <div>
+      {this.props.render()}
       <Row className = {styles.container__row}>
           
 <Col flex={5} className = {styles.container__column}>

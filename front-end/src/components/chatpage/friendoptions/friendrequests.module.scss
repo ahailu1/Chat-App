@@ -1,166 +1,130 @@
+@mixin toggleditems {
+    align-items: flex-start;
+        flex-direction: column;
+        display: flex;
+}
 
+.input__password{
+    border: none;
+    outline: none;
+    color: black;
+    margin-bottom: 0.5rem;
+    display: flex;
+}
 
 .container{
     display: flex;
-justify-content: space-between;
-padding: 0.3rem 1rem 0.3rem 0;
-height: 10rem;
-margin: 1rem 0 1rem 0;
-position: relative;
+    justify-content: space-between;
+    border: solid red 0.5px;
+    padding: 0.5rem;
+    margin: 0.5rem 0 0.5rem 0;
 &:hover{
-    background-color: #0051bb;
-}
-&__button{
-    flex-direction: column;
-    position: absolute;
-    display: flex;
-    top: -15%;
-    left: -2rem;
-    opacity: 0;
-    &.toggled{
-        opacity: 1;
-        transition: all ease-in-out 0.5s;
-    }
- &__delete{
-     position: relative;
- &:hover{
-     color: red;
- }
-&__display{
-    margin-top: 0.25rem;
-    display: flex;
-}
-}   
-    &__alternative{
-        left: -2rem;
-        top: -15%;
-        display: flex;
-        flex-direction: column;
-        opacity: 0;
-        position: absolute;
-        &__display{
-            margin-top: 0.25rem;
-            display: flex;
-        }
-    &.toggled{
-        opacity: 1;
-        transition: all ease-in-out 0.5s;
-
-    }
-}
+    background-color:rgb(0, 132, 255);
 }
 &__username{
-    z-index: 2;
-    position: relative;
     flex-direction: column;
-    width: 35%;
-    font-size: 1.15rem;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 1rem;
     color: white;
-    height: 100%;
+    width: 25%;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    }
 
-&.toggled::after{
-    content: '';
-    position: absolute;
-    top: 15%;
-    right: 30%;
-    display: flex;
-    background-color: #00d300;
-    z-index: 5;
-    border-radius: 50%;
-    width: 1.5rem;
-    height: 1.5rem;
-}
-}
 &__icon{
     align-items: center;
-    width: 55%;
-    justify-content: space-between;
-    color:white;
-    font-size: 1.75rem;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    display: flex;
+&.toggled{
+    display: none;
+    }
+
+    &__favourite{
+    display: flex;
+    }
+    &__trash{
     display: flex;
 
-&.toggled{
-    margin-top: 2rem;
-
+}
+    &__lock{
     display: flex;
     flex-direction: column;
+    }
 }
-&__alternative{
-    position: relative;
-&:hover{
+}
+
+.myicon{
+    color: white;
+    font-size: 1.75rem;
+&.toggled{
+    display: none;
+}
+    &:hover{
     color: red;
 }}
-&__istoggled{
-    opacity: 1;
-    height: 100%;
-    width: 100%;
-
-&.toggled{
-    transition: all ease-in-out 0.25s;
-opacity: 0;
-}
-}
-
-}
-
-}
-.icon{
-    &__delete{
-        opacity: 1;
-        position: relative;
-        &:hover{
-            color: red;
-        }
-    
+.container__button{
+    display: flex;
+    &__favourite{
+        display: none;
     &.toggled{
-        opacity: 0;
-    }
-    }
-    &:hover{
-        cursor: pointer;
-        color: red;
-    
-    }
-&.toggled{
+        @include toggleditems;
+
+    }}
+    &__trash{
+        display: none;
+    &.toggled{
+        @include toggleditems;
+    }}
+    &__lock{
+        display: none;
+    &.toggled{
+        @include toggleditems;
+
+    }}
+}
+
+.mychaticon{
+    padding: 0.5rem;
+    color: white;
+    font-size: 1.75rem;
+&:hover{
     color: red;
 }
-    &__alternative{
-        position: relative;
-        opacity: 1;
-
-    &.toggled{
-        opacity: 0;
-        transition: all ease-in-out 0.25s;
-    }
+&.istoggled{
+    color: red;
+}
+&.toggled{
 
 }
 }
 .button{
-    margin-right: 0.5rem;
-    &__alternative{
-        margin-right: 0.5rem;
-    
-    &:hover{
-        background-color: red;
-        color: white;
-        outline: white;
-        border: none;
-    }
-}
+margin: 0 0.5rem 0 0;
 &:hover{
-    color: white;
-    border: white;
+    border: solid white 0.5px;
     background-color: red;
-}
-}
+    color: white;
+}}
 
 .confirm{
     font-size: 1rem;
+    color: white;
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+&.isset{
+    display: none;
 }
 
-.randomname{
-    border: solid red;
+}
+.isset{
+    display: none;
+}
+
+.highlighted{
+    color: red;
+}
+.toggled__off{
+    display: none;
+    border: solid green;
 }
