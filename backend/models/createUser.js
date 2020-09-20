@@ -3,6 +3,40 @@ const Connection = require('../database/connection');
 const connection = Connection();
 const saltRounds = 5;
 
+
+
+const createGroup = async (object) => {
+  let { groupName, groupId, groupDescription, groupCreator } = object;
+  let query = 'insert into my_groups(group_name, group_id, group_creator, description,creation_date) values ($1, $2, $3, $4, LOCALTIMESTAMP)';
+  let values = [groupName, groupId, groupCreator, groupDescription];
+  try {
+    connection.query(query, values);
+  } catch (err) {
+    console.log(err);
+    throw new Error('couldnt add group')
+  }
+};
+const getGroup = async (username) => {
+  let query = 'select * from my_groups where group_creator = $1';
+  let values = [username];
+  try {
+    let myResults = await connection.query(query, values);
+    return myResults.rows;
+  } catch (err) {
+    console.log(err);
+    throw new Error('couldnt get groups')
+  }
+};
+const getAllGroups = async () => {
+  let query = 'select * from my_groups';
+  try {
+    let results = await connection.query(query);
+    return results.rows;
+  } catch (err) {
+    throw new Error({ error: 'couldnt fetch all groups' });
+  }
+};
+
 const friendStatus = async (username) => {
   let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
   console.log(username + 'is a retard');
@@ -19,7 +53,7 @@ const friendStatus = async (username) => {
 
 
 const alterFavourites = async (value, username, friendname, reverse) => {
-// if my username is under the 'friendname' category and my friendname is under the username category, then update username is favourite where username = friendname and friendname == username
+  // if my username is under the 'friendname' category and my friendname is under the username category, then update username is favourite where username = friendname and friendname == username
   let queryOne = 'UPDATE friend_status SET username_isfavourite = $1 WHERE friendname = $2 AND username = $3';
   let queryTwo = 'UPDATE friend_status SET friendname_isfavourite = $1 WHERE username = $2 AND friendname = $3';
   let query;
@@ -65,7 +99,7 @@ const getMessages = async (info) => {
 };
 
 const addMessage = async (info, time) => {
-  //get info
+  //  get info
   let { sender, recipient, message } = info;
 
   const { hour, minute, day, year, month, second } = time;
@@ -102,8 +136,6 @@ const createUser = async (username, password) => {
 };
 let createLock = async (username, password, friendname, query) => {
   let num = parseInt(query);
-  console.log(query);
-  console.log(typeof query);
   let userPassword = bcrypt.hashSync(password, saltRounds);
   const queryOne = 'update friend_status set username_password = $1 where friendname = $2 AND username = $3';
   const queryTwo = 'update friend_status set friendname_password = $1 where username = $2 AND friendname = $3';
@@ -118,16 +150,15 @@ let createLock = async (username, password, friendname, query) => {
     throw new Error('couldnt set password for some reason');
   }
 };
-let loginLock = async (username,friendname, query) => {
-  const queryOne = 'select friendname_password from friend_status where username = $1 AND friendname = $2';
-  const queryTwo = 'select username_password from friend_status where username = $2 AND friendname = $1';
+let loginLock = async (username, friendname, query) => {
+  const queryOne = 'select username_password from friend_status where friendname = $1 and username = $2';
+  const queryTwo = 'select friendname_password from friend_status where username = $1 AND friendname = $2';
   let select = query === 1 ? queryOne : queryTwo;
   let values = [username, friendname];
   try {
-    let res = connection.query(select, values);
-    let rows = res.rows[0];
-    console.log(rows);
-    return rows;
+    let res = await connection.query(select, values);
+    let results = res.rows;
+    return results;
   } catch (e) {
     throw new Error('something happened');
   }
@@ -208,4 +239,7 @@ module.exports = {
   removeLock,
   createLock,
   loginLock,
+  createGroup,
+  getGroup,
+  getAllGroups,
 };

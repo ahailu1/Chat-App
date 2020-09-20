@@ -15,7 +15,6 @@
 .container{
     display: flex;
     justify-content: space-between;
-    border: solid red 0.5px;
     padding: 0.5rem;
     margin: 0.5rem 0 0.5rem 0;
 &:hover{
@@ -46,12 +45,20 @@
     }
     &__trash{
     display: flex;
-
 }
     &__lock{
     display: flex;
     flex-direction: column;
-    }
+    &.toggled{
+        color: red;
+        transition: all ease-in-out 0.2s;
+        justify-content: space-around;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+    }    
+}
+    
 }
 }
 
@@ -85,20 +92,28 @@
     }}
 }
 
-.mychaticon{
-    padding: 0.5rem;
+.chaticon{
     color: white;
     font-size: 1.75rem;
-&:hover{
+&__container{
+&.toggled{
     color: red;
-}
-&.istoggled{
+    transition: all ease-in-out 0.2s;
+    justify-content: space-around;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}}
+    &:hover{
+    transition: all ease-in 0.1s;
+    font-size: 2rem;
     color: red;
 }
 &.toggled{
+    color: red;
+}
+}
 
-}
-}
 .button{
 margin: 0 0.5rem 0 0;
 &:hover{
@@ -126,5 +141,4 @@ margin: 0 0.5rem 0 0;
 }
 .toggled__off{
     display: none;
-    border: solid green;
 }

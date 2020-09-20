@@ -11,17 +11,14 @@
 
 
 .sidebar{
-    width: 44rem;
+    width: 50rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
     position: relative;
     flex-grow: 1;
-    padding: 0.5rem;
-
 }
 .avatar{
-    border: solid red;
 }
 
 .container{

@@ -1,10 +1,11 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button, Tabs, Avatar, Badge} from 'antd';
-import { AppleOutlined, LockFilled, MessageFilled , DeleteFilled,StarFilled, CheckCircleOutlined } from '@ant-design/icons';
+import {Row, Col, Form, Input, Button, Tabs, Avatar, Spin, AutoComplete, Select} from 'antd';
+import { AppleOutlined, LockFilled, MessageFilled , DeleteFilled,StarFilled, CheckCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import styles from './friendslist.module.scss';
 import axios from 'axios';
 import Friendrequests from './friendoptions/friendrequests';
 import DisplayPending from './friendoptions/displayPending';
+import Creategroup from './friendoptions/creategroup';
 class Friendslist extends React.Component{
 constructor(props){
     super(props);
@@ -17,56 +18,75 @@ constructor(props){
         locked: [],
         pass: '',
         error: '',
+        myGroups: [],
+        allGroups : [],
+        loading: null,
+        toggleGroup: false,
     }
-    this.handleButton = this.handleButton.bind(this);
     this.setLock = this.setLock.bind(this);
 
     this.deletePending = this.deletePending.bind(this); 
 }
 componentDidMount = () => {
-    this.checkProps();
     this.getFavourites();
     this.getLocked();
+    this.getmyGroup();
+    this.fetchAllGroups();
 }
 
-handleChange = (e) => {
-  const value = e.currentTarget.id;
+fetchAllGroups = () => {
+    axios.get('http://localhost:5000/chat/groups/allgroups').then(el => {
+    console.log(el);
+    console.log(el.data);
+    this.setState({allGroups: el.data});
+    }).catch(el => {
 
-  this.setState((prev) => {
-    let target = !prev.toggled.value;
-    return {
-        toggled: target
-    }  
-});
+    })
 }
 
-checkProps = () => {
-let {favourites,friends} = this.props;
+getmyGroup = () => {
+    let {username} = this.props.userData;
+    console.log(username);
+    axios.get(`http://localhost:5000/chat/groups/mygroups/${username}`).then(res => {
+        let groupInfo = res.data.groupData;
+    this.setState({myGroups: groupInfo, loading: false});
+    }).catch(res => {
+        this.setState({loading: true});
+
+    })
 }
-    
-handleIcon = (e) => {
-    let val = e.currentTarget.id;
-    console.log(typeof val);
-    let myVal = this.state[val];
-    console.log(!myVal);
-    this.setState((prev) => {
-        return{
-            [val]: !myVal
-        }
-    });
-}
+listGroups = () => {
+    const { Option } = Select;
+      
+      return (
+      
+      <AutoComplete icon = {<UploadOutlined/>} placeholder="Search users" className = {styles.container__autocomplete} filterOption={(inputValue, option) =>
+        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+      }>
+      {this.state.allGroups.length > 0 && this.state.allGroups.map(el => {
+          return <Option key = {el.group_id} value = {el.group_id} className = {styles.container__options}>
+                <div className = {styles.container__groupinfo}> 
+                    <div>{el.group_name} </div>
+                    <div>{el.group_id} </div> 
+                    <div> </div>  
+                </div> 
+             </Option> 
+      })}
+        </AutoComplete>
+      )
+  }
+
     getFavourites = () => {
         let {favourites} = this.props;
         this.setState({favourites: favourites});
     }
-    
 
     declineRequest = async (friendname) => {
     const {username} = this.props.userData;
     console.log(friendname);
     const request = await axios.get(`http://localhost:5000/chat/friendslist/declinerequest/${username}/${friendname}`);
     this.props.friendStatus();
-}   
+    }   
     deletePending = async (friendname) => {
         const {username} = this.props.userData;
         const request = await axios.get(`http://localhost:5000/chat/friendslist/deletepending/${username}/${friendname}`).then(() => {
@@ -84,18 +104,7 @@ handleIcon = (e) => {
         });
        
     }
-handleButton = (friendname) => {
-    let {username} = this.props.userData;
-    this.setState((prev) => {
-        let locked = prev.locked;
-        console.log(locked);
-        locked = locked.concat(friendname);
-        return {
-            error: '',
-            locked: locked
-        }
-    })
-}
+
 setLock = (friendname) => {
     console.log(this.state.locked);
     //take the friendname and set the lock
@@ -109,14 +118,33 @@ setLock = (friendname) => {
        console.log('right in the callback');
     });   
 }
+initGroup = () => {
+
+this.setState({toggleGroup: !this.state.toggleGroup});
+}
+groupInput = () => {
+    return(
+        <>
+        <div className = {`${styles.group__container__icon}`}>
+        <PlusCircleOutlined className = {styles.group__icon} onClick = {this.initGroup} />
+                    </div>
+                    <div className = {`${styles.group__container__form} ${this.state.toggleGroup && styles.toggled} `}>
+                    <form>
+                <input type = 'text' name = 'group_name' className = {styles.form__input} placeholder = 'Group Name' />
+                <input type = 'text' name = 'group_id' className = {styles.form__input} placeholder = 'Group ID' />
+                <textarea type = 'text' name = 'group_description' className = {`${styles.form__input} ${styles.textarea}`} placeholder = 'Group Description'></textarea>
+                <Button type = 'primary' size = 'medium' htmlType = 'submit' className = {styles.group__button}>Create Group </Button>
+                </form>
+                </div>
+                </>
+    )
+}
+
 getLocked = () => {
     let {username} = this.props.userData;
     let data = this.props.fullList;
     let arr = [];
-    console.log(data);
     data.forEach((el) => {
-        console.log(el.state);
-        console.log(typeof el.state);
         if(parseInt(el.state) === 3){
                 if(el.username === username && (el.friendname_password !== null || el.friendname_password)){
                     arr.push(el.friendname);
@@ -152,20 +180,25 @@ render(){
         locked: false,
         favourite: true,
         userData: this.props.userData,
-        avatar : false,
+        avatar : true,
+        myLock : this.state.locked,
         thisicon: (func, param) => { return <CheckCircleOutlined onClick = {func} className = {`${styles.myicon} ${param && styles.toggled}`}/> }
     }
     let pending = {
-        avatar : false,
+        avatar : true,
         locked: false,
         favourite: false,
         userData: this.props.userData,
+        myLock : this.state.locked,
     }
     let favourite = {
-        avatar : false,
-        locked: false,
+        myUsers : this.props.myUsers,
+        avatar : true,  
+        locked: true,
         favourite: false,
+        setLock :this.setLock,
         userData: this.props.userData,
+        myLock : this.state.locked,
     }
     return(
         <Tabs defaultActiveKey = '2'>
@@ -187,7 +220,7 @@ render(){
             <div className = {styles.container__requests}>
                     { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
                     return <Friendrequests {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
-                    return  <Avatar shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                    return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
                         }} />
                         })
                     }
@@ -198,7 +231,7 @@ render(){
                    <AppleOutlined/> 
                    Requests
                 </span>
-                            }
+                                    }
                 >
                     
                             {this.props.requests.map((el, index) => {
@@ -213,7 +246,9 @@ render(){
                             }
                 >
                     {this.props.pending.map( (el, index) => {
-                        return <Friendrequests {...pending} displayIcon = {()=> false} friendname = {el} setDelete = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}}/>;
+                        return <Friendrequests {...pending} displayIcon = {()=> false} friendname = {el} setDelete = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
+                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                                }} />
                     })}
             </TabPane>
             <TabPane key = "4" tab = {
@@ -224,10 +259,33 @@ render(){
                             }
                 >
                     {this.props.favourites.map(el => {
-                        return <Friendrequests {...favourite} friendname = {el} createChat = {() => { this.props.createChat(el)}} friendName = {el} setDelete = {() => {this.props.toggleFavourite(el, false) }} avatar = {() => {
+                        return <Friendrequests {...favourite} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} friendname = {el} createChat = {() => { this.props.createChat(el)}} friendName = {el} setDelete = {() => {this.props.toggleFavourite(el, false) }} avatar = {() => {
                             return  <Avatar shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
                                 }} />
                     })}
+            </TabPane>
+            <TabPane key = "5" tab = {
+                <span className = {styles.tab}>
+                   <AppleOutlined/> 
+                   MyGroups
+                </span>
+                            }
+                >
+                    <>
+<Tabs className = {styles.tab__container}>
+        <TabPane tab= {<span className = {styles.tab__title}>Join Group </span>} key="1" className = {styles.tab__key}>
+                            {this.listGroups()}
+        </TabPane>
+        <TabPane tab= {<span className = {styles.tab__title}>Create Group </span>} className = {styles.tab__key}>
+        {this.groupInput()}
+        {this.state.loading ? <Spin/> : 
+                   this.state.myGroups.map((el, index) => {
+                       return <Creategroup key = {index} userData =  {this.props.userData} description = {el.description} group_name = {el.group_name} group_id = {el.group_id}/>
+                   })
+                 }
+        </TabPane>
+      </Tabs>
+      </>
             </TabPane>
         </Tabs>
     )

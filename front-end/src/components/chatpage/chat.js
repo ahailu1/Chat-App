@@ -311,8 +311,8 @@ render(){
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
         <Profilepicture userData = {userData}/>
-{ this.state.loading != true ? <Friendslist {...friendsList}/> : <this.loadingPage/>
-}        </Sider>
+{ this.state.loading != true ? <Friendslist {...friendsList}/> : <this.loadingPage/>}
+        </Sider>
         <Layout>
             <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}
              />

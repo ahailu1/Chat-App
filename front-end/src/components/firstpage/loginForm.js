@@ -1,5 +1,5 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button} from 'antd';
+import { Button, Spin} from 'antd';
 import styles from './Loginform.module.scss';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
@@ -9,15 +9,17 @@ class Loginform extends React.Component{
         super(props);
         this.state = {
             name: null,
-    
+            loading: null,
+            error: ''
         }
     }
     userInput = (e) => {
         let item = e.target.name;
         }
         
-        handleForm = async (e) => {
+        handleForm = (e) => {
           e.preventDefault();
+          this.setState({loading: true, error: ''});
         const data = {
             method: 'POST',
             url: 'http://localhost:5000/api/loginuser',
@@ -27,34 +29,47 @@ class Loginform extends React.Component{
             password__login: e.target.password.value,
             },
         }
-        const request = await axios(data);
 
-        if(request.status == 200){
-            let data = request.data;
-            console.log(data);   
+
+        axios(data).then(res => {
+            this.setState({loading: false});
+            let {data} = res;
+            console.log(data);
             this.props.handleLogin(data);
-            this.props.history.push(`/chat/${request.data.username}`);
+            this.props.history.push(`/chat/${data.username}`);
 
-        } else {
+        }).catch((e) => {
+            let {error} = e.response.data.error;
+            console.log(e.response.data.error.error);
+            this.setState({loading: false, error: error});
+
+        })
         }
-        }
+loginForm = () => {
+    return (
+        <>
+        <div className = {styles.container__header}>LOGIN</div>
+        <form method = 'POST' onSubmit = {this.handleForm}>
+            <div className = {styles.container__username}>
+            <input type = 'text' name = 'username' placeholder = 'username' className = {styles.input__username} onChange = {this.handleInput} value = {this.state.name}/>
+            
+            </div>
+            <div className = {styles.container__password}>
+            <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+            <p>{this.state.error !== '' && this.state.error }</p>
+            </div>
+            <div className = {styles.container__button}>
+            <Button type = "primary" htmlType="submit">Login</Button>
+            </div>
+        </form>
+        </>
+    )
+}
 
     render(){
         return(
         <div className = {styles.container}>
-        <div className = {styles.container__header}>LOGIN</div>
-    <form method = 'POST' onSubmit = {this.handleForm}>
-        <div className = {styles.container__username}>
-        <input type = 'text' name = 'username' placeholder = 'username' className = {styles.input__username} onChange = {this.handleInput} value = {this.state.name}/>
-        
-        </div>
-        <div className = {styles.container__password}>
-        <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
-        </div>
-        <div className = {styles.container__password}>
-        <Button type = "primary" htmlType="submit">Login</Button>
-        </div>
-    </form>
+       {this.state.loading ? <Spin size = 'large' tip = 'logging in'/> : this.loginForm()}
 </div>
     )
 }

@@ -8,14 +8,14 @@ const loginAuthenticate = async (userLogin, userPassword) => {
     const checkPassword = await getPassword(userLogin);
     const match = await bcrypt.compare(userPassword, checkPassword);
     if (match) {
-      isAuthenticated = true;
+      isAuthenticated = {validated: true};
       console.log('passwords match');
     } else {
-      isAuthenticated = false;
+      isAuthenticated = {validated: false, error: 'passwords dont match'};
       console.log('passwords dont match');
     }
   } else {
-    console.log('user not found');
+    isAuthenticated = { validated: false, error: 'username not found' }
   }
   return isAuthenticated;
 };

@@ -22,11 +22,16 @@ router.post('/setlock', async (req, res) => {
   }
 });
 router.post('/unlock', async (req, res) => {
-  console.log('right here baby');
   try {
-    await userUnlock(req, res);
+    let response = await userUnlock(req, res);
+    console.log(response);
+    if (response) {
+      res.status(200).send({ message: 'password match' });
+    } else {
+      res.status(422).send({ message: 'error: enter password again' });
+    }
   } catch (err) {
-    res.status(422).send({error:'couldnt log in'})
+    res.status(422).send({ error: 'couldnt log in' });
   }
 });
 

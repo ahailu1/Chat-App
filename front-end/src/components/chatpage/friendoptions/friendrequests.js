@@ -10,8 +10,8 @@ const Friendrequest = (props) => {
 const [star, favouriteOn] = useState(false);
 const [trash, trashOn] = useState(false);
 const [error, passwordOn] = useState('');
-const [turnOff, toggleAny] = useState(false);
-    const [chat, toggleChat] = useState(false);
+const [turnOff, toggleAny] = useState([]);
+    const [chat, toggleChatIcon] = useState(false);
 const [isSet, setPass] = useState(false);
 const toggleTrash = (e) => {
     trashOn(!trash);
@@ -23,20 +23,28 @@ const toggleFavourite = (e) => {
     favouriteOn(!star);
 };
 const toggleLock = (e) => { 
-    toggleAny(!turnOff);
-    let val = e.currentTarget.id;
-    toggleChat(false);
-    trashOn(false);
-    lockOn(!lock);
+
+    if(turnOff.length === 0){
+        toggleAny(['favourites', 'chat', 'trash']);
+        lockOn(true);
+        } else {
+            lockOn(false);
+
+            toggleAny([]);
+        }
 };
 
 const myChat = () => {
-    toggleChat(!chat);
     if(props.myLock.indexOf(props.friendname) !== -1){
     msgOn(!msgLock);
+    if(turnOff.length === 0){
+    toggleAny(['favourites', 'lock', 'trash']);
     } else {
-    //wait for validation then open it.
+        toggleAny([]);
+    }
+    } else {
     props.createChat(props.friendname);
+    toggleChatIcon(true);
     }
 }
 const toggleMessage = () => {
@@ -62,16 +70,19 @@ const loginChat = (e, friendname) => {
         },
     }
     axios(config).then(res => {
-        console.log(res);
+        props.createChat(props.friendname);
+        msgOn(!msgLock);
+        toggleChatIcon(true);
+        toggleAny([]);
+    }).catch(err => {
+        console.log(err.message);
     })
 
 }
 const handleLock = (e,callback, friendname) => {
     e.preventDefault();
-    console.log(props.myUsers);
     let mypass = e.target.setpass.value;
     let confirm = e.target.confirmpass.value;
-    console.log(confirm);
     let query;
     if(props.myUsers.indexOf(friendname) !== -1){
             query = 1;
@@ -96,7 +107,7 @@ const handleLock = (e,callback, friendname) => {
         })
         .then(newData => {
             setPass(!isSet);
-            toggleAny(!turnOff);
+            toggleAny([]);
             lockOn(false);
         })
         .catch(el => {
@@ -117,7 +128,9 @@ const handleLock = (e,callback, friendname) => {
 
             <div className = {styles.container__icon}>
             
-            <div className = {`${styles.mychaticon} ${chat && styles.toggled} `} ><MessageFilled onClick = {myChat}/>
+            <div className = {`${styles.chaticon__container} ${msgLock && styles.toggled} ${turnOff.indexOf('chat') != -1 && styles.toggled__off}`}>
+            <MessageFilled onClick = {myChat} className = {`${styles.chaticon} ${chat && styles.toggled}`}/>
+            
             {msgLock &&
             <form method = 'post' onSubmit = { (e) => {loginChat(e, props.friendname)} }>                        
                          <div className = {styles.confirm}>
@@ -134,7 +147,7 @@ const handleLock = (e,callback, friendname) => {
 
         {props.favourite &&
 
-    <div className = {`${styles.container__icon__alternative} ${turnOff && styles.toggled__off} `}>
+    <div className = {`${styles.container__icon__alternative} ${chat && styles.toggled} ${turnOff.indexOf('favourites') != -1 && styles.toggled__off} `}>
         {props.thisicon(toggleFavourite, star)}
 
                <div className = {`${styles.container__button__favourite} ${star && styles.toggled}`}>
@@ -147,9 +160,9 @@ const handleLock = (e,callback, friendname) => {
      </div>
      }
                     {props.locked && 
-                         <div className = {`${styles.container__icon__lock} ${lock && styles.toggled} `} > 
+                         <div className = {`${styles.container__icon__lock} ${lock && styles.toggled} ${turnOff.indexOf('lock') != -1 && styles.toggled__off} `} > 
                   
-                  <LockFilled className = {`${styles.myicon} ${lock && styles.toggled} ${props.isLocked && styles.highlighted}` } onClick = {toggleLock}/>
+                  <LockFilled className = {`${styles.myicon} ${props.isLocked && styles.highlighted}` } onClick = {toggleLock}/>
          
                        <div className = {`${styles.container__button__lock} ${lock && styles.toggled}`}>
                        {!props.isLocked &&
@@ -184,7 +197,7 @@ const handleLock = (e,callback, friendname) => {
                                  </div>
                     }
 
-                <div className = {`${styles.container__icon__trash} ${turnOff && styles.toggled__off}`}> 
+                <div className = {`${styles.container__icon__trash} ${turnOff.indexOf('trash') != -1 && styles.toggled__off}`}> 
                   
                 <DeleteFilled className = {`${styles.myicon} ${trash && styles.toggled}`} onClick = {toggleTrash}/>
 

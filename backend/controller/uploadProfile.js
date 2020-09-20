@@ -16,13 +16,14 @@ const upload = multer({
 const uploadPic = async (req, res) => {
   let username = `${req.params.username}--profilepicture.png`;
   const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
-  let pathaz = path.resolve('../front-end');
+  let pathaz = path.resolve(__dirname, '../public/images');
   let check = path.join(pathaz, '/public/images');
-  await fs.writeFile(path.join(pathaz, `/public/images/${username}`), buffer, (req, res, err) => {
-    if (err) throw err;
+  console.log(path.join(pathaz, `/${username}`));
+  await fs.writeFile(path.join(pathaz, `/${username}`), buffer, (req, res, err) => {
+    if (err) console.log(err);
   });
   res.set('Content-Type', 'image/png');
-  res.send(buffer.toString('base64'));
+  res.status(200).send(buffer.toString('base64'));
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
 let bcrypt = require('bcrypt');
-let { declineRequest, getDeclined,loginLock } = require('../models/createUser');
+let { declineRequest, getDeclined, loginLock } = require('../models/createUser');
 const declineReq = (username, friendname) => {
 
   return declineRequest(username, friendname).then((res) => {
@@ -20,17 +20,13 @@ const fetchDeclined = async (username) => {
 };
 const userUnlock = async (req, res) => {
   let { username,friendname, password, query } = req.body;
-  console.log([username,friendname,password,query]);
+  console.log([username, friendname, password, query]);
   try {
     let response = await loginLock(username, friendname, query);
-    console.log(response);
-    console.log('adsdsadsa');
-    let match = await bcrypt.compare(password, response);
-    if (match) {
-      res.status(200).send({ message: 'password confirmed' });
-    } else {
-      res.status(422).send({message: 'password do not match'});
-    }
+    let checkPass = Object.values(response[0])[0];
+    let match = await bcrypt.compare(password, checkPass);
+    let returnVal = match ? true : false;
+    return returnVal;
   } catch (err) {
     res.status(422).send({ error: 'there was an error in setting  your password'});
   }

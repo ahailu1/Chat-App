@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './createaccount.module.scss';
-import {Row, Col, Form, Input, Button} from 'antd';
+import {Spin, Button} from 'antd';
 import axios from 'axios';
 import {history, withRouter} from 'react-router-dom';
 
@@ -12,8 +12,35 @@ class Createaccount extends React.Component{
             errUsername: [],
             errPassword: [],
             errConfirmPwd: [],
+            loading: null,
     
         }
+    }
+
+    loadForm = () => {
+        return (
+            <>
+            <div className = {styles.container__header}>Create Account</div>
+            <form method = 'POST' onSubmit = {this.handleForm}>
+                <div className = {styles.container__username}>
+                <input type = 'text' name = 'username' placeholder = 'username' className = {styles.input__username} onChange = {this.handleInput} value = {this.state.name}/>
+                <div className = {styles.error__input}>{this.state.errUsername.length > 0 && this.state.errUsername.map(el => {return el}) } </div>
+                </div>
+                <div className = {styles.container__password}>
+                <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+                <div className = {styles.error__input}>{this.state.errPassword.length > 0 && this.state.errPassword.map(el => {return el}) } </div>
+        
+                </div>
+                <div className = {styles.container__password}>
+                <input type = 'text' name = 'confirm__password' placeholder = 'confirm' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+                    <div className = {styles.error__input}>{this.state.errConfirmPwd.length > 0 && this.state.errConfirmPwd.map(el => {return el}) } </div>
+                </div>
+                <div className = {styles.container__password}>
+                <Button type = "primary" htmlType="submit">Login</Button>
+                </div>
+            </form>
+            </>
+        )
     }
     handleInput = (e) => {
         let item = e.target.name;
@@ -66,25 +93,8 @@ class Createaccount extends React.Component{
 render(){
     return(
   <div className = {styles.container}>
-        <div className = {styles.container__header}>Create Account</div>
-    <form method = 'POST' onSubmit = {this.handleForm}>
-        <div className = {styles.container__username}>
-        <input type = 'text' name = 'username' placeholder = 'username' className = {styles.input__username} onChange = {this.handleInput} value = {this.state.name}/>
-        <div className = {styles.error__input}>{this.state.errUsername.length > 0 && this.state.errUsername.map(el => {return el}) } </div>
-        </div>
-        <div className = {styles.container__password}>
-        <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
-        <div className = {styles.error__input}>{this.state.errPassword.length > 0 && this.state.errPassword.map(el => {return el}) } </div>
+             {this.state.loading ? <Spin size = 'large' tip = 'logging in'/> : this.loadForm()}
 
-        </div>
-        <div className = {styles.container__password}>
-        <input type = 'text' name = 'confirm__password' placeholder = 'confirm' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
-            <div className = {styles.error__input}>{this.state.errConfirmPwd.length > 0 && this.state.errConfirmPwd.map(el => {return el}) } </div>
-        </div>
-        <div className = {styles.container__password}>
-        <Button type = "primary" htmlType="submit">Login</Button>
-        </div>
-    </form>
 </div>
     )
 }

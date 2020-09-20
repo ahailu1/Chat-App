@@ -1,0 +1,64 @@
+.container{
+    display: flex;
+    width: 100%;
+    border: solid white 0.5px;
+    margin: 1rem 0 1rem 0;
+    &__groupdata{
+        width: 70%;
+        display: flex;
+}
+&__icons{
+    width: 30%;
+    align-items: center;
+    display: flex;
+    justify-content: space-evenly;
+}
+}
+
+.container__groupdata{
+    &__information{
+        width: 35%;
+        border-right: solid white 0.5px;
+    }
+    &__avatar{
+        display: flex;
+        flex-direction: column;
+        border-right: solid white 0.5px;
+        width: 65%;
+    }
+}
+.container{
+    &__groupdata__avatar__container{
+        display: flex;
+        justify-content: center;
+        margin: 0.5rem 0 0.5rem 0;
+    }
+    &__groupid{
+
+    }
+    &__groupname{
+
+    }
+}
+.title{
+    display: flex;
+    border-top: solid white 0.5px;
+    border-bottom: solid white 0.5px;
+    padding: 0.1rem;
+    color: #1890ff;
+    justify-content: center;
+    &.groupdescription{
+        border-top: none;
+    }
+&__description{
+    padding-left: 0.5rem;
+    color: white;
+}}
+.icon{
+    &__delete{
+        color: white;
+        font-size: 2rem;
+    &:hover{
+        color: #1890ff;
+    }}
+}

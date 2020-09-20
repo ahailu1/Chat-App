@@ -23,47 +23,77 @@
         border-radius: 1rem;
         }
         @media(min-width:1024px){
+
         }
 &__username{
-    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0 0 2rem;
+    margin: 0.5rem 0 0 0;
+    outline: none;
     border: none;
 
 }
 &__password{
-    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 0 0 2rem;
+    margin: 0.5rem 0 0 0;
     outline: none;
     border: none;
+
+& > p {
+    font-size: 0.75rem;
+    color: white;
+    text-transform: capitalize;
+    flex-shrink: 0.5;
+    display: flex;
+    padding:0.5rem;
+}
+}
+&__button{
+    padding: 0.5rem 0 0 2rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  
 }
 &__header{
     color: white;
     justify-content: center;
     display: flex;
-    font-size: 1.25rem;
+    font-size: 1.55rem;
     padding: 0 0 0 0.5rem;
+    margin-bottom: 1rem;
 }
 }
-.container__password{
 
-}
 
 .input{
     &__username{
         border-radius: 0.25rem;
-        padding: 0.35rem;
-
-        border: solid #001529 0.5px;
+        padding: 0.5rem;
+        border: none;
+        display: flex;
+        width: 100%;
         &:focus{
-            outline: solid cyan 0.5px;
-            border: none;
+            border-radius: 0.25rem;
+            outline: none;
+            border: solid cyan 1px;
         }
     }
     &__password{
-        padding: 0.35rem;
-        border: solid #001529 0.5px;
+        display: flex;
+        width: 100%;
+        padding: 0.5rem;
+        border: none;
         border-radius: 0.25rem;
 
     &:focus{
-        border: none;
-        outline: solid cyan 0.5px;
+        outline: none;
+        border-radius: 0.25rem;
+        border: solid cyan 0.5px;
     }}
 }

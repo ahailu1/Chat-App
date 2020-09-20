@@ -9,6 +9,8 @@ const bodyParser = require('body-parser');
 const homeRoute = require('./routes/homeRoute');
 const chat = require('./routes/chat');
 const chatbox = require('./routes/chatbox');
+const groupchat = require('./routes/groupchat');
+
 const server = http.createServer(app);
 const io = socketio(server);
 const { insertMsg } = require('./controller/addFriend');
@@ -25,6 +27,7 @@ app.use('/api', homeRoute);
 app.use('/chat', chat);
 app.use('/chat/friendslist', friendsList);
 app.use('/chat/chatbox', chatbox);
+app.use('/chat/groups', groupchat);
 
 client.on('connect', () => {
   console.log('connected redis server');

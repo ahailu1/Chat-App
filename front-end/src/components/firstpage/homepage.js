@@ -1,5 +1,6 @@
 import React from 'react';
 import {Row, Col, Form, Input, Button} from 'antd';
+import {LinkedinOutlined, GithubOutlined, PhoneOutlined, MailOutlined} from '@ant-design/icons';
 import styles from './homepage.module.scss';
 import Loginform from './loginForm';
 import Createaccount from './createaccount';
@@ -15,9 +16,56 @@ constructor(props){
 
     }
 
-
-
 }
+myFooter = () => {
+    return(
+
+        <>
+          <Col span={6} className = {styles.footer__column__two}>
+      <div className = {styles.footer__header__main}>About</div>
+        <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add friends and start chatting. Users are allowed to add their friends to 'favourites' and can set a lock to their conversations so that a password must be entered in order to start chatting or to view conversation history.   </div>
+          
+        </Col>    
+        <Col span={6} className = {styles.footer__column__two}>
+        <div className = {styles.footer__header__main}>Contact</div>
+      <div className = {`${styles.footer__container__contact}`}>
+        <div className = {styles.rre}>
+            <div className = {styles.footer__icon__container}> <LinkedinOutlined className = {styles.icon__contact}/><a href = 'https://www.linkedin.com/in/alexanderhailu'>LinkedIn</a> </div>
+            <div className = {styles.footer__icon__container}><GithubOutlined className = {styles.icon__contact}/> <a href = 'https://github.com/ahailu1'>Github</a></div>
+            <div className = {styles.footer__icon__container}><MailOutlined className = {styles.icon__contact}/> alex.hailu@hotmail.com</div>
+        </div>
+      </div>
+        </Col>
+      <Col span={6} className = {styles.footer__column__two}>
+          <div className = {styles.footer__header__main}>Technologies Used</div>
+      <div className = {`${styles.footer__container__technologies}`}>
+        <div>
+            <p className = {styles.footer__header}>Front End</p>
+        <p>ReactJS</p>
+        <p>CSS</p>
+        <p>SASS</p>
+        <p>Socket Io</p>        
+        <p>Ant Design</p>
+    
+        </div>
+        <div>
+            <p className = {styles.footer__header}>Back End</p>
+        <p>NodeJS</p>
+        <p>ExpressJs</p>
+        <p>Socket Io</p>    
+        <p>PostgreSQL</p>    
+        </div>
+      </div>
+      </Col>
+      <Col span={6} className = {styles.footer__column__two}>
+      <div className = {styles.footer__header__main}>About</div>
+        <div className = {styles.footer__container__about}>
+     </div>
+          
+        </Col> 
+</>
+    )
+}    
 
 render(){
     const firstDescription = {
@@ -62,6 +110,9 @@ render(){
     <Description {...thirdDescription}/>
 
 </Col>
+</Row>
+<Row className = {styles.footer__row}>
+{this.myFooter()}
 </Row>
 
   </div>
