@@ -35,7 +35,7 @@ font-size: 0.65rem;
 }
 
 .myicon{
-    color: white;
+    color: #052d52;
     font-size: 1.75rem;
     &.toggled{
         display: none;
@@ -100,15 +100,45 @@ font-size: 0.65rem;
 }
 
 .container{
+    &__dropdown{
+        padding: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+    &__button{
+        width: 25%;
+    }
+&__error{
+    color: white;
+    font-size: 0.75rem;
+    margin: 0.5rem;
+}}
     &__autocomplete{
-        width: 100%;
+        width: 70%;
     }
     &__options{
-        border: solid white;
         width: 100%;
-    }
+        padding: 0.5rem;
+        &:hover{
+            background-color: #c7c7c7;
+            width: 100%;    
+        }}
     &__groupinfo{
         display: flex;
-        justify-content: space-evenly;
+        justify-content: flex-start;
+}
+    &__header{
+        display: flex;
+    & > p{
+        font-weight: 500;
+        color: #1890ff;
+    }
+    &__id{
+        display: flex;
+        margin-left: 1rem;
+        & > p {
+            font-weight: 500;
+            color: #1890ff;
+    }
+    }
     }
 }

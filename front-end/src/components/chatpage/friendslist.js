@@ -1,10 +1,9 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button, Tabs, Avatar, Spin, AutoComplete, Select} from 'antd';
-import { AppleOutlined, LockFilled, MessageFilled , DeleteFilled,StarFilled, CheckCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import {Button, Tabs, Avatar, Spin, AutoComplete, Select} from 'antd';
+import { AppleOutlined,UsergroupAddOutlined, LockFilled, MessageFilled , DeleteFilled,StarFilled, CheckCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import styles from './friendslist.module.scss';
 import axios from 'axios';
 import Friendrequests from './friendoptions/friendrequests';
-import DisplayPending from './friendoptions/displayPending';
 import Creategroup from './friendoptions/creategroup';
 class Friendslist extends React.Component{
 constructor(props){
@@ -20,11 +19,14 @@ constructor(props){
         error: '',
         myGroups: [],
         allGroups : [],
+        joinedGroups: [],
         loading: null,
         toggleGroup: false,
+        groupId : '',
+        loadJoined: null,
+        joinGroupError: ''
     }
     this.setLock = this.setLock.bind(this);
-
     this.deletePending = this.deletePending.bind(this); 
 }
 componentDidMount = () => {
@@ -32,6 +34,7 @@ componentDidMount = () => {
     this.getLocked();
     this.getmyGroup();
     this.fetchAllGroups();
+    this.getJoinedGroups();
 }
 
 fetchAllGroups = () => {
@@ -49,30 +52,90 @@ getmyGroup = () => {
     console.log(username);
     axios.get(`http://localhost:5000/chat/groups/mygroups/${username}`).then(res => {
         let groupInfo = res.data.groupData;
+        console.log(groupInfo);
+        console.log('right here');
     this.setState({myGroups: groupInfo, loading: false});
     }).catch(res => {
-        this.setState({loading: true});
+        this.setState({loading: false});
 
     })
+}
+getJoinedGroups = () => {
+
+    this.setState({loadJoined: true});
+
+    let {username} = this.props.userData;
+    console.log(username);
+    axios.get(`http://localhost:5000/chat/groups/joinedgroups/${username}`).then(res => {
+        let groupInfo = res.data;
+        console.log(groupInfo);
+        console.log('right here');
+    this.setState({joinedGroups: groupInfo, loadJoined: false});
+    }).catch(res => {
+        this.setState({loadJoined: false});
+    })
+}
+handleInputChange = (e) => {
+ let myGroupId = e;
+this.setState({groupId: myGroupId });    
+}
+
+handleJoinGroup = () => {
+    let { username } = this.props.userData;
+    let {groupId} = this.state;
+    console.log(groupId);
+    let groupInfo = this.state.allGroups.filter((el) => {
+        if(el.group_id === groupId){
+            return el;
+        }
+    });
+    console.log(groupInfo);
+
+    if(groupInfo.length != 0){
+        axios.get(`http://localhost:5000/chat/groups/join/${groupId}/${username}`).then(res => {
+       
+            this.setState((prev) => {
+                    let myGroup = prev.joinedGroups;
+                    myGroup = myGroup.concat(groupInfo);
+                    return {
+                        joinedGroups: myGroup,
+                        joinGroupError: 'Group Joined',
+                    }
+                });
+            })
+            .catch(err => {
+        
+            })
+    } else {
+        this.setState({joinGroupError: 'Could Not Join Group. Please Enter A Valid Group ID'})
+    }
+    
+    //check if user is in group
+    //if he is
 }
 listGroups = () => {
     const { Option } = Select;
       
       return (
-      
-      <AutoComplete icon = {<UploadOutlined/>} placeholder="Search users" className = {styles.container__autocomplete} filterOption={(inputValue, option) =>
+          <>
+      <div className = {styles.container__dropdown}>
+      <AutoComplete name = 'myautocomplete' placeholder="Search users" onChange = {this.handleInputChange} className = {styles.container__autocomplete} filterOption={(inputValue, option) =>
         option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
       }>
       {this.state.allGroups.length > 0 && this.state.allGroups.map(el => {
           return <Option key = {el.group_id} value = {el.group_id} className = {styles.container__options}>
                 <div className = {styles.container__groupinfo}> 
-                    <div>{el.group_name} </div>
-                    <div>{el.group_id} </div> 
-                    <div> </div>  
+                    <div className = {styles.container__header}><p>Name-></p>{el.group_name} </div>
+                    <div className = {styles.container__header__id}><p>Id-></p>{el.group_id} </div> 
+                    <div> <UsergroupAddOutlined/> </div>  
                 </div> 
              </Option> 
       })}
         </AutoComplete>
+        <Button type = 'primary' size = 'medium' htmlType = 'submit' className = {styles.container__dropdown__button} onClick = {this.handleJoinGroup} disabled = {this.state.groupId == '' ? true : false}>Join </Button>
+        </div>
+        <div className = {styles.container__dropdown__error}>{this.state.joinGroupError}</div>
+        </>
       )
   }
 
@@ -102,7 +165,6 @@ listGroups = () => {
         }).catch(er => {
             alert('friend not addadsaded');
         });
-       
     }
 
 setLock = (friendname) => {
@@ -119,7 +181,6 @@ setLock = (friendname) => {
     });   
 }
 initGroup = () => {
-
 this.setState({toggleGroup: !this.state.toggleGroup});
 }
 groupInput = () => {
@@ -130,8 +191,8 @@ groupInput = () => {
                     </div>
                     <div className = {`${styles.group__container__form} ${this.state.toggleGroup && styles.toggled} `}>
                     <form>
-                <input type = 'text' name = 'group_name' className = {styles.form__input} placeholder = 'Group Name' />
-                <input type = 'text' name = 'group_id' className = {styles.form__input} placeholder = 'Group ID' />
+                <input type = 'text' name = 'group_name' className = {styles.form__input} placeholder = 'Group Name' required />
+                <input type = 'text' name = 'group_id' className = {styles.form__input} placeholder = 'Group ID' required/>
                 <textarea type = 'text' name = 'group_description' className = {`${styles.form__input} ${styles.textarea}`} placeholder = 'Group Description'></textarea>
                 <Button type = 'primary' size = 'medium' htmlType = 'submit' className = {styles.group__button}>Create Group </Button>
                 </form>
@@ -165,6 +226,7 @@ getLocked = () => {
 }
 
 render(){
+    let createGroupChat = this.props;
     const {TabPane} = Tabs;
     let friendsList = {
         locked: true,
@@ -200,6 +262,7 @@ render(){
         userData: this.props.userData,
         myLock : this.state.locked,
     }
+    console.log(this.state.joinedGroups);
     return(
         <Tabs defaultActiveKey = '2'>
             <TabPane key = "1" tab = 
@@ -211,7 +274,7 @@ render(){
             }
             >
                 
-                {/*<div className = {styles.container__addfriend}>
+        {/*<div className = {styles.container__addfriend}>
             <input type = 'text' name = 'addfriend' className = {styles.input} value = {this.state.value} onChange = {this.handleChange} />
             <Button htmlType = 'submit' type = 'primary' className = {styles.button} onClick = {this.addFriend} disabled = {this.state.value == '' ? true : false}>Add Friend </Button>
             </div>
@@ -233,9 +296,8 @@ render(){
                 </span>
                                     }
                 >
-                    
-                            {this.props.requests.map((el, index) => {
-                                return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}}/>
+                    {this.props.requests.map((el, index) => {
+                        return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}}/>
                             })}
             </TabPane>
             <TabPane key = "3" tab = {
@@ -269,27 +331,35 @@ render(){
                    <AppleOutlined/> 
                    MyGroups
                 </span>
-                            }
-                >
+                                    }
+            >   
                     <>
 <Tabs className = {styles.tab__container}>
+    
         <TabPane tab= {<span className = {styles.tab__title}>Join Group </span>} key="1" className = {styles.tab__key}>
                             {this.listGroups()}
         </TabPane>
-        <TabPane tab= {<span className = {styles.tab__title}>Create Group </span>} className = {styles.tab__key}>
+
+        <TabPane tab= {<span className = {styles.tab__title}>Create Group </span>} key = '2' className = {styles.tab__key}>
         {this.groupInput()}
         {this.state.loading ? <Spin/> : 
                    this.state.myGroups.map((el, index) => {
-                       return <Creategroup key = {index} userData =  {this.props.userData} description = {el.description} group_name = {el.group_name} group_id = {el.group_id}/>
+                       return <Creategroup createGroupChat = {this.props.createGroupChat} joinedGroups = {false}  key = {index} userData =  {this.props.userData} groupDescription = {el.description} groupName = {el.group_name} groupId = {el.group_id}/>
                    })
                  }
+        </TabPane>
+        
+                <TabPane tab = {<span>All Groups</span>} key = '3'>
+                 { this.state.loadJoined ? <Spin/> :  this.state.joinedGroups.map((el, index) => {
+                     return <Creategroup createGroupChat = {this.props.createGroupChat} joinedGroups = {true} key = {index} userData =  {this.props.userData} description = {false} groupDescription = {el.description} groupName = {el.group_name} groupId = {el.group_id}/>
+                    })
+                }
         </TabPane>
       </Tabs>
       </>
             </TabPane>
         </Tabs>
     )
-}
-
+        }
 }
 export default Friendslist;

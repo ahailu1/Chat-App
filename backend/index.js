@@ -62,6 +62,13 @@ io.on('connect', (socket) => {
     console.log('logging out');
     io.emit('logout', data);
   });
+  socket.on('groupMessage', (data) => {
+    let { groupId, message } = data;
+    console.log(groupId);
+    console.log(message);
+    socket.join(groupId);
+    io.emit(groupId, data);
+  });
 });
 server.listen(app.get('port') || 5000, () => {
   console.log(`server is listening  on ${app.get('port')}`);

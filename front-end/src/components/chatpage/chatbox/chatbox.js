@@ -3,7 +3,7 @@ import { MessageFilled , DeleteFilled,LockFilled } from '@ant-design/icons';
 import {Button, Avatar} from 'antd';
 import styles from './chatbox.module.scss'
 import io from 'socket.io-client';
-import UserContext from '../context';
+import UserContext from '../../context';
 import axios from 'axios';
 
 class Chatbox extends React.Component {
@@ -82,11 +82,32 @@ getHistory = () => {
     console.log(username + 'hello');
 let response = axios.get(`http://localhost:5000/chat/chatbox/${username}/${this.props.friendName}`)
     .then((res) => {
+        res.data.forEach((el) => {
+            console.log(el.time);
+        })
         this.setState({msgHistory:res.data})
     })
     .catch((err) => {
         console.log(err);
     })
+}
+messageHistory = (el, index) => {
+    let newTime = el.timezone;
+    newTime = new Date(el.timezone).toLocaleString();
+    console.log(newTime)
+    return (
+        <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
+        <div className = {styles.container__history__message}> 
+        
+        <div className = {styles.container__history__format}>  
+                <div className = {styles.sender}> {el.sender} </div>
+                <div className = {styles.time}> {newTime} </div>
+        </div>
+        <div>{el.message}</div>
+       </div>
+        </div>
+            )
+    
 }
 
 
@@ -113,12 +134,14 @@ this.setState( (prev) => {
         messages: prev.messages.concat(data)
     }
 });
+
 socket.emit('message', data);
 
 }
 
 
 render() {
+let {msgHistory} = this.state
 
 return(
 
@@ -130,26 +153,21 @@ return(
         <div className = {styles.container__wrapper}>
 
         <div className = {styles.container__history}>
-        {this.state.msgHistory.length > 0 && this.state.msgHistory.map ((el, index) => {
-        return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
-
-        <div className = {styles.container__history__message}> 
-            <div className = {styles.sender}> {el.sender} </div>
-                <div className = {styles.time}> {el.time} </div>
-       </div>
-            <div>{el.message}</div>
-        </div>
-    })
-    }
+        { msgHistory.length > 0 && msgHistory.map((el,index) => {
+            return this.messageHistory(el,index) 
+            })
+        }
         </div>
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
-                    <div> 
-                        <div> {el.time} </div>
-                        <div> {el.sender} </div>
-                    </div>
-            <div>{el.message}</div>
+        <div className = {styles.container__history__message}> 
+            <div className = {styles.container__history__format}>  
+                <div className = {styles.sender}> {el.sender} </div>
+                <div className = {styles.time}> {el.time} </div>
+            </div>
+        <div>{el.message}</div>
+       </div>
                 </div>
     })
     }

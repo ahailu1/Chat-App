@@ -1,0 +1,176 @@
+.container{
+    &__groupchatbox{
+        display: flex;
+        height: 80vh;
+        width: 90%;
+    }
+    &__messagebox{
+        position: relative;
+        height: 15%;
+        display: flex;
+        width: 95%;
+    }
+    &__dialogue{
+        box-shadow: 0 0 3px 0 white;
+        width: 70%;
+        justify-content: flex-end;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background-color: whitesmoke;
+        &__wrapper__container{
+            height: 100%;
+            position: relative;
+        }
+    &__wrapper{
+        position: absolute;
+        bottom: 0;
+        height: 100%;
+        width: 95%;
+        display: flex;
+        flex-direction: column-reverse;
+        overflow-y: scroll;
+        left: 0;
+    }
+}
+    &__groupinformation{
+        background-color: whitesmoke;
+        margin-left: 2rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 2rem;
+    &__wrapper{
+        width: 100%;
+    }}
+}
+
+.button{
+    display: flex;
+    width: 6rem;
+    align-items: center;
+    flex-grow: 1;
+    height: 5rem;
+    justify-content: center;
+    background-color: rgb(0, 21, 48);
+    color: white;
+&:hover{
+    background-color:#1890ff;
+    color: white;
+
+}}
+
+.message{
+    &__actualmessage{
+        padding: 0.5rem;
+        color: white;
+    }
+    &__time{
+margin-left: 0.5rem;
+color: white;
+font-style: italic;
+        font-family: 'montserrat', serif;
+    }
+    &__username{
+        font-family: 'montserrat', serif;
+        font-style: italic;
+        color: #ff6b6b;
+        font-weight: 500;
+    &.toggled{
+    
+    }}
+    &__format{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    &__container{
+        display: flex;
+
+        &.toggled{
+            margin-right: 1rem;
+            justify-content: flex-end;
+        }
+
+    &__sent{
+        background-color: #001529;
+        display: flex;
+        border-radius: 5px;
+        width: 90%;
+        margin: 0.5rem 0 0.5rem 0;
+    }}
+    &__timestamp{
+        padding-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        align-content: center;
+    }
+    &__actualmessage{
+
+    }
+    &__image{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+}
+.form{
+    width: 100%;
+    display: flex;
+}
+
+
+.group{
+    &__description{
+        width: 100%;
+        font-size: 1rem;
+        border: solid orange;
+        display: flex;
+        border-radius: 0.5rem;
+        padding: 0.25rem;
+    }
+    &__name{
+
+    }
+    &__members__container{
+        margin: 1rem 0 0 0;
+        box-shadow: 0 0 3px 0 whitesmoke;
+        border: solid orange;
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+    }
+    &__members{
+
+        &__icon{
+            color: white;
+            font-size: 2.5rem;
+        }
+
+    &__heading{
+        background-color: #55adff;
+        justify-content: center;
+        padding-top: 0.5rem;
+        align-items: center;
+        display: flex;
+        align-content: center;
+        & > p {
+            display: flex;
+            align-items: center;
+            align-content: center;
+            font-size: 1rem;
+        }
+    }
+    }
+}
+.title{
+    font-size: 1rem;
+    color: #001529;
+    font-weight: 600;
+    font-family: montserrat, sans-serf;
+    &__description{
+
+    }
+}

@@ -34,7 +34,18 @@ const insertGroup = (e) =>{
     });
 }
 
+const initChat = () => {
+    let groupInfo = {
+        description: props.groupDescription,
+        groupId : props.groupId,
+        groupName: props.groupName,
+    }
+    props.createGroupChat(groupInfo);
+
+}
+
 let fetchGroup = () => {
+
     return (
         <>
         <div className = {styles.container}>
@@ -42,24 +53,26 @@ let fetchGroup = () => {
         
         <div className = {styles.container__groupdata}>
             
-            <div className = {styles.container__groupdata__avatar}>   
+            <div className = {`${styles.container__groupdata__avatar} ${props.joinedGroups && styles.toggled}`}>   
                 <div className = {styles.container__groupdata__avatar__container}>
         <Avatar size = {50} className = {styles.icon__delete}/>
                 </div>
+                {props.description &&
             <div className = {styles.container__groupdata__avatar__description}>
             <p className = {`${styles.title}`}>Description</p>
-                <p className = {styles.title__description}>{props.description}</p>
+                <p className = {styles.title__description}>{props.groupDescription}</p>
             </div>
+                }
         </div>
 
-            <div className = {styles.container__groupdata__information}>
-            <div className = {styles.container__groupid}>
-                    <p className = {styles.title}>Group Id </p>
-                    <p className = {styles.title__description}>{props.group_id}</p>
+            <div className = {`${styles.container__groupdata__information} ${props.joinedGroups && styles.toggled}`}>
+            <div className = {`${styles.container__groupid} ${props.joinedGroups && styles.toggled}`}>
+                    <p className = {`${styles.title} ${props.joinedGroups && styles.toggled}`}>Group Id </p>
+                    <p className = {styles.title__description}>{props.groupId}</p>
                 </div>
                     <div className = {styles.container__groupname}>
-                        <p className = {styles.title}>Group Name</p>
-                        <p className = {styles.title__description}> {props.group_name}</p>
+                        <p className = {`${styles.title} ${props.joinedGroups && styles.toggled}`}>Group Name</p>
+                        <p className = {styles.title__description}> {props.groupName}</p>
                     </div>
              </div>
         </div>
@@ -72,14 +85,13 @@ let fetchGroup = () => {
                 <MinusCircleOutlined className = {styles.icon__delete}/>
             </div>
                     <div>
-                        <MessageOutlined className = {styles.icon__delete}/>
+                        <MessageOutlined className = {styles.icon__delete} onClick = {initChat}/>
                     </div>    
         </div>        
         </div>
     </>
     )
 }
-
     return(
     fetchGroup()
     )

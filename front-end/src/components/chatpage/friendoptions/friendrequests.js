@@ -141,7 +141,6 @@ const handleLock = (e,callback, friendname) => {
                         <Button type = 'default' size = 'small' className = {styles.button} onClick = {myChat}>Cancel</Button>
                         </div>
                         </form>
-            
             }
                         </div>
 

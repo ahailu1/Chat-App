@@ -12,7 +12,6 @@ const declineReq = (username, friendname) => {
 const fetchDeclined = async (username) => {
   try {
     let response = await getDeclined(username);
-    console.log(response);
     return response;
   } catch (err) {
     return false;
@@ -20,7 +19,6 @@ const fetchDeclined = async (username) => {
 };
 const userUnlock = async (req, res) => {
   let { username,friendname, password, query } = req.body;
-  console.log([username, friendname, password, query]);
   try {
     let response = await loginLock(username, friendname, query);
     let checkPass = Object.values(response[0])[0];

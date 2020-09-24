@@ -23,8 +23,17 @@ const getGroup = async (username) => {
     let myResults = await connection.query(query, values);
     return myResults.rows;
   } catch (err) {
-    console.log(err);
     throw new Error('couldnt get groups')
+  }
+};
+const joinGroup = async (username, groupId) => {
+  const query = 'insert into group_members(group_member_username, group_id) values ($1, $2)';
+  const values = [username, groupId];
+  try {
+    const results = await connection.query(query, values);
+    return true;
+  } catch (err) {
+    return false;
   }
 };
 const getAllGroups = async () => {
@@ -36,6 +45,29 @@ const getAllGroups = async () => {
     throw new Error({ error: 'couldnt fetch all groups' });
   }
 };
+const getGroupMembers = async (groupId) => {
+  let query = 'select distinct my_groups.description,group_members.group_member_username, my_groups.group_id, my_groups.group_name from my_groups right join group_members on group_members.group_id = my_groups.group_id where group_members.group_id = $1';
+  let values = [groupId];
+  try {
+    let results = await connection.query(query, values);
+    return results.rows;
+  } catch (err) {
+    console.log('couldnt fetch group members');
+    return err;
+  }
+  
+}
+
+const getJoinedGroups = async (username) => {
+  let query = 'select group_creator, group_name, group_id, description from my_groups where group_id in (select group_id from group_members where group_member_username = $1)';
+  let values = [username];
+  try {
+    let results = await connection.query(query, values);
+    return results.rows;
+  } catch (err) {
+    throw new Error({ error: `couldnt fetch ${username} groups`});
+  }
+};
 
 const friendStatus = async (username) => {
   let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
@@ -44,7 +76,6 @@ const friendStatus = async (username) => {
   try {
     let result = await connection.query(query, values);
     let myresults = result.rows;
-    console.log(myresults);
     return myresults;
   } catch (err) {
     throw new Error('couldnt fetch');
@@ -86,11 +117,12 @@ const getAll = async () => {
 
 const getMessages = async (info) => {
   const { username, friendname } = info;
-  const query = 'SELECT message, sender, recipient, time FROM chat_messages WHERE sender = $1 and recipient = $2 UNION SELECT message,sender,recipient,time FROM chat_messages WHERE sender = $3 and recipient = $4 ORDER BY TIME ASC';
+  const query = `SELECT message, sender, recipient, time::timestamptz at time zone 'EDT' FROM chat_messages WHERE sender = $1 and recipient = $2 UNION SELECT message,sender,recipient,time::timestamptz at time zone 'EDT' FROM chat_messages WHERE sender = $3 and recipient = $4 ORDER BY TIMEZONE ASC`;
   const values = [username, friendname, friendname, username];
   try {
     const results = await connection.query(query, values);
     const data = results.rows;
+    console.log(data);
     return data;
   } catch (err) {
     console.log('return messages error');
@@ -103,8 +135,8 @@ const addMessage = async (info, time) => {
   let { sender, recipient, message } = info;
 
   const { hour, minute, day, year, month, second } = time;
-  const query = 'insert into chat_messages(sender, recipient, message, time) values ($1, $2, $3, make_timestamp($4, $5, $6, $7, $8, $9))';
-  const values = [sender, recipient, message, year, month, day, hour, minute, 0];
+  const query = 'insert into chat_messages(sender, recipient, message, time) values ($1, $2, $3, current_timestamp)';
+  const values = [sender, recipient, message];
   try {
     const result = await connection.query(query, values);
   } catch (err) {
@@ -123,6 +155,7 @@ const declineRequest = async (username, friendname) => {
     throw new Error('could not decline request properly');
   }
 };
+
 
 const createUser = async (username, password) => {
   let userPassword = bcrypt.hashSync(password, saltRounds);
@@ -242,4 +275,7 @@ module.exports = {
   createGroup,
   getGroup,
   getAllGroups,
+  joinGroup,
+  getJoinedGroups,
+  getGroupMembers,
 };

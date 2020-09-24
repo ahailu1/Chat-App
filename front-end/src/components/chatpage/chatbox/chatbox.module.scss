@@ -102,9 +102,13 @@ flex-grow: 1;
     height: auto;
     display: flex;
     flex-direction: column;
+    &__format{
+        display: flex;
+    }
 &__message{
     justify-content: flex-start;
     display: flex;
+    flex-direction: column;
 }
 }
 

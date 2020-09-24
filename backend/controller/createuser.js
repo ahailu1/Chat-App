@@ -24,7 +24,6 @@ let authenticate = async (req, res) => {
     param: 'username',
     location: 'body',
   };
-  console.log(userquery);
   if (userquery !== false) {
     error.errors.push(obj);
   }

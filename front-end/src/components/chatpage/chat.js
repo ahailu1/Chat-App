@@ -2,9 +2,10 @@ import React from 'react';
 import {Layout, Tabs, Avatar, Menu, AutoComplete, Select, Spin, Space} from 'antd';
 import styles from './chat.module.scss';
 import { UploadOutlined, CloseSquareFilled, UserAddOutlined } from '@ant-design/icons';
+import Groupchatbox from './chatbox/groupchatbox';
 import Profilepicture from './profilepicture';
 import Friendslist from './friendslist';
-import Chatbox from './chatbox';
+import Chatbox from './chatbox/chatbox.js';
 import io from 'socket.io-client';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
@@ -19,6 +20,7 @@ class Chat extends React.PureComponent{
         initChat: [],
         users: [],
         initMessage: '',
+        initGroupChat: [],
         toggled: [],
         pending: [],
         declined : [],
@@ -26,7 +28,7 @@ class Chat extends React.PureComponent{
         favourites: [],
         myUsers: [],
         fullList: [],
-        loading: true
+        loading: true,
         }
 
     this.createChat = this.createChat.bind(this);
@@ -34,10 +36,10 @@ class Chat extends React.PureComponent{
     this.addFriend = this.addFriend.bind(this);
     this.toggleFavourite = this.toggleFavourite.bind(this);
         this.friendStatus = this.friendStatus.bind(this);
+        this.createGroupChat = this.createGroupChat.bind(this);
 }
 
 componentDidMount = () => {
-    this.createSocket();
     this.friendStatus();
 }
 
@@ -112,7 +114,9 @@ createTab = (el) => {
 }
 
 
-removeTab = (name) => {
+
+removeTab = (name, group = false) => {
+
 
     this.setState((prev) => {
         let newList = prev.initChat;
@@ -125,38 +129,24 @@ removeTab = (name) => {
 
 
     })
-
-}
-
-createSocket = () => {
-    const socket = io('http://localhost:5000');
-    const cookie = new Cookies();
-    const userData = cookie.get('userData');
-    const {username} = userData;
-    const data = {
-        username,
-        online: true,
+    if(group){
+        this.setState((prev) => {
+            let arr = prev.initGroupChat;
+            arr = arr.map(el => {
+                if(el.groupId === name){
+                     console.log('exists')
+                }
+                else {
+                    return el;
+                }
+            })
+            return {
+                initGroupChat: arr
+            }
+        });
     }
-    socket.emit('login', data);
-    
-    setTimeout(() => {
-    socket.emit('login', data);
-        }, 5000);
 
-    socket.on(username, (data) => {
-        if (!this.state.initChat.includes(data.sender)) { 
-            this.createChat(data.sender, data.message);
-        } else {
-
-        }
-
-    });
-    //send message that indicates you are logged in
-    // once message is sent sent and received, 
-    //receive message that indicates you are logged in
 }
-
-
 toggleUser = (friendname) => {
 this.setState((prev) => {
     let newList = prev.filter((el) => {
@@ -253,6 +243,23 @@ loadingPage = () => {
         </Space>
     )
 }
+createGroupChat = (groupInfo) => {
+   let initState = true;
+ this.state.initGroupChat.forEach(el => {
+       if(el.groupId === groupInfo.groupId){
+           initState = false;
+       }
+   });
+   if(initState){
+    this.setState((prev) => {
+        let groupChat = prev.initGroupChat;
+        groupChat = groupChat.concat(groupInfo);
+        return {
+            initGroupChat: groupChat
+        }
+    })
+   }
+}
 
 createChat = (friendname, initialMessage = '') => {
     const cookie = new Cookies();
@@ -264,15 +271,18 @@ createChat = (friendname, initialMessage = '') => {
         messages: [],
         initialMessage:[],
     }
-
+        /*
     if(this.state.initChat.includes(friendname)){
         
         this.setState( (prev) => { 
             let newList = prev.toggled.includes(friendname) ? prev.toggled.filter(el => el != friendname) : prev.toggled.concat(friendname);
             return {toggled: newList}
         });
-    } else {
+    } else
+     { */
     this.setState((prev) => {
+
+        if(!this.state.initChat.includes(friendname)){
         const arr = [...prev.initChat];
         arr.push(userObject);
         return{
@@ -280,8 +290,8 @@ createChat = (friendname, initialMessage = '') => {
             initChat: prev.initChat.concat(friendname),
             initMessage: initialMessage 
             }
+        }
         });
-    }
 }
 
 render(){
@@ -311,7 +321,7 @@ render(){
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
         <Profilepicture userData = {userData}/>
-{ this.state.loading != true ? <Friendslist {...friendsList}/> : <this.loadingPage/>}
+{ this.state.loading != true ? <Friendslist {...friendsList} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
         </Sider>
         <Layout>
             <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}
@@ -319,6 +329,13 @@ render(){
         <Content className = {styles.container__content}>
             
         <Tabs type = 'card' className = {styles.tab__card}>
+        {
+            this.state.initGroupChat.length != 0 && this.state.initGroupChat.map(el => {
+                return <TabPane tab = {this.createTab(el.groupId, true)}> 
+                    <Groupchatbox socket = {socket} userData = {userData} groupId = {el.groupId} groupName = {el.groupName} description = {el.description}  />
+                    </TabPane>
+            })
+        }
         {
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
            
