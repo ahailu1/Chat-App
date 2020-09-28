@@ -81,24 +81,20 @@ handleAuthentication = () => {
         }
     })
     .then((res) => {
-      if(res.status == 200) {
         this.setState( (prev) => {
             return {
                 loggedIn: true,
                 userData: userData
             }
         })
-      } else {
+    })
+    .catch((err) => {
         this.setState( (prev) => {
             return {
                 loggedIn: false,
                 userData: null
             }
         })
-    }  
-    })
-    .catch((err) => {
-    
     });
     } else {
         this.setState( (prev) => {

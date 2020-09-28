@@ -37,6 +37,7 @@ class Chat extends React.PureComponent{
     this.toggleFavourite = this.toggleFavourite.bind(this);
         this.friendStatus = this.friendStatus.bind(this);
         this.createGroupChat = this.createGroupChat.bind(this);
+        this.removeFriend = this.removeFriend.bind(this);
 }
 
 componentDidMount = () => {
@@ -75,7 +76,7 @@ handleFilter = () => {
       )
   }
 
-        addFriend = async (friendname) => {
+addFriend = async (friendname) => {
             const friendName = friendname;
             const {username} = this.props.userData;
                 if(this.state.requests.includes(friendName)) {
@@ -96,8 +97,7 @@ handleFilter = () => {
                         })                    
                     })
                 }
-           
-                    }
+}
 
 
 createTab = (el) => {
@@ -112,24 +112,8 @@ createTab = (el) => {
             </div>
     )
 }
-
-
-
 removeTab = (name, group = false) => {
-
-
-    this.setState((prev) => {
-        let newList = prev.initChat;
-        newList = newList.filter((el) => {
-            return el != name;
-        });
-        return {
-            initChat: newList
-        }
-
-
-    })
-    if(group){
+  if(group) {
         this.setState((prev) => {
             let arr = prev.initGroupChat;
             arr = arr.map(el => {
@@ -144,8 +128,17 @@ removeTab = (name, group = false) => {
                 initGroupChat: arr
             }
         });
+    } else {
+        this.setState((prev) => {
+            let newList = prev.initChat;
+            newList = newList.filter((el) => {
+                return el != name;
+            });
+            return {
+                initChat: newList
+            }
+        })
     }
-
 }
 toggleUser = (friendname) => {
 this.setState((prev) => {
@@ -167,6 +160,8 @@ toggleFavourite = (myfriendname, boolean) => {
     } else {
         reverse = 2;
     }
+    // if my username is the friendname then set state to six
+    //if my username is the username then set te state to 5
     axios.get(`http://localhost:5000/chat/friendslist/setfavourites/${username}/${friendname}/${boolean}/${reverse}`).then(
         this.setState(prev => {
             let myFavourites;
@@ -260,6 +255,20 @@ createGroupChat = (groupInfo) => {
     })
    }
 }
+removeFriend = (username) => {
+        this.setState((prev) => {
+            let friends = prev.friends;
+            console.log(friends);
+            console.log(username);
+            friends = friends.filter(el => {
+                return el !== username;
+            });
+            console.log(friends);
+            return {
+                friends: friends
+            }
+        })
+}
 
 createChat = (friendname, initialMessage = '') => {
     const cookie = new Cookies();
@@ -294,11 +303,13 @@ createChat = (friendname, initialMessage = '') => {
         });
 }
 
+
 render(){
     let {friends, requests, pending, declined, favourites, myUsers, fullList} = this.state;
     let props = {friends, requests, pending, declined, favourites};
     const cookie = new Cookies();
     const userData = cookie.get('userData');
+    let {username} = userData;
     const {Sider,Content} = Layout;
     const socket = io('http://localhost:5000');
     let friendsList = {
@@ -309,31 +320,34 @@ render(){
         pending : pending,
         friends : friends,
         myUsers: myUsers,
+        declined: declined,
         fullList: fullList,
         friendStatus : this.friendStatus,
         createChat : this.createChat,
         userData : userData,
         toggled : this.state.toggled, 
-        socket : {socket}
+        socket : {socket},
+        users : this.props.users,
+        addFriend : this.addFriend,
     }
     const { TabPane } = Tabs;
     return(
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
-        <Profilepicture userData = {userData}/>
-{ this.state.loading != true ? <Friendslist {...friendsList} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
+        <div className = {styles.sidebar__profilepicture__container}>
+        <Profilepicture userData = {userData} actionUrl = {`http://localhost:5000/chat/${username}`} setSize = {100}/>
+        <p className = {styles.sidebar__description}>{username}</p>
+        </div>
+        {this.state.loading != true ? <Friendslist {...friendsList} removeFriend = {this.removeFriend} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
         </Sider>
         <Layout>
-            <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}
-             />
+        <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}/>
         <Content className = {styles.container__content}>
-            
         <Tabs type = 'card' className = {styles.tab__card}>
-        {
-            this.state.initGroupChat.length != 0 && this.state.initGroupChat.map(el => {
-                return <TabPane tab = {this.createTab(el.groupId, true)}> 
-                    <Groupchatbox socket = {socket} userData = {userData} groupId = {el.groupId} groupName = {el.groupName} description = {el.description}  />
-                    </TabPane>
+        {this.state.initGroupChat.length != 0 && this.state.initGroupChat.map(el => {
+        return <TabPane tab = {this.createTab(el.groupId, true)}> 
+                <Groupchatbox socket = {socket} userData = {userData} groupId = {el.groupId} groupName = {el.groupName} description = {el.description}  />
+                </TabPane>
             })
         }
         {
@@ -351,5 +365,4 @@ render(){
             )
     }
 }
-
 export default Chat

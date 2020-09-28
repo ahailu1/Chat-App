@@ -1,10 +1,16 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
+let cors = require('cors');
+
+const path = require('path');
+const fs = require('fs');
 const bodyParser = require('body-parser');
-let { makeGroup } = require('../controller/groupchat');
-let { getGroup, getAllGroups, joinGroup, getJoinedGroups, getGroupMembers } = require('../models/createUser');
-router.post('/create', async (req, res) => {
+const { upload, uploadPic } = require('../controller/uploadProfile');
+let { getGroup, getAllGroups, joinGroup, getJoinedGroups, getGroupMembers, leaveGroup, deleteGroup, createGroup } = require('../models/createUser');
+app.use(cors());
+
+router.post('/creategroup', cors(), async (req, res) => {
   let {
     groupId, groupName, groupDescription, groupCreator,
   } = req.body;
@@ -12,21 +18,19 @@ router.post('/create', async (req, res) => {
     groupId, groupName, groupDescription, groupCreator,
   };
   try {
-    let insertGroup = await makeGroup(obj);
+    await createGroup(obj);
+    console.log('why is this thing not fucking owrking??');
+    res.status(200).send({ errorMsg: 'its working' });
   } catch (err) {
-    throw new Error('something happened');
+    console.log('what am i catching really?');
+    res.status(422).send({errorMsg: 'couldnt add group member'});
   }
-  res.status(200).send({msg: 'hello'});
 });
 router.get('/mygroups/:username', async (req, res) => {
   let {username} = req.params;
-  console.log(username + 'is trying to be here');
-  console.log('hello im trying here in groups y naa')
 
   try {
     let groupData = await getGroup(username);
-    console.log('herre in groups');
-    console.log(groupData);
     res.status(200).send({ groupData: groupData });
   } catch (err) {
     res.status(422).send({error: 'couldnt fetch group'})
@@ -43,6 +47,7 @@ router.get('/allgroups', async (req, res) => {
 router.get('/join/:groupid/:username', async (req, res) => {
   let { username, groupid } = req.params;
   console.log(groupid);
+  console.log(username);
   try {
     let join = await joinGroup(username, groupid);
     if (join === true) {
@@ -54,7 +59,6 @@ router.get('/join/:groupid/:username', async (req, res) => {
 });
 router.get('/joinedgroups/:username', async (req, res) => {
   let { username } = req.params;
-  console.log(username + 'get his joined groups');
   try {
     let joinedGroups = await getJoinedGroups(username);
     res.status(200).send(joinedGroups);
@@ -71,5 +75,48 @@ router.get('/groupinfo/:groupname', async (req, res) => {
     res.status(422).send({ errorMsg: 'couldnt fetch group members'});
   }
 });
+router.get('/profilepicture/:groupId', async (req, res, next) => {
+  let pathaz = path.resolve(__dirname, '../../front-end/public/images');
+  let groupId = `${req.params.groupId}--profilepicture.png`;
+  let defaultUsername = 'default--profilepicture.png';
+  let profilePath = path.join(pathaz, `/${groupId}`);
+  // check if path exists. if it does, send the route to the path, otherwise send the route to the default profile picture;
+  fs.access(profilePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(404).send({ default: defaultUsername });
+    } else {
+      res.status(200).send({ profilePicture: groupId });
+    }
+  });
+  res.set('Content-Type', 'image/png');
+});
 
+
+router.post('/profilepicture/:groupId', upload.single('avatar'), async (req, res) => {
+  let group = true;
+  try {
+    await uploadPic(req, res, group);
+  } catch (err) {
+    res.status(422).send({ errorMsg: 'couldnt upload picture' });
+  }
+});
+router.get('/leavegroup/:groupId/:username', async (req, res) => {
+  let { username, groupId } = req.params;
+  try {
+    let response = await leaveGroup(username, groupId);
+    res.status(200).send({ message: 'user successfully removed from group' });
+  } catch (err) {
+    res.status(422).send({ errorMsg: 'couldnt leave group. Please try again' });
+  }
+});
+router.get('/deletegroup/:groupId/:username', async (req, res) => {
+  let { username, groupId } = req.params;
+  try {
+    let response = await deleteGroup(username, groupId);
+    res.status(200).send({ message: 'successfully deleted group' });
+  } catch (err) {
+    res.status(422).send({ errorMsg: 'couldnt delete group. Please try again' });
+  }
+});
 module.exports = router;

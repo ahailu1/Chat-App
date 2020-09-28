@@ -17,12 +17,14 @@
     background-color: #e9e9e9;
     border-radius: 0.5rem;
     display: flex;
+    width: auto;
     justify-content: space-between;
     margin: 0.75rem 0.5rem 0.5rem 0.5rem;
 &:hover{
-    background-color:#4e5aff;
+    background-color:#3ba0ff;
 }
 &__username{
+    font-weight: 600;
     flex-direction: column;
     display: flex;
     font-size: 1rem;

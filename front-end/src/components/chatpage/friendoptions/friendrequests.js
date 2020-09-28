@@ -34,6 +34,10 @@ const toggleLock = (e) => {
         }
 };
 
+const deleteFunction = () => {
+    props.setDelete();
+    toggleTrash();
+}
 const myChat = () => {
     if(props.myLock.indexOf(props.friendname) !== -1){
     msgOn(!msgLock);
@@ -57,7 +61,8 @@ const loginChat = (e, friendname) => {
         query = 1;
 } else {
     query = 2;
-}    let {username} = props.userData;
+}    
+    let {username} = props.userData;
     let val = e.target.loginpwd.value;
     let config = {
         method: 'POST',
@@ -79,6 +84,7 @@ const loginChat = (e, friendname) => {
     })
 
 }
+
 const handleLock = (e,callback, friendname) => {
     e.preventDefault();
     let mypass = e.target.setpass.value;
@@ -152,7 +158,7 @@ const handleLock = (e,callback, friendname) => {
                <div className = {`${styles.container__button__favourite} ${star && styles.toggled}`}>
                    <div className = {styles.confirm}> Confirm </div>
                    <div className = {`${styles.container__button}`}>
-               <Button type = 'default' size = 'small' className = {styles.button} onClick = {() => {props.setFunction(props.friendname, true); favouriteOn(false)}}>Yes</Button>
+               <Button type = 'default' size = 'small' className = {styles.button} onClick = {() => {props.setFunction(props.friendname, true); favouriteOn(!star)}}>Yes</Button>
                <Button type = 'default' size = 'small' className = {styles.button} onClick = {toggleFavourite}>No</Button>
                 </div>
                 </div>
@@ -203,7 +209,7 @@ const handleLock = (e,callback, friendname) => {
                <div className = {`${styles.container__button__trash} ${trash && styles.toggled}`}>
                 <div className = {styles.confirm}>Confirm</div>
                 <div className = {styles.container__button}>
-               <Button type = 'default' size = 'small' className = {styles.button} onClick = { props.setDelete}>Yes</Button>
+               <Button type = 'default' size = 'small' className = {styles.button} onClick = {deleteFunction}>Yes</Button>
                <Button type = 'default' size = 'small' className = {styles.button} onClick = {toggleTrash}>No</Button>
                </div>
                 </div>

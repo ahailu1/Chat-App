@@ -9,7 +9,6 @@ const {getAll} = require('../models/createUser');
 const getToken = require('../middleware/session');
 router.post('/createaccount', async (req, res, next) => {
   let isValidated = await authenticate(req, res);
-  console.log(isValidated);
   if (isValidated.authenticated === true) {
     const {username} = isValidated;
     const token = await jwt.sign({ user: username }, 'secret-key');
@@ -24,7 +23,6 @@ router.post('/createaccount', async (req, res, next) => {
 router.post('/loginuser', async (req, res, next) => {
   const { username__login: username, password__login: password } = req.body;
   const test = await loginAuthenticate(username, password);
-  console.log(test.validated + 'hello');
   if (test.validated) {
     const token = await jwt.sign({ user: username }, 'secret-key');
 
@@ -32,14 +30,12 @@ router.post('/loginuser', async (req, res, next) => {
       authenticated: true,
       token,
       username,
-    });
+    }); 
   } else {
-    console.log(test)
     res.status(422).send({ error: test });
   }
 });
 router.get('/authenticate', getToken, async (req, res, next) => {
-  console.log(req.token);
   jwt.verify(req.token, 'secret-key', (err, authorized) => {
     if (err) {
       res.status(403);
@@ -51,7 +47,6 @@ router.get('/authenticate', getToken, async (req, res, next) => {
 router.get('/allusers', async (req, res) => {
   console.log('rgiht here asshole');
   try {
-    console.log('rgiht here asshole');
   let list = await getAll();
   res.status(200).send(list);
   } catch(err) {

@@ -13,7 +13,7 @@ class Createaccount extends React.Component{
             errPassword: [],
             errConfirmPwd: [],
             loading: null,
-    
+            
         }
     }
 
@@ -65,10 +65,8 @@ class Createaccount extends React.Component{
         }
         console.log(e.target.confirm__password.value);
          axios(data).then(res => {
-             console.log(res.data);
              this.props.handleLogin(res.data);
             this.props.history.push(`/chat/${res.data.username}`);
-            console.log(res);
          }).catch(err => {
              console.log(err.response);
         

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './groupchatbox.module.scss';
-import {Input, Button} from 'antd';
+import {Input, Button,Spin, Avatar} from 'antd';
 import {TeamOutlined} from '@ant-design/icons'
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -11,35 +11,43 @@ class Groupchatbox extends React.Component{
             myMessages: [],
             groupMembers : [],
             groupInfo : {},
+            loadingFriends: true,
+            groupProfile: ''
         }
         this.msgBox = this.msgBox.bind(this);
     }
     componentDidMount = () => {
         this.getMessage();
         this.getGroupInfo();
+        this.checkGroupProfile();
     }
 
+
+
     getGroupInfo = () => {
-        let {groupName} = this.props;
-        axios.get(`http://localhost:5000/chat/groups/groupinfo/${groupName}`)
+        this.setState({loadingFriends: true});
+        let {groupId} = this.props;
+        axios.get(`http://localhost:5000/chat/groups/groupinfo/${groupId}`)
         .then((el) => {
+        
             let arr = el.data.groupMembers;
+            console.log(arr);
             let members = [];
             arr.forEach(el => {
+                console.log(el);
                 members.push(el.group_member_username);
             });
             this.setState({groupMembers: members});
+            this.setState({loadingFriends: false});
             /*
             this.setState((prev) => {
                 groupInfo.description
             })
             */
-            console.log(el.data.groupMembers);
-        }).catch(el => {
+            }).catch(el => {
 
         });
     }
-
     getMessage = (msgBox) => {
         let {groupName} = this.props;
         
@@ -55,17 +63,19 @@ class Groupchatbox extends React.Component{
         });
     }
 
+
+
+
     msgBox = (data, key = 1) => {
         let {message, username, time} = data;
-
+        let myUsername = this.props.userData.username
         return (
             <>
-        <div className = {`${styles.message__container} ${key % 2 == 0 && styles.toggled}`}>   
+        <div className = {`${styles.message__container} ${username === myUsername && styles.toggled}`}>   
                     <div className = {styles.message__container__sent}>
-                    <div className = {styles.message__image}> <h1>image</h1> </div>
+                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`/images/${username}--profilepicture.png`}>U</Avatar> </div>
                     <div className = {styles.message__format}>
-                    <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${key % 2 != 0 && styles.toggled}`}>{username}</p><p className = {`${styles.message__time}`}>{time}</p>
-                    </div>
+                    <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${username && styles.toggled}`}>{username}</p><p className = {`${styles.message__time}`}>{time}</p></div>
         <div className = {styles.message__actualmessage}>{message}</div>
                     </div>
                     </div>
@@ -88,7 +98,29 @@ class Groupchatbox extends React.Component{
     }
     socket.emit('groupMessage', msgInfo);
 }
+/*
+    checkProfile = (username) => {
+        let {token} = this.props.userData;
+        axios.get(`http://localhost:5000/chat/${username}`, {
+         headers: { Authorization:'Bearer' + token } })
+        .then(el => {
+            return <h1>hello</h1>
+        }).catch(el =>{
+            return (<div>hello world</div>)
+        })
+    }
+    */
+   checkGroupProfile = () => {
+       let {groupId} = this.props;
+    axios.get(`http://localhost:5000/chat/groups/profilepicture/${groupId}`).then(el => {
+        console.log(el.data);
+        let profilePicture = el.data.profilePicture;
+        this.setState({groupProfile: profilePicture});
+    }).catch(el => {
+        console.log(el.response.data);
+    })
 
+   }
 
     render(){
         let msgBox = this.msgBox;
@@ -121,17 +153,26 @@ class Groupchatbox extends React.Component{
 
                 <div className = {styles.container__groupinformation}>
                        <div className = {styles.container__groupinformation__wrapper}>
-                       <div className = {styles.group__image}>Image</div>
-                    <div className = {styles.group__name}><p className = {styles.title}>Group Name</p><p className = {styles.title__description}> {this.props.groupName} </p></div>
-                    <div className = {styles.group__description}>{this.props.description}</div>
+                       <div className = {styles.group__image__container}><Avatar size = {85} shape = 'circle' className = {styles.group__image} src = {`/images/${this.state.groupProfile}`} alt = 'profilepicture' />
+                       <p className = {styles.title}>{this.props.groupName}</p>
+                       </div>
+                    <div className = {styles.group__name}><p className = {styles.title__description}>{this.props.description} </p></div>
                        </div>
                        <div className = {styles.group__members__container}>
                            <div className = {styles.group__members__heading}>
-                           <TeamOutlined className = {styles.group__members__icon} /> <p>Group Members</p>
+                           <TeamOutlined className = {styles.group__members__icon} /> <p className = {styles.title}>Group Members</p>
                            </div>
-                           {this.state.groupMembers.map(el => {
-                            return <p>{el}</p>
-                       }) }</div>
+                           <div className = {styles.group__members__username__container}>
+                           { this.state.loadingFriends ? <Spin/> : 
+                           this.state.groupMembers.map(el => {
+                            return <div className = {styles.username}>
+                                <Avatar shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`} />
+                                {el}
+                                </div>
+                            
+                       }) }
+                        </div>
+                       </div>
                        <div>is Online</div>
                 </div>
 

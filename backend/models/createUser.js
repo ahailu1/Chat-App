@@ -3,15 +3,17 @@ const Connection = require('../database/connection');
 const connection = Connection();
 const saltRounds = 5;
 
-
-
 const createGroup = async (object) => {
   let { groupName, groupId, groupDescription, groupCreator } = object;
   let query = 'insert into my_groups(group_name, group_id, group_creator, description,creation_date) values ($1, $2, $3, $4, LOCALTIMESTAMP)';
   let values = [groupName, groupId, groupCreator, groupDescription];
   try {
-    connection.query(query, values);
+    let results = await connection.query(query, values);
+    console.log(results.rows);
+    console.log('there is not a single fucking error')
+    return true;
   } catch (err) {
+    console.log('some sorta group add error');
     console.log(err);
     throw new Error('couldnt add group')
   }
@@ -55,9 +57,7 @@ const getGroupMembers = async (groupId) => {
     console.log('couldnt fetch group members');
     return err;
   }
-  
 }
-
 const getJoinedGroups = async (username) => {
   let query = 'select group_creator, group_name, group_id, description from my_groups where group_id in (select group_id from group_members where group_member_username = $1)';
   let values = [username];
@@ -68,7 +68,24 @@ const getJoinedGroups = async (username) => {
     throw new Error({ error: `couldnt fetch ${username} groups`});
   }
 };
-
+const leaveGroup = async (username, groupId) => {
+  let query = 'delete from group_members where group_member_username = $1 and group_id = $2';
+  let values = [username, groupId];
+  try {
+    let results = connection.query(query, values);
+  } catch (errr) {
+    throw new Error({ message: 'couldnt add user' });
+  }
+};
+const deleteGroup = async (username, groupId) => {
+  let query = 'delete from my_groups where group_creator = $1 and group_id = $2';
+  let values = [username, groupId];
+  try {
+    let results = connection.query(query, values);
+  } catch (errr) {
+    throw new Error({ message: 'couldnt delete group' });
+  }
+};
 const friendStatus = async (username) => {
   let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
   console.log(username + 'is a retard');
@@ -82,6 +99,23 @@ const friendStatus = async (username) => {
   }
 };
 
+const deleteFriend = async (username,friendname, query) => {
+  let queryOne = 'delete from friend_status WHERE username = $1 and friendname = $2';
+  let queryTwo = 'delete from friend_status WHERE friendname = $1 and username = $2';
+  let finalQuery;
+  if (query === 1 || query === '1') {
+    finalQuery = queryOne;
+  } else {
+    finalQuery = queryTwo;
+  }
+  let values = [username, friendname];
+  try {
+    let results = await connection.query(finalQuery, values);
+    return results.rows;
+  } catch (err) {
+    throw new Error('couldnt delete friend');
+  }
+}
 
 const alterFavourites = async (value, username, friendname, reverse) => {
   // if my username is under the 'friendname' category and my friendname is under the username category, then update username is favourite where username = friendname and friendname == username
@@ -263,6 +297,7 @@ module.exports = {
   addUser,
   confirmRequest,
   deletePending,
+  deleteFriend,
   addMessage,
   getMessages,
   getAll,
@@ -278,4 +313,6 @@ module.exports = {
   joinGroup,
   getJoinedGroups,
   getGroupMembers,
+  leaveGroup,
+  deleteGroup,
 };

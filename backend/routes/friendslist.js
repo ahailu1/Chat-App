@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const router = express.Router();
-let { alterFavourites, friendStatus, createLock } = require('../models/createUser');
+let { alterFavourites, friendStatus, createLock, deleteFriend } = require('../models/createUser');
 const {
   removePending, addFriend, confirmFriend,
 } = require('../controller/addFriend');
@@ -12,9 +12,8 @@ const sessionInit = require('../middleware/session.js');
 
 
 router.post('/setlock', async (req, res) => {
-  let {username, password, query, friendname} = req.body;
+  let { username, password, query, friendname } = req.body;
   try {
-    console.log(query);
     createLock(username, password, friendname, query);
     res.status(200).send('lock set');
   } catch (err) {
@@ -24,7 +23,6 @@ router.post('/setlock', async (req, res) => {
 router.post('/unlock', async (req, res) => {
   try {
     let response = await userUnlock(req, res);
-    console.log(response);
     if (response) {
       res.status(200).send({ message: 'password match' });
     } else {
@@ -36,7 +34,6 @@ router.post('/unlock', async (req, res) => {
 });
 
 router.get('/addfriend/:username/:friendname', async (req, res) => {
-  console.log(req.params.username);
   const requests = await addFriend(req, res);
   res.status(200).send('success');
 });
@@ -53,7 +50,6 @@ router.get('/deletepending/:username/:friendname', async (req, res) => {
 });
 router.get('/declinerequest/:username/:friendname', (req, res) => {
   let { username, friendname} = req.params;
-  console.log([username, friendname]);
   declineReq(username, friendname)
     .then(() => { console.log('hello'); res.status(200).send(true); })
     .catch((err) => res.status(422));
@@ -69,11 +65,20 @@ router.get('/friendstatus/:username', async (req, res) => {
 });
 router.get('/setfavourites/:username/:friendname/:value/:reverse', async (req, res) => {
   let { username, friendname, value, reverse } = req.params;
-  console.log([username,friendname,value, reverse] + 'isawasteyute');
   try {
     alterFavourites(value, username, friendname, reverse);
   } catch (err) {
     res.status(422);
   }
+});
+router.delete('/deletefriend', async (req, res) => {
+  let {username, friendname, query } = req.body;
+  try {
+    let deleteItem = await deleteFriend(username, friendname, query);
+    console.log('deleting friend buddy')
+    res.status(200).send({msg: 'friend deleted'});
+  } catch (err) {
+    res.status(422).send({errorMsg: 'couldnt delete friend'});
+  };
 });
 module.exports = router;

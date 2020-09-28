@@ -1,3 +1,7 @@
+const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
+const sharp = require('sharp');
 const { createGroup } = require('../models/createUser');
 
 let makeGroup = async (obj) => {
@@ -7,6 +11,8 @@ let makeGroup = async (obj) => {
     throw new Error('couldnt add group ');
   }
 };
+
+
 
 module.exports = {
   makeGroup,

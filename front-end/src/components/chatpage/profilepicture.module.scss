@@ -1,14 +1,36 @@
 .container__profile{
-    flex-direction: column;
     display: flex;
     align-items: center;
-padding: 2rem 0 0 0rem;
-margin: 3rem 0 3rem 0;
+    margin: 5rem 0 3rem 0;
+flex-direction: column;
+&.toggled{
+    margin: 0 0 0 0;
+& > p {
+    font-size: 0.55rem;
+}}
 & > button{
-    border: solid orange;
+
 }}
 
 
 .upload__button{
     margin: 2rem 0 2rem 0;
 }
+
+.image{
+    display: flex;
+    align-self: center;
+&__text{
+    color: white;
+    font-size: 0.75rem;
+    &.toggled{
+        display: none;
+    }
+}}
+.avatar__uploader{
+    display: flex;
+    width: auto;
+&:hover{
+
+    cursor: pointer;
+}}

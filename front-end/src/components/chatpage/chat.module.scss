@@ -12,11 +12,23 @@
 
 .sidebar{
     width: 50rem;
+    height: 100vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
     position: relative;
     flex-grow: 1;
+&__profilepicture__container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+&__description{
+    text-align: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-top: -2rem;
+}
 }
 .avatar{
 }
@@ -24,7 +36,10 @@
 .container{
 
 &__layout{
+    box-shadow: 0 0 2px 0 black;
     min-height: 100vh;
+}
+&__content{
 }
 
 }
@@ -40,9 +55,10 @@
 }}
 .tab{
     &__card{
-        background-color:#001529;
+        border: solid white;
+        box-shadow: 0 0 3px 0 black;
+        background-color:rgb(221, 221, 221);
         height: 100%;
-        border: solid white 0.5px;
     }
     &__pane{
         border: solid orange;

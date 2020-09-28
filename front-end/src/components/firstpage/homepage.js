@@ -23,7 +23,7 @@ myFooter = () => {
         <>
           <Col span={6} className = {styles.footer__column__two}>
       <div className = {styles.footer__header__main}>About</div>
-        <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add friends and start chatting. Users are allowed to add their friends to 'favourites' and can set a lock to their conversations so that a password must be entered in order to start chatting or to view conversation history.   </div>
+        <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add friends, create groups. Users are allowed to add their friends to 'favourites' and can set a lock to their conversations so that a password must be entered to chat or view conversation history.   </div>
           
         </Col>    
         <Col span={6} className = {styles.footer__column__two}>
@@ -39,6 +39,7 @@ myFooter = () => {
       <Col span={6} className = {styles.footer__column__two}>
           <div className = {styles.footer__header__main}>Technologies Used</div>
       <div className = {`${styles.footer__container__technologies}`}>
+        
         <div>
             <p className = {styles.footer__header}>Front End</p>
         <p>ReactJS</p>
@@ -46,7 +47,6 @@ myFooter = () => {
         <p>SASS</p>
         <p>Socket Io</p>        
         <p>Ant Design</p>
-    
         </div>
         <div>
             <p className = {styles.footer__header}>Back End</p>
@@ -55,11 +55,20 @@ myFooter = () => {
         <p>Socket Io</p>    
         <p>PostgreSQL</p>    
         </div>
+        <div>
+            <p className = {styles.footer__header}>Misc</p>
+        <p>Git Version Control</p>
+        <p>NGINX Web Server</p>
+        <p>Linux OS</p>    
+        </div>
       </div>
       </Col>
       <Col span={6} className = {styles.footer__column__two}>
       <div className = {styles.footer__header__main}>About</div>
         <div className = {styles.footer__container__about}>
+            I am an aspiring Web Developer that has been working on this application over the past 9 months. I started with basic knowlege of PHP and javascript and zero knowledge of Node.js, but decided that 
+            to find a job as a web-developer, I ought to learn tools that are 'in demand.' I created this application because it required an integration of CRUD Operations and REST API-s, which forced me to get both a practical and a knowledge-based understanding of such concepts.
+
      </div>
           
         </Col> 

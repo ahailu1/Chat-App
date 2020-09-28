@@ -1,18 +1,35 @@
 
-
+.container{
+    &__requests{
+        overflow-y: scroll;
+        display: flex;
+        height: 50vh;
+        flex-direction: column;
+    &__creategroup{
+        height: 40vh;
+        overflow-y: scroll;
+    &.toggled{
+        display: none;
+    }}}
+}
 .tab{
 color: white;
 font-size: 0.65rem;
+&__title{
+    color: white;
+    font-size: 0.75rem;
+}
 &:hover{
     color: #1890ff;
 }
 &__key{
 }
+&__pane__container{
+}
 }
 
 .icon{
     &__container{
-        border: solid red;
         display: flex;
         height: 100%;
         justify-content: space-between;
@@ -124,15 +141,16 @@ font-size: 0.65rem;
         }}
     &__groupinfo{
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
 }
-    &__header{
+    &__header__name{
         display: flex;
     & > p{
         font-weight: 500;
         color: #1890ff;
+    }  
     }
-    &__id{
+    &__header__id{
         display: flex;
         margin-left: 1rem;
         & > p {
@@ -140,5 +158,63 @@ font-size: 0.65rem;
             color: #1890ff;
     }
     }
+}
+.tab{
+    &__title{
+
     }
+}
+.adderror{
+    color: white;
+    font-size: 0.85rem;
+}
+.container{
+    &__autocomplete{
+        width: 100%;
+        display: flex;
+    &__button{
+        font-size: 0.75rem;
+        width: 20%;
+    }}
+    &__options{
+        display: flex;
+        justify-content: space-between;
+    }
+    &__username{
+        font-size: 1rem;
+        color:#0b0d1b;
+    }
+    &__icon{
+        width: 20%;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+    &:hover{
+        transition: all ease-in 0.05s;
+        font-size: 1rem;
+        color: red;
+    }}
+    &__header{
+        min-height: 10vh;
+    }
+    &__select{
+        width: 20%;
+    }
+    &__users{
+        margin: 0 0 0 0.5rem;
+        font-size: 1rem;
+        width: 70%;
+        background-color: orchid;
+        color: #0b0d1b;
+    & > h1 {
+    }
+    &:hover{
+    }
+}
+
+}
+.create__error{
+    font-style: italic;
+    font-size: 0.75rem;
+    color: white;
 }

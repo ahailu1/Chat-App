@@ -35,19 +35,17 @@ componentDidMount(){
 loadProfile = async () => {
   let {username, token} = this.props.userData;
   console.log('got em');
-  let getPic = await axios.get(`http://localhost:5000/chat/${username}`, {
-    headers: {
-      Authorization:'Bearer' + token,
-    }
-  });
-
-  const data = getPic.data;
-console.log(getPic.status);
-if(getPic.status == 200) {
-
-
-} else {
-  }  
+  
+  try {
+    let getPic = await axios.get(`${this.props.actionUrl}`, {
+    headers: { Authorization:'Bearer' + token }});
+    console.log(getPic.data);
+    this.setState({profilePath: getPic.data.profilePicture});
+  } catch (err) {
+     let path = err.response.data.default;
+    this.setState({profilePath: 'default--profilepicture.png'});
+     console.log(err);
+  }
 }
 uploadButton = () => {
   let {loading} = this.state;
@@ -76,7 +74,7 @@ handleChange = info => {
     return;
   }
   if (info.file.status === 'done') {
-    // Get this url from response in real world.
+      console.log(info.file.originFileObj);
     this.getBase64(info.file.originFileObj, imageUrl =>
       this.setState({
         imageUrl,
@@ -87,26 +85,24 @@ handleChange = info => {
 }
 
 render(){
-  let {username, imageUrl} = this.props.userData;
+  let {username} = this.props.userData;
+  let {imageUrl} = this.state;
 
   return(
-        <div className = {styles.container__profile}> 
-        <Avatar size = {120} className = {styles.avatar} src = {`${this.state.profilepic == null ? '/images/default--profilepicture.png' : this.state.profilepic}`} />
+        <div className = {`${styles.container__profile} ${this.props.toggled && styles.toggled}`}> 
         <Upload
         name="avatar"
-        listType="picture-card"
-        className="avatar-uploader"
+        listType="picture"
+        className={styles.avatar__uploader}
         showUploadList={false}
-        action= {`http://localhost:5000/chat/${username}`}
+        action= {this.props.actionUrl}
         beforeUpload={this.beforeUpload}
         onChange={this.handleChange}
       >
-                {imageUrl ? <img src={`images/${imageUrl}`} alt="avatar" style={{ width: '100%' }} /> : this.uploadButton()}
-
+                {this.state.profilePath ? <Avatar className = {styles.image} src={`/images/${this.state.profilePath}`} alt="avatar" size = {this.props.setSize} /> : this.uploadButton()}
     </Upload>
      </div>
     )
-
 }
 
 }

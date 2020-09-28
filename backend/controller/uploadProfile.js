@@ -13,17 +13,26 @@ const upload = multer({
   },
 });
 
-const uploadPic = async (req, res) => {
-  let username = `${req.params.username}--profilepicture.png`;
-  const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
-  let pathaz = path.resolve(__dirname, '../public/images');
-  let check = path.join(pathaz, '/public/images');
-  console.log(path.join(pathaz, `/${username}`));
-  await fs.writeFile(path.join(pathaz, `/${username}`), buffer, (req, res, err) => {
-    if (err) console.log(err);
-  });
-  res.set('Content-Type', 'image/png');
-  res.status(200).send(buffer.toString('base64'));
+const uploadPic = async (req, res, group = false) => {
+  if (!group) { 
+    let username = `${req.params.username}--profilepicture.png`;
+    const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
+    let check = path.resolve(path.join(__dirname, '../../front-end/public/images'));
+    await fs.writeFile(path.join(check, `/${username}`), buffer, (req, res, err) => {
+      if (err) {
+        res.status(422).send({ errorMsg: 'couldnt uplod picture' });
+  }
+    });
+  } else {
+    const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
+    let groupId = `${req.params.groupId}--profilepicture.png`;
+    let check = path.resolve(path.join(__dirname, '../../front-end/public/images'));
+    await fs.writeFile(path.join(check, `/${groupId}`), buffer, (req, res, err) => {
+      if (err) {
+        res.status(422).send({ errorMsg: 'couldnt uplod picture' });
+      }
+    });
+  }
 };
 
 module.exports = {

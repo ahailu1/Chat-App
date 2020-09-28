@@ -14,7 +14,7 @@ router.get('/:username/:friendname', async (req, res) => {
     .then((msg) => {
       res.status(200).send(msg);
     }).catch((err) => {
-      console.log(err);
+      console.log('couldnt get messages');
     });
 });
 

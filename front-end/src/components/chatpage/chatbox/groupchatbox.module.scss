@@ -1,21 +1,27 @@
 .container{
     &__groupchatbox{
+        background-color: whitesmoke;
+        box-shadow: 0 0 3px 0 #5c5c5c;
         display: flex;
         height: 80vh;
         width: 90%;
+        margin: 2rem;
+    }
+    &__sent__socket{
+        width: 100%;
     }
     &__messagebox{
         position: relative;
         height: 15%;
         display: flex;
-        width: 95%;
+        width: 100%;
     }
     &__dialogue{
         box-shadow: 0 0 3px 0 white;
         width: 70%;
-        justify-content: flex-end;
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;
         height: 100%;
         background-color: whitesmoke;
         &__wrapper__container{
@@ -26,21 +32,24 @@
         position: absolute;
         bottom: 0;
         height: 100%;
-        width: 95%;
+        width: 100%;
         display: flex;
+        align-items: flex-end;
         flex-direction: column-reverse;
         overflow-y: scroll;
         left: 0;
     }
 }
     &__groupinformation{
+        border-radius: 0.5rem;
+        border: solid #1890ff 2px;
+        padding: 2rem 0.5rem 0.5rem 0.5rem;
         background-color: whitesmoke;
         margin-left: 2rem;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 2rem;
     &__wrapper{
         width: 100%;
     }}
@@ -62,10 +71,7 @@
 }}
 
 .message{
-    &__actualmessage{
-        padding: 0.5rem;
-        color: white;
-    }
+   
     &__time{
 margin-left: 0.5rem;
 color: white;
@@ -75,39 +81,45 @@ font-style: italic;
     &__username{
         font-family: 'montserrat', serif;
         font-style: italic;
-        color: #ff6b6b;
-        font-weight: 500;
+        color: #ff3d3d;
+        font-weight: 600;
     &.toggled{
     
     }}
     &__format{
-        width: 100%;
+        width: 90%;
         display: flex;
         flex-direction: column;
+        align-items: flex-start;
     }
     &__container{
+        margin: 1.5rem 0 1.5rem 0;
+        width: 100%;
+        height: auto;
         display: flex;
-
         &.toggled{
-            margin-right: 1rem;
+
             justify-content: flex-end;
         }
 
     &__sent{
-        background-color: #001529;
+        box-shadow: 0 0 3px 0 rgb(163, 163, 163);
+        background-color: #55adff;
         display: flex;
         border-radius: 5px;
         width: 90%;
-        margin: 0.5rem 0 0.5rem 0;
+        height: auto;
+        margin: 0 1rem 0 1rem;
     }}
     &__timestamp{
         padding-top: 0.5rem;
         display: flex;
-        align-items: center;
-        align-content: center;
     }
     &__actualmessage{
-
+        font-weight: 500;
+        padding: 0 0.75rem 0.75rem 0;
+        word-break:break-word;
+        display: flex;
     }
     &__image{
         display: flex;
@@ -123,26 +135,30 @@ font-style: italic;
 
 
 .group{
-    &__description{
-        width: 100%;
-        font-size: 1rem;
-        border: solid orange;
-        display: flex;
-        border-radius: 0.5rem;
-        padding: 0.25rem;
-    }
     &__name{
-
-    }
-    &__members__container{
-        margin: 1rem 0 0 0;
-        box-shadow: 0 0 3px 0 whitesmoke;
-        border: solid orange;
+        align-items: center;
+        background-color: #55adff;
         display: flex;
         flex-direction: column;
-        width: 80%;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+    }
+    &__members__container{
+        overflow-y: scroll;
+        border-radius: 0.5rem;
+        background-color: #55adff;
+        box-shadow: 0 0 4px 0 white;
+        margin: 1rem 0 0 0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
     &__members{
+
+        &__username__container{
+            display: flex;
+            flex-direction: column;
+        }
 
         &__icon{
             color: white;
@@ -150,17 +166,20 @@ font-style: italic;
         }
 
     &__heading{
+        width: 100%;
         background-color: #55adff;
         justify-content: center;
-        padding-top: 0.5rem;
+        padding: 0.5rem;
         align-items: center;
         display: flex;
         align-content: center;
+        border-bottom: solid white 2px;
         & > p {
             display: flex;
             align-items: center;
             align-content: center;
             font-size: 1rem;
+            font-weight: 600;
         }
     }
     }
@@ -169,8 +188,37 @@ font-style: italic;
     font-size: 1rem;
     color: #001529;
     font-weight: 600;
-    font-family: montserrat, sans-serf;
+    font-family: montserrat, sans-serif;
     &__description{
 
     }
 }
+
+.username{
+    display: flex;
+    padding: 0.5rem;
+    justify-content: space-around;
+    color: #001529;
+    font-weight: 600;
+    width: 70%;
+    white-space:nowrap;
+    box-shadow: 0 0 3px 0 whitesmoke;
+    background-color: whitesmoke;
+    border-radius: 0.5rem;
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+&:hover{
+    background-color: white;
+}}
+.group{
+    &__image__container{
+        align-items: center;
+        flex-direction: column;
+        background-color: #55adff;
+        display: flex;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    &__image{
+    }
+}   
