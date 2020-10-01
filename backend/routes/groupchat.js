@@ -7,7 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const { upload, uploadPic } = require('../controller/uploadProfile');
-let { getGroup, getAllGroups, joinGroup, getJoinedGroups, getGroupMembers, leaveGroup, deleteGroup, createGroup } = require('../models/createUser');
+let { fetchGroupMessage, getGroup, getAllGroups, joinGroup, getJoinedGroups, getGroupMembers, leaveGroup, deleteGroup, createGroup } = require('../models/createUser');
 app.use(cors());
 
 router.post('/creategroup', cors(), async (req, res) => {
@@ -19,11 +19,9 @@ router.post('/creategroup', cors(), async (req, res) => {
   };
   try {
     await createGroup(obj);
-    console.log('why is this thing not fucking owrking??');
     res.status(200).send({ errorMsg: 'its working' });
   } catch (err) {
-    console.log('what am i catching really?');
-    res.status(422).send({errorMsg: 'couldnt add group member'});
+    res.status(422).send({ errorMsg: 'couldnt add group member' });
   }
 });
 router.get('/mygroups/:username', async (req, res) => {
@@ -46,8 +44,6 @@ router.get('/allgroups', async (req, res) => {
 });
 router.get('/join/:groupid/:username', async (req, res) => {
   let { username, groupid } = req.params;
-  console.log(groupid);
-  console.log(username);
   try {
     let join = await joinGroup(username, groupid);
     if (join === true) {
@@ -83,7 +79,6 @@ router.get('/profilepicture/:groupId', async (req, res, next) => {
   // check if path exists. if it does, send the route to the path, otherwise send the route to the default profile picture;
   fs.access(profilePath, fs.constants.F_OK, (err) => {
     if (err) {
-      console.log(err);
       res.status(404).send({ default: defaultUsername });
     } else {
       res.status(200).send({ profilePicture: groupId });
@@ -99,6 +94,15 @@ router.post('/profilepicture/:groupId', upload.single('avatar'), async (req, res
     await uploadPic(req, res, group);
   } catch (err) {
     res.status(422).send({ errorMsg: 'couldnt upload picture' });
+  }
+});
+router.get('/chathistory/:groupId', async (req, res) => {
+  let {groupId} = req.params;
+  try {
+    let results = await fetchGroupMessage(groupId);
+    res.status(200).send({ msgHistory: results });
+  } catch (err) {
+    res.status(422).send({ errorMsg: 'couldnt retrieve message history'});
   }
 });
 router.get('/leavegroup/:groupId/:username', async (req, res) => {

@@ -63,17 +63,13 @@ class Createaccount extends React.Component{
             confirm__password: e.target.confirm__password.value,
             },
         }
-        console.log(e.target.confirm__password.value);
          axios(data).then(res => {
              this.props.handleLogin(res.data);
             this.props.history.push(`/chat/${res.data.username}`);
          }).catch(err => {
-             console.log(err.response);
         
              let error = err.response.data.isValidated.data;
              let [errUsername, errPassword, errConfirmPwd]= [[], [], []];
-             console.log(errPassword);
-             console.log(errUsername);
                 error.map((el) => {
                 if(el.param == 'username'){
                    errUsername = errUsername.concat(el.msg)

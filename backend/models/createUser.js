@@ -9,15 +9,34 @@ const createGroup = async (object) => {
   let values = [groupName, groupId, groupCreator, groupDescription];
   try {
     let results = await connection.query(query, values);
-    console.log(results.rows);
-    console.log('there is not a single fucking error')
     return true;
   } catch (err) {
     console.log('some sorta group add error');
-    console.log(err);
     throw new Error('couldnt add group')
   }
 };
+const insertGroupMessage = async (data) => {
+  let { username, groupId, message} = data;
+  let query = 'insert into group_chat_messages(group_member_username, group_id, group_message, time_sent) values ($1, $2, $3, current_timestamp)';
+  let values = [username, groupId, message];
+  try {
+    let res = await connection.query(query, values);
+  } catch (err) {
+    throw new Error('couldnt insert group_message');
+  }
+};
+const fetchGroupMessage = async (groupId) => {
+  let query = "select group_member_username, group_id, group_message, time_sent::timestamp at time zone 'edt' from group_chat_messages where group_id = $1 order by time_sent asc";
+  let values = [groupId];
+  try {
+    let results = await connection.query(query, values);
+    let myResults = results.rows;
+    return myResults;
+  } catch (err) {
+    throw new Error('couldnt fetch group chat history');
+  }
+};
+
 const getGroup = async (username) => {
   let query = 'select * from my_groups where group_creator = $1';
   let values = [username];
@@ -54,7 +73,6 @@ const getGroupMembers = async (groupId) => {
     let results = await connection.query(query, values);
     return results.rows;
   } catch (err) {
-    console.log('couldnt fetch group members');
     return err;
   }
 }
@@ -88,7 +106,6 @@ const deleteGroup = async (username, groupId) => {
 };
 const friendStatus = async (username) => {
   let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
-  console.log(username + 'is a retard');
   let values = [username, username];
   try {
     let result = await connection.query(query, values);
@@ -144,7 +161,6 @@ const getAll = async () => {
     const data = results.rows;
     return data;
   } catch (err) {
-    console.log('return messages erros');
     return new Error();
   }
 };
@@ -156,10 +172,8 @@ const getMessages = async (info) => {
   try {
     const results = await connection.query(query, values);
     const data = results.rows;
-    console.log(data);
     return data;
   } catch (err) {
-    console.log('return messages error');
     return new Error();
   }
 };
@@ -183,7 +197,6 @@ const declineRequest = async (username, friendname) => {
   const query = 'update friend_status SET state = $1 WHERE username = $2 and friendname = $3';
   const values = [4, friendname, username];
   try {
-    console.log('right sdaasdsasdahere');
     const result = await connection.query(query, values);
   } catch (er) {
     throw new Error('could not decline request properly');
@@ -273,7 +286,6 @@ const addUser = async (username, friendname) => {
   try {
     await connection.query(query, values);
   } catch (err) {
-    console.log('cant add user');
     throw new Error();
   }
 };
@@ -315,4 +327,6 @@ module.exports = {
   getGroupMembers,
   leaveGroup,
   deleteGroup,
+  insertGroupMessage,
+  fetchGroupMessage,
 };

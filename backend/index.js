@@ -10,10 +10,10 @@ const homeRoute = require('./routes/homeRoute');
 const chat = require('./routes/chat');
 const chatbox = require('./routes/chatbox');
 const groupchat = require('./routes/groupchat');
-
 const server = http.createServer(app);
 const io = socketio(server);
 const { insertMsg } = require('./controller/addFriend');
+const { insertGroupMessage } = require('./models/createUser');
 const friendsList = require('./routes/friendslist');
 
 //  const sessionInit = require('./middleware/session.js');
@@ -34,7 +34,6 @@ client.on('connect', () => {
 });
 
 client.lrange('messagedata', 0, -1, (err, res) => {
-  console.log(res);
 });
 
 io.on('connect', (socket) => {
@@ -49,26 +48,13 @@ io.on('connect', (socket) => {
     insertMsg(response);
     io.emit(room, response);
     socket.on('disconnect', () => {
-      console.log('im outta here');
     });
-  });
-  socket.on('login', (data) => {
-
-    console.log(data.online);
-    io.emit('login', data);
-  });
-  socket.on('logout', (data) => {
-    console.log(data);
-    console.log('logging out');
-    io.emit('logout', data);
   });
   socket.on('groupMessage', (data) => {
     let { groupId, message } = data;
-    console.log(groupId);
-    console.log(message);
-    socket.join(groupId);
+    insertGroupMessage(data);
     io.emit(groupId, data);
-  });
+  }); 
 });
 server.listen(app.get('port') || 5000, () => {
   console.log(`server is listening  on ${app.get('port')}`);

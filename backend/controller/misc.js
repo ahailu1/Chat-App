@@ -3,7 +3,6 @@ let { declineRequest, getDeclined, loginLock } = require('../models/createUser')
 const declineReq = (username, friendname) => {
 
   return declineRequest(username, friendname).then((res) => {
-    console.log('friend request declined for' + friendname);
     return true;
   }).catch((err) => {
     throw new Error('something happened');

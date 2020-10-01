@@ -68,7 +68,6 @@ myFooter = () => {
         <div className = {styles.footer__container__about}>
             I am an aspiring Web Developer that has been working on this application over the past 9 months. I started with basic knowlege of PHP and javascript and zero knowledge of Node.js, but decided that 
             to find a job as a web-developer, I ought to learn tools that are 'in demand.' I created this application because it required an integration of CRUD Operations and REST API-s, which forced me to get both a practical and a knowledge-based understanding of such concepts.
-
      </div>
           
         </Col> 
@@ -78,18 +77,18 @@ myFooter = () => {
 
 render(){
     const firstDescription = {
-        paragraph: 'this is a description of the title',
-        heading: 'Chat with multiple people',
+        paragraph: 'Create and join groups within 2 clicks. Just enter your description, group-ID and Group Name',
+        heading: 'Create Groups',
         icon: <WechatFilled/> 
     }
     const secondDescription = {
-        paragraph: 'this is a description of the title',
+        paragraph: 'Add a lock to your chat so that you need to enter a password to initiate conversations',
         heading: 'Add A lock to your chat',
         icon: <LockOutlined/> 
     }
     const thirdDescription = {
-        paragraph: 'Saved Chat History',
-        heading: 'hasadsello',
+        paragraph: 'all conversation history is saved so that when you log out and then log back in, your conversation is still there',
+        heading: 'Saved Conversation History',
         icon: <TeamOutlined/> 
     }
     return (

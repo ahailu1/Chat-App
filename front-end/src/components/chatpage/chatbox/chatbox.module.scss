@@ -118,15 +118,15 @@ flex-grow: 1;
     position: absolute;
     bottom:0;
     width: 100%;
+
     &0{
     overflow-y: scroll;
-
     display: flex;
     flex-direction: column-reverse;
     height: 100%;
     width: 100%;
     overflow-y: scroll;
-        position: relative;
+    position: relative;
 }}
 
 .sender{

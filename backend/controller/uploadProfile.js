@@ -14,14 +14,14 @@ const upload = multer({
 });
 
 const uploadPic = async (req, res, group = false) => {
-  if (!group) { 
+  if (!group) {
     let username = `${req.params.username}--profilepicture.png`;
     const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
     let check = path.resolve(path.join(__dirname, '../../front-end/public/images'));
     await fs.writeFile(path.join(check, `/${username}`), buffer, (req, res, err) => {
       if (err) {
         res.status(422).send({ errorMsg: 'couldnt uplod picture' });
-  }
+      }
     });
   } else {
     const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();

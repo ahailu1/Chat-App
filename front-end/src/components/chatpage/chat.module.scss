@@ -1,14 +1,43 @@
 .spinner{
     color: red;
     font-size: 5rem;
-    border: solid orange;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
 }
-
+.navbar__wrapper{
+    border: solid white 0.5px;
+    display: flex;
+    flex-direction: column;
+    width: 27%;
+    height: 100vh;
+    background-color: #001529;
+}
+.popover{
+    margin: -1rem 0 1rem 0;
+    display: flex;
+    justify-content: center;
+    &__container{
+        width: 100%;
+        flex-direction: column;
+        display: flex;
+    }
+}
+.profilepicture{
+    &__container{
+        border: solid white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    &__popover{
+        display: flex;
+        justify-content: center;
+    }
+}
 
 .sidebar{
     width: 50rem;
@@ -16,12 +45,13 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    position: relative;
     flex-grow: 1;
 &__profilepicture__container{
+
+    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    height: 35%;
 }
 &__description{
     text-align: center;
@@ -40,6 +70,7 @@
     min-height: 100vh;
 }
 &__content{
+    display: flex;
 }
 
 }
@@ -55,6 +86,7 @@
 }}
 .tab{
     &__card{
+        width: 80%;
         border: solid white;
         box-shadow: 0 0 3px 0 black;
         background-color:rgb(221, 221, 221);
@@ -92,4 +124,22 @@
         color: white;
         font-size: 2rem;
     }
+    &__instructions{
+        padding: 1rem;
+    
+    & > p {
+        font-size: 0.85rem;
+        color: white;
+    }}
+}
+.instructions{
+    &__header{
+        text-align: center;
+        color: white;
+        font-size: 1.5rem;
+        font-style: montserrat, sans-serif;
+    &__item{
+        color: red;
+        margin-right: 0.5rem;
+    }}
 }

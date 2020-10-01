@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Layout, Tabs, Avatar, Menu, AutoComplete, Select, Spin, Space, Button} from 'antd';
+import {Layout, Tabs, Avatar, Button} from 'antd';
 import styles from './creategroup.module.scss';
-import { PlusCircleOutlined, DeleteFilled, MinusCircleFilled, UserOutlined, MessageFilled} from '@ant-design/icons';
+import { DeleteFilled, MinusCircleFilled, UserOutlined, MessageFilled} from '@ant-design/icons';
 import Profilepicture from '../profilepicture';
 import axios from 'axios';
 const Creategroup = (props) => {
@@ -26,7 +26,7 @@ const initChat = () => {
         groupId : props.groupId,
         groupName: props.groupName,
     }
-    props.createGroupChat(groupInfo);
+    props.createGroupChat([groupInfo]);
 
 }
 const leaveMyGroup = (username, groupId) => {
@@ -46,7 +46,7 @@ let fetchGroup = () => {
             <div className = {`${styles.container__groupdata__avatar} ${props.joinedGroups && styles.toggled}`}>   
                 <div className = {styles.container__groupdata__avatar__container}>
                 { props.setProfile ? <Profilepicture actionUrl = {`http://localhost:5000/chat/groups/profilepicture/${props.groupId}`} userData = {props.userData} toggled = {true} setSize = {50}/>
-                 : <Avatar src = {`/images/${props.groupId}--profilepicture.png`} size = {64} />  
+                 : <Avatar src = {`/images/${props.groupId}--profilepicture.png`} size = {64}>U</Avatar>  
                 }
                 </div>
                 {props.description &&

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Layout, Tabs, Avatar, Menu, AutoComplete, Select, Spin, Space} from 'antd';
+import {Layout, Tabs, AutoComplete, Select, Spin, Space, Popover} from 'antd';
 import styles from './chat.module.scss';
 import { UploadOutlined, CloseSquareFilled, UserAddOutlined } from '@ant-design/icons';
 import Groupchatbox from './chatbox/groupchatbox';
@@ -10,10 +10,9 @@ import io from 'socket.io-client';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 import Navbar from '../header/header';
-class Chat extends React.PureComponent{
+class Chat extends React.Component{
 
     constructor(props){
-
     super(props);
     this.state = {
         friends: [],
@@ -29,10 +28,10 @@ class Chat extends React.PureComponent{
         myUsers: [],
         fullList: [],
         loading: true,
+        groupIdArr: [],
         }
 
     this.createChat = this.createChat.bind(this);
-    this.removeTab = this.removeTab.bind(this);
     this.addFriend = this.addFriend.bind(this);
     this.toggleFavourite = this.toggleFavourite.bind(this);
         this.friendStatus = this.friendStatus.bind(this);
@@ -100,36 +99,28 @@ addFriend = async (friendname) => {
 }
 
 
-createTab = (el) => {
-    return (
-        <div className = {styles.tab__container}>
-            <span className = {styles.tab__icon}>
-            <CloseSquareFilled className = {styles.tabicon} onClick = { () => { this.removeTab(el) }}/>
-            </span>
-            <span className = {styles.tab__name}>
-            {el}
-            </span>
-            </div>
-    )
-}
-removeTab = (name, group = false) => {
-  if(group) {
+   createTab(id, isgroup) {
+    let thisGroup = isgroup;
+
+    let removeTab = (name, group) => {
+    
+  if(group === true) {
         this.setState((prev) => {
-            let arr = prev.initGroupChat;
-            arr = arr.map(el => {
-                if(el.groupId === name){
-                     console.log('exists')
+            let arr = [...prev.initGroupChat].map((el) => { return {...el} });
+            let newArr = arr.filter(el => {
+                if(el.groupId !== name){
+                    return {...el};
                 }
                 else {
-                    return el;
                 }
-            })
+            });
             return {
-                initGroupChat: arr
+                initGroupChat: newArr
             }
         });
     } else {
         this.setState((prev) => {
+
             let newList = prev.initChat;
             newList = newList.filter((el) => {
                 return el != name;
@@ -139,6 +130,17 @@ removeTab = (name, group = false) => {
             }
         })
     }
+}
+    return (
+        <div className = {styles.tab__container}>
+            <span className = {styles.tab__icon}>
+            <CloseSquareFilled className = {styles.tabicon} onClick = {() => {removeTab(id, thisGroup)}}/>
+            </span>
+            <span className = {styles.tab__name}>
+            {id}
+            </span>
+            </div>
+    )
 }
 toggleUser = (friendname) => {
 this.setState((prev) => {
@@ -180,7 +182,6 @@ toggleFavourite = (myfriendname, boolean) => {
             }
         })
     ).catch(err => {
-        console.log(err + 'could not set favorutes');
     })
 }
 
@@ -189,12 +190,10 @@ friendStatus = async () => {
             const {username} = this.props.userData;
             const request = await axios.get(`http://localhost:5000/chat/friendslist/friendstatus/${username}`);
             const data = request.data;
-            console.log(data);
             data.forEach((el) => {
                  if(el.friendname === username && myList.indexOf(el.username) == -1){
                         myList.push(el.username);
                      }   
-
                 if((el.state === '3' && el.friendname === username && el.username_isfavourite !== true) || (el.state === '3' && el.username === username && el.friendname_isfavourite !== true)) {
                     // check if the friendname is my name//
                     let res  = el.friendname === username ? el.username : el.friendname;
@@ -240,36 +239,27 @@ loadingPage = () => {
 }
 createGroupChat = (groupInfo) => {
    let initState = true;
- this.state.initGroupChat.forEach(el => {
-       if(el.groupId === groupInfo.groupId){
-           initState = false;
-       }
-   });
-   if(initState){
-    this.setState((prev) => {
-        let groupChat = prev.initGroupChat;
-        groupChat = groupChat.concat(groupInfo);
-        return {
-            initGroupChat: groupChat
-        }
-    })
-   }
+   let initChat = [...this.state.initGroupChat];
+this.setState((prev) => {
+    let group = [...prev.initGroupChat].map(el => ({...el}));
+    let obj = [...groupInfo].map(el => { return {...el} });
+    let newGroup = group.concat(obj);
+    return {
+        initGroupChat: newGroup,
+    }
+});
 }
 removeFriend = (username) => {
         this.setState((prev) => {
             let friends = prev.friends;
-            console.log(friends);
-            console.log(username);
             friends = friends.filter(el => {
                 return el !== username;
             });
-            console.log(friends);
             return {
                 friends: friends
             }
-        })
+        });
 }
-
 createChat = (friendname, initialMessage = '') => {
     const cookie = new Cookies();
     const userData = cookie.get('userData');
@@ -292,8 +282,8 @@ createChat = (friendname, initialMessage = '') => {
     this.setState((prev) => {
 
         if(!this.state.initChat.includes(friendname)){
-        const arr = [...prev.initChat];
-        arr.push(userObject);
+        let arr = [...prev.initChat];
+        arr.concat([userObject]);
         return{
             users: arr,
             initChat: prev.initChat.concat(friendname),
@@ -302,8 +292,6 @@ createChat = (friendname, initialMessage = '') => {
         }
         });
 }
-
-
 render(){
     let {friends, requests, pending, declined, favourites, myUsers, fullList} = this.state;
     let props = {friends, requests, pending, declined, favourites};
@@ -330,35 +318,48 @@ render(){
         users : this.props.users,
         addFriend : this.addFriend,
     }
+    let instructions = (<div className = {styles.popover__container}><p>To Change your profile picture,<br/> click on the avatar above your username</p></div>)
     const { TabPane } = Tabs;
     return(
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
         <div className = {styles.sidebar__profilepicture__container}>
-        <Profilepicture userData = {userData} actionUrl = {`http://localhost:5000/chat/${username}`} setSize = {100}/>
-        <p className = {styles.sidebar__description}>{username}</p>
+        <Profilepicture className = {styles.profilepicture} userData = {userData} actionUrl = {`http://localhost:5000/chat/${username}`} setSize = {100}/>
+        <Popover className = {styles.popover} content = {instructions} title = 'Info'><a href = '#'>{username}</a></Popover>
         </div>
         {this.state.loading != true ? <Friendslist {...friendsList} removeFriend = {this.removeFriend} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
         </Sider>
         <Layout>
-        <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}/>
         <Content className = {styles.container__content}>
+
         <Tabs type = 'card' className = {styles.tab__card}>
-        {this.state.initGroupChat.length != 0 && this.state.initGroupChat.map(el => {
-        return <TabPane tab = {this.createTab(el.groupId, true)}> 
-                <Groupchatbox socket = {socket} userData = {userData} groupId = {el.groupId} groupName = {el.groupName} description = {el.description}  />
+        {this.state.initGroupChat.length > 0 && this.state.initGroupChat.map((el,index) => {
+        return <TabPane tab = {this.createTab(el.groupId, true)} key = {`${index}/groupchat`}> 
+                <Groupchatbox key = {`${index}---thisgroupchatbox`} socket = {socket} userData = {userData} groupId = {el.groupId} groupName = {el.groupName} description = {el.description}  />
                 </TabPane>
             })
         }
         {
         this.state.initChat.length > 0 && this.state.initChat.map( (el, index) => {
-           
-            return <TabPane tab = {this.createTab(el) } key = {index} >
+            return <TabPane tab = {this.createTab(el, false) } key = {`${index}/chat`} >
             <Chatbox socket = {socket} userData = {userData} /*createProfile = {this.createProfile} */ toggled = {this.state.toggled} friendName = {el} key = {index} initMessage = {this.state.initMessage != '' ? this.state.initMessage : false }/>
             </TabPane>
         })
         }
         </Tabs>
+        <div className = {styles.navbar__wrapper}>
+        <Navbar declined = {declined} initUser = {true} pending = {pending} requests = {requests} addFriend = {this.addFriend} friends = {friends} handleLogout = {this.props.handleLogout} users = {this.props.users} userData = {this.props.userData}/>
+        <div className = {styles.container__instructions}>
+            <h1 className = {styles.instructions__header}>Instructions</h1>
+            <p>All chats are created by clicking on the 'message' icon</p>
+            <p>  <span className = {styles.instructions__header__item}>To Add a Friend</span> click on the 'friends' tab and click on the search bar to see a list of all users. To filter through that list, simply enter a character that the username contains. To add a user to the 'favourites' tab, click on the star under the 'friends' tab </p>
+            <p>  <span className = {styles.instructions__header__item}>To view group options</span> click on the 'mygroups' tab which will display group-related options below. To join a group, click 'Join Group'; to create a group, click on the plus sign and fill in the form. To leave a group, click on the trashcan under the 'All Groups' tab. Groups are sorted only by GROUP ID</p>
+            <p>  <span className = {styles.instructions__header__item}>To set a lock on your chat</span> click on the lock icon under the 'friends' tab, which will display an input box that requires a password and a password confirmation.<span className = {styles.instructions__header__item}>Once a lock is set, you will need a password to enter or view your chats.</span> 
+            Locked chats will be colored <span className = {styles.instructions__header__item}> red.</span>To remove the password, enter the password that you created when you first set the lock.
+            </p>
+        </div>
+        
+        </div>
         </Content>
         </Layout>
         </Layout>

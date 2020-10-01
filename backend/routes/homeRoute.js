@@ -10,7 +10,7 @@ const getToken = require('../middleware/session');
 router.post('/createaccount', async (req, res, next) => {
   let isValidated = await authenticate(req, res);
   if (isValidated.authenticated === true) {
-    const {username} = isValidated;
+    const { username } = isValidated;
     const token = await jwt.sign({ user: username }, 'secret-key');
     res.status(200).send({ username,
       token,
@@ -25,7 +25,6 @@ router.post('/loginuser', async (req, res, next) => {
   const test = await loginAuthenticate(username, password);
   if (test.validated) {
     const token = await jwt.sign({ user: username }, 'secret-key');
-
     res.status(200).json({
       authenticated: true,
       token,
@@ -45,13 +44,12 @@ router.get('/authenticate', getToken, async (req, res, next) => {
   });
 });
 router.get('/allusers', async (req, res) => {
-  console.log('rgiht here asshole');
   try {
-  let list = await getAll();
-  res.status(200).send(list);
-  } catch(err) {
+    let list = await getAll();
+    res.status(200).send(list);
+  } catch (err) {
     res.status(422);
-  }  
-})
+  }
+});
 
 module.exports = router;

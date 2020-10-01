@@ -28,12 +28,9 @@ class Chatbox extends React.Component {
     }
 
     getFriends = async () => {
-        console.log('got');
             const {username} = this.props.userData;
-            console.log(username);
             const request = await axios.get(`http://localhost:5000/chat/friendslist/getfriends/${username}`);
             const data = request.data;
-            console.log(data);
             }
 
 
@@ -83,18 +80,15 @@ getHistory = () => {
 let response = axios.get(`http://localhost:5000/chat/chatbox/${username}/${this.props.friendName}`)
     .then((res) => {
         res.data.forEach((el) => {
-            console.log(el.time);
         })
         this.setState({msgHistory:res.data})
     })
     .catch((err) => {
-        console.log(err);
     })
 }
 messageHistory = (el, index) => {
     let newTime = el.timezone;
     newTime = new Date(el.timezone).toLocaleString();
-    console.log(newTime)
     return (
         <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
         <div className = {styles.container__history__message}> 
@@ -118,7 +112,6 @@ const friendname = this.props.friendName;
 let message = e.target.message.value;
 const {socket} = this.props;
 let time = new Date().toLocaleString();
-  console.log(time);
   
 const data = {
     room: this.props.friendName,
@@ -158,6 +151,7 @@ return(
             })
         }
         </div>
+        
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >

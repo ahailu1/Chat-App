@@ -12,7 +12,10 @@ class Groupchatbox extends React.Component{
             groupMembers : [],
             groupInfo : {},
             loadingFriends: true,
-            groupProfile: ''
+            groupProfile: '',
+            msgHistory: [],
+            loadHistory : true,
+            historyMsg: '',
         }
         this.msgBox = this.msgBox.bind(this);
     }
@@ -20,9 +23,19 @@ class Groupchatbox extends React.Component{
         this.getMessage();
         this.getGroupInfo();
         this.checkGroupProfile();
+        this.getMsgHistory();
     }
 
-
+    getMsgHistory = () => {
+        let {groupId} = this.props;
+        axios.get(`http://localhost:5000/chat/groups/chathistory/${groupId}`).then(el => {
+        let msgHistory = el.data.msgHistory;
+        console.log(msgHistory);
+        this.setState({msgHistory: msgHistory, loadHistory: false});
+        }).catch((el) => {
+            this.setState({loadHistory: false, historyMsg: 'couldnt fetch history. please refresh pagee'})
+        })
+    }
 
     getGroupInfo = () => {
         this.setState({loadingFriends: true});
@@ -31,10 +44,8 @@ class Groupchatbox extends React.Component{
         .then((el) => {
         
             let arr = el.data.groupMembers;
-            console.log(arr);
             let members = [];
             arr.forEach(el => {
-                console.log(el);
                 members.push(el.group_member_username);
             });
             this.setState({groupMembers: members});
@@ -49,10 +60,10 @@ class Groupchatbox extends React.Component{
         });
     }
     getMessage = (msgBox) => {
-        let {groupName} = this.props;
+        let {groupId} = this.props;
         
         let socket = io('http://localhost:5000');
-        socket.on(groupName, (data) => {
+        socket.on(groupId, (data) => {
             this.setState(prev => {
                 let myMessages = prev.myMessages;
                 myMessages = myMessages.concat(data);
@@ -66,17 +77,33 @@ class Groupchatbox extends React.Component{
 
 
 
-    msgBox = (data, key = 1) => {
-        let {message, username, time} = data;
-        let myUsername = this.props.userData.username
+    msgBox = (data, key = 1, msgHistory = false) => {
+        // let {message, username, time} = data;
+        let myUsername = this.props.userData.username;
+        let thisUser;
+        let thisGroupId;
+        let thisTime;
+        let thisMessage;
+        if(msgHistory === true){
+            let {group_member_username, group_id, group_message, timezone} = data;
+             thisUser = group_member_username;
+            thisMessage = group_message;
+            thisTime = new Date(timezone).toLocaleString();
+        } else {
+            let {message, username, time} = data;
+            thisMessage = message;
+            thisUser = username;
+            thisTime = time;
+        }
+
         return (
             <>
-        <div className = {`${styles.message__container} ${username === myUsername && styles.toggled}`}>   
+        <div className = {`${styles.message__container} ${thisUser === myUsername && styles.toggled}`}>   
                     <div className = {styles.message__container__sent}>
-                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`/images/${username}--profilepicture.png`}>U</Avatar> </div>
+                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`/images/${thisUser}--profilepicture.png`}>U</Avatar> </div>
                     <div className = {styles.message__format}>
-                    <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${username && styles.toggled}`}>{username}</p><p className = {`${styles.message__time}`}>{time}</p></div>
-        <div className = {styles.message__actualmessage}>{message}</div>
+                    <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${thisUser && styles.toggled}`}>{thisUser}</p><p className = {`${styles.message__time}`}>{thisTime}</p></div>
+        <div className = {styles.message__actualmessage}>{thisMessage}</div>
                     </div>
                     </div>
                     </div>
@@ -92,7 +119,7 @@ class Groupchatbox extends React.Component{
     let time = new Date().toLocaleString();
     let msgInfo = {
         message: val,
-        groupId : this.props.groupName,
+        groupId : this.props.groupId,
         username : username,
         time: time,
     }
@@ -113,11 +140,9 @@ class Groupchatbox extends React.Component{
    checkGroupProfile = () => {
        let {groupId} = this.props;
     axios.get(`http://localhost:5000/chat/groups/profilepicture/${groupId}`).then(el => {
-        console.log(el.data);
         let profilePicture = el.data.profilePicture;
         this.setState({groupProfile: profilePicture});
     }).catch(el => {
-        console.log(el.response.data);
     })
 
    }
@@ -134,13 +159,22 @@ class Groupchatbox extends React.Component{
                 <div className = {styles.container__dialogue}>
                     <div className = {styles.container__dialogue__wrapper__container}>
                     <div className = {styles.container__dialogue__wrapper}> 
+                    <div className = {styles.container__dialogue__messages}>
+                    
                     <div className = {styles.container__sent__socket}>
-                       {this.state.myMessages.map((el, index) => {
+            
+                       {this.state.loadHistory ? <Spin/> : this.state.msgHistory.map((el, index) => {
+                           return this.msgBox(el, index, true);
+                       })}
+                    </div>
+                        
+                    <div className = {styles.container__sent__socket}>
+                        {this.state.myMessages.map((el, index) => {
                            return this.msgBox(el, index)
                        })}
-                        </div>
-                        <div className = {styles.container__sent__history}> hello world </div>
+                    </div>
 
+                    </div>
                     </div>
                     </div> 
                 <div className = {styles.container__messagebox}>
@@ -164,16 +198,16 @@ class Groupchatbox extends React.Component{
                            </div>
                            <div className = {styles.group__members__username__container}>
                            { this.state.loadingFriends ? <Spin/> : 
-                           this.state.groupMembers.map(el => {
-                            return <div className = {styles.username}>
-                                <Avatar shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`} />
-                                {el}
+                           this.state.groupMembers.map((el, index) => {
+                            return <div className = {styles.username__container}>
+                                <Avatar key = {`${index}---isthekey`} shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`}>U </Avatar>
+                                <p className = {styles.username}>{el}</p>
                                 </div>
                             
                        }) }
                         </div>
                        </div>
-                       <div>is Online</div>
+                       <div></div>
                 </div>
 
             </div>

@@ -34,7 +34,6 @@ class Loginform extends React.Component{
         axios(data).then(res => {
             this.setState({loading: false});
             let {data} = res;
-            console.log(data);
             this.props.handleLogin(data);
             this.props.history.push(`/chat/${data.username}`);
 

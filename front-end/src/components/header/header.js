@@ -7,12 +7,12 @@ import './header.css'
 class Navbar extends React.Component{
 constructor(props){
   super(props);
-  this.handleFilter = this.handleFilter.bind(this);
+  //this.handleFilter = this.handleFilter.bind(this);
 
 }
 componentDidMount = () => {
 }
-
+/*
 handleFilter = () => {
       const { Option } = Select;
       let {users,friends, requests, pending, declined} = this.props;
@@ -40,26 +40,36 @@ handleFilter = () => {
             </AutoComplete>
           )
     }
+*/
+displayInfo = () => {
+
+}
+myMenu = () => {
+  return (<Menu className = {styles.container__menu}>
+<Menu.Item className = {styles.container__menu__item}>
+  <a target = "_blank" rel = "noreferrer" onClick = {this.props.handleLogout}>Logout</a>
+</Menu.Item>
+
+  </Menu>
+  )
+}
 
 render(){
-    const {Header, Content,Footer} = Layout;
     const {SubMenu} = Menu;
     const { Option } = Select;
     let users = this.props.users;
     return(
-        // 
-      <Header className = {styles.container__header}>
-        <Menu theme = "dark" mode = "horizontal">
-
-                    {this.props.initUser !== false && this.handleFilter()}
-    {this.props.userData != null &&  
-    <SubMenu icon = {<DownOutlined />} className = {`${styles.submenu}`} title = {`Welcome ${this.props.userData.username}`} > 
-    <Menu.Item key="4" className = {`${styles.logout}`} onClick = {this.props.handleLogout}>Logout</Menu.Item>
-    </SubMenu>
+        //         <Menu theme = "dark" mode = "horizontal">
+      <>
+    { this.props.userData != null &&
+    
+    <Dropdown overlay = {this.myMenu} className = {styles.container__dropdown}>
+      <a className= {styles.dropdown__item} onClick = {(e) => e.preventDefault()} >
+        Hello, {this.props.userData.username} <DownOutlined />
+      </a>
+    </Dropdown>
 }
-
-        </Menu>
-    </Header>
+</>
     )
 
 }

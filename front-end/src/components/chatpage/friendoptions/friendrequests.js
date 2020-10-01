@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import styles from './friendrequests.module.scss'
-import { MessageFilled , DeleteFilled,LockFilled, StarFilled } from '@ant-design/icons';
+import { MessageFilled , DeleteFilled,LockFilled } from '@ant-design/icons';
 import {Button} from 'antd';
 import axios from 'axios';
 
@@ -19,7 +19,6 @@ const toggleTrash = (e) => {
 
 const toggleFavourite = (e) => {
     let val = e.currentTarget.id;
-    console.log(val);
     favouriteOn(!star);
 };
 const toggleLock = (e) => { 
@@ -80,7 +79,6 @@ const loginChat = (e, friendname) => {
         toggleChatIcon(true);
         toggleAny([]);
     }).catch(err => {
-        console.log(err.message);
     })
 
 }

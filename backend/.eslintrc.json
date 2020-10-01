@@ -15,7 +15,7 @@
     "rules": {
         "prefer-const":"warn",
         "no-unused-vars": "warn",
-        "linebreak-style": "warn",
+        "linebreak-style": "off",
         "import/newline-after-import": "warn"
     }
 }

@@ -1,11 +1,10 @@
 import React from 'react';
 import {Button, Tabs, Avatar, Spin, AutoComplete, Select} from 'antd';
-import { AppleOutlined,UsergroupAddOutlined,UserAddOutlined, LockFilled, MessageFilled , DeleteFilled,StarFilled, CheckCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { AppleOutlined,UserAddOutlined,StarFilled, CheckCircleOutlined, PlusCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import styles from './friendslist.module.scss';
 import axios from 'axios';
 import Friendrequests from './friendoptions/friendrequests';
 import Creategroup from './friendoptions/creategroup';
-import Profilepicture from './profilepicture';
 class Friendslist extends React.Component{
 constructor(props){
     super(props);
@@ -24,7 +23,7 @@ constructor(props){
         addError: '',
         membersOnly: [],
         createError: '',
-        name: null,
+        name: '',
     }
     this.setLock = this.setLock.bind(this);
     this.deletePending = this.deletePending.bind(this); 
@@ -38,7 +37,6 @@ componentDidMount = () => {
 }
 handleFriendInput = (e) => {
     let friendname = e;
-    console.log(e);
    this.setState({friendName: friendname });    
 }
 handleFilter = () => {
@@ -87,18 +85,14 @@ if(val){
 } else {
     this.setState({addError: 'please enter an existing username'})
 }
-console.log(val);
 }
 
 fetchAllGroups = () => {
     axios.get('http://localhost:5000/chat/groups/allgroups').then(el => {
-    console.log(el);
-    console.log(el.data);
     let groupMemberName = el.data.map((el) => {
         el = el.group_id;
         return el;
     });
-    console.log(groupMemberName);
     this.setState({allGroups: el.data, membersOnly: groupMemberName});
     }).catch(el => {
 
@@ -106,11 +100,8 @@ fetchAllGroups = () => {
 }
 getmyGroup = () => {
     let {username} = this.props.userData;
-    console.log(username);
     axios.get(`http://localhost:5000/chat/groups/mygroups/${username}`).then(res => {
         let groupInfo = res.data.groupData;
-        console.log(groupInfo);
-        console.log('right here');
     this.setState({myGroups: groupInfo, loading: false});
     }).catch(res => {
         this.setState({loading: false});
@@ -123,21 +114,14 @@ getJoinedGroups = () => {
     this.setState({loadJoined: true});
 
     let {username} = this.props.userData;
-    console.log(username);
     axios.get(`http://localhost:5000/chat/groups/joinedgroups/${username}`).then(res => {
         let groupInfo = res.data;
-        console.log(groupInfo);
-        console.log('right here');
     this.setState({joinedGroups: groupInfo, loadJoined: false});
-    console.log(this.state.joinedGroups);
     }).catch(res => {
         this.setState({loadJoined: false});
     })
 }
-leaveGroup = (username,groupId) => {
-    console.log(groupId);
-    console.log(username);
-   
+leaveGroup = (username,groupId) => {   
    axios.get(`http://localhost:5000/chat/groups/leavegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
@@ -154,10 +138,7 @@ leaveGroup = (username,groupId) => {
 
     })
 }
-deleteGroup = (username,groupId) => {
-    console.log(groupId);
-    console.log(username);
-   
+deleteGroup = (username,groupId) => {   
    axios.get(`http://localhost:5000/chat/groups/deletegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
@@ -194,12 +175,9 @@ this.setState({groupId: myGroupId });
 handleJoinGroup = () => {
     let { username } = this.props.userData;
     let {groupId, joinedGroups, allGroups, membersOnly} = this.state;
-    console.log(joinedGroups);
     // check if you are already in group. If you are it will return your group number
     let groupInfo = this.state.joinedGroups.filter((el) => {
         if(el.group_id === groupId){
-            console.log(el.group_id);
-            console.log(el);
             return el;
         }
     });
@@ -208,12 +186,10 @@ handleJoinGroup = () => {
     } else if(membersOnly.indexOf(groupId) === -1) {
         this.setState({joinGroupError: 'Could Not Join Group. Please Enter A Valid Group ID'})
         let blah = allGroups;
-        console.log(blah);
         blah.filter(el => {
             return el.group_id !== groupId
         })
         
-        console.log(blah);
     } else {
         axios.get(`http://localhost:5000/chat/groups/join/${groupId}/${username}`).then(res => {
        
@@ -224,12 +200,10 @@ handleJoinGroup = () => {
                     let myJoinedGroups = prev.joinedGroups;
                     // filter through all groups so that only the id of the group you want to join is returned
                     myGroup = myGroup.filter(el => {
-                        console.log(el);
                          return el.group_id === groupId;
                     });
                     
                     // add the filtered groups to your joined groups
-                    console.log(myGroup);
                     let finalGroup = myJoinedGroups.concat(myGroup);
                     return {
                         joinedGroups: finalGroup,
@@ -274,13 +248,11 @@ listGroups = () => {
         let query;
 
         let {myUsers} = this.props;
-        console.log(myUsers);
         if(myUsers.indexOf(friendname) === -1){
             query = 1;
     } else {
         query = 2;
     }
-    console.log('hello world');  
         axios.delete('http://localhost:5000/chat/friendslist/deletefriend', { 
             data: { 
                 username:username, friendname:friendname, query: query 
@@ -298,7 +270,6 @@ listGroups = () => {
 
     declineRequest = async (friendname) => {
     const {username} = this.props.userData;
-    console.log(friendname);
     const request = await axios.get(`http://localhost:5000/chat/friendslist/declinerequest/${username}/${friendname}`);
     this.props.friendStatus();
     }   
@@ -320,7 +291,6 @@ listGroups = () => {
     }
 
 setLock = (friendname) => {
-    console.log(this.state.locked);
     //take the friendname and set the lock
          this.setState((prev) => {
         let locked = prev.locked;
@@ -329,7 +299,6 @@ setLock = (friendname) => {
             locked: locked
         }
     }, () => {
-       console.log('right in the callback');
     });   
 }
 initGroup = () => {
@@ -376,11 +345,9 @@ insertGroup = (e) => {
         group_id: groupId,
         description: groupDescription,
     }
-    console.log(data);
 let error = "could create group. Please enter unique group ID";
     let regex = /[^A-Za-z0-9_-]/;
     let validValue = regex.test(groupId);
-    console.log(validValue)
     if(membersOnly.indexOf(groupId) !== -1){
         this.setState({createError: error})
     } else if(validValue){
@@ -399,7 +366,6 @@ let error = "could create group. Please enter unique group ID";
         });
 }).catch(err => {
     let error = err;
-    console.log(error);
     this.setState({createError: 'there was an error. Please try again'});
 })
     }
@@ -415,7 +381,6 @@ getLocked = () => {
                 } else if(el.friendname === username && (el.username_password !== null || el.username_password)){
                     arr.push(el.username);
                 } else {
-                    console.log(el);
                 }
         }
     });
@@ -495,7 +460,7 @@ render(){
         {
            this.handleFilter()
         }
-            <div className = {styles.container__requests}>
+            <div className = {styles.container__myfriends}>
                     { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
                     return <Friendrequests setDelete = {() => {this.deleteFriend(username, el)}} {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
                     return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
@@ -513,10 +478,11 @@ render(){
                 >
                                 <div className = {styles.container__requests}>
 
-                    {this.props.requests.map((el, index) => {
-                        return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}}/>
-                            })}
-                            </div>
+                    { this.props.requests.map((el, index) => {
+                        return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
+                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
+                        }
+                        </div>
             </TabPane>
             <TabPane key = "3" tab = {
                 <span className = {styles.tab}>
@@ -529,7 +495,7 @@ render(){
 
                     {this.props.pending.map( (el, index) => {
                         return <Friendrequests {...pending} displayIcon = {()=> false} friendname = {el} setDelete = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U </Avatar>                
                                 }} />
                     })}
                     </div>
@@ -571,13 +537,13 @@ render(){
         {this.state.loading ? <Spin/> : 
 
                    this.state.myGroups.map((el, index) => {
-                       return <Creategroup setProfile = {true} {...myGroups} createGroupChat = {this.props.createGroupChat} key = {index} groupDescription = {el.description} groupName = {el.group_name} groupId = {el.group_id}/>
+                       return <Creategroup setProfile = {true} {...myGroups} createGroupChat = {this.props.createGroupChat} key = {`${index}/grouponclick`} groupDescription = {el.description} groupName = {el.group_name} groupId = {el.group_id}/>
                    })
                  }
                  </div>
         </TabPane>
                 <TabPane tab = {<span className = {styles.tab__title}>All Groups</span>} key = '3'>
-            <div className = {styles.container__requests}>        
+            <div className = {styles.container__allgroups}>        
                  { this.state.loadJoined ? <Spin/> :  this.state.joinedGroups.map((el, index) => {
                      return <Creategroup setProfile = {false} {...joinedGroups} key = {index} groupDescription = {el.description} groupName = {el.group_name} groupId = {el.group_id}/>
                     })

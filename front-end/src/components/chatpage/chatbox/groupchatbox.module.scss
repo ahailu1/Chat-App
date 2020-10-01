@@ -3,9 +3,8 @@
         background-color: whitesmoke;
         box-shadow: 0 0 3px 0 #5c5c5c;
         display: flex;
-        height: 80vh;
+        height: 75vh;
         width: 90%;
-        margin: 2rem;
     }
     &__sent__socket{
         width: 100%;
@@ -25,26 +24,40 @@
         height: 100%;
         background-color: whitesmoke;
         &__wrapper__container{
-            height: 100%;
+            /*
             position: relative;
+            height: 100%;
+            border: solid orange;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;*/
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column-reverse;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+
         }
+        &__messages{
+            flex-direction: column;
+            display: flex;
+            position: absolute;
+            bottom:0;
+            width: 100%;
+                }
     &__wrapper{
-        position: absolute;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
         display: flex;
-        align-items: flex-end;
-        flex-direction: column-reverse;
-        overflow-y: scroll;
-        left: 0;
-    }
+        flex-direction: column;
+        width: 100%;
+        position: relative;
+        }
 }
     &__groupinformation{
-        border-radius: 0.5rem;
+        border-radius: 0.25rem;
         border: solid #1890ff 2px;
         padding: 2rem 0.5rem 0.5rem 0.5rem;
-        background-color: whitesmoke;
+        background-color:#1890ff;
         margin-left: 2rem;
         flex-grow: 1;
         display: flex;
@@ -71,7 +84,6 @@
 }}
 
 .message{
-   
     &__time{
 margin-left: 0.5rem;
 color: white;
@@ -137,7 +149,7 @@ font-style: italic;
 .group{
     &__name{
         align-items: center;
-        background-color: #55adff;
+        background-color: whitesmoke;
         display: flex;
         flex-direction: column;
         padding: 0.5rem;
@@ -146,7 +158,7 @@ font-style: italic;
     &__members__container{
         overflow-y: scroll;
         border-radius: 0.5rem;
-        background-color: #55adff;
+        background-color: whitesmoke;
         box-shadow: 0 0 4px 0 white;
         margin: 1rem 0 0 0;
         display: flex;
@@ -161,13 +173,13 @@ font-style: italic;
         }
 
         &__icon{
-            color: white;
+            color: #55adff;
             font-size: 2.5rem;
         }
 
     &__heading{
         width: 100%;
-        background-color: #55adff;
+        background-color: whitesmoke;
         justify-content: center;
         padding: 0.5rem;
         align-items: center;
@@ -195,17 +207,21 @@ font-style: italic;
 }
 
 .username{
-    display: flex;
+    margin-left: 1rem;
+    &__container {
+display: flex;
     padding: 0.5rem;
-    justify-content: space-around;
+    justify-content: flex-start;
     color: #001529;
     font-weight: 600;
-    width: 70%;
+    width: 100%;
     white-space:nowrap;
     box-shadow: 0 0 3px 0 whitesmoke;
     background-color: whitesmoke;
     border-radius: 0.5rem;
     margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+    }
+
 &:hover{
     background-color: white;
 }}
@@ -213,7 +229,7 @@ font-style: italic;
     &__image__container{
         align-items: center;
         flex-direction: column;
-        background-color: #55adff;
+        background-color: whitesmoke;
         display: flex;
         border-radius: 0.5rem;
         padding: 0.5rem;

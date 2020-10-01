@@ -60,7 +60,6 @@ handleLogout = () => {
         username: username
     }
     const socket = io('http://localhost:5000');
-    socket.emit('logout', logout);
     cookie.remove('userData');
     socket.disconnect();
     this.setState(() => {

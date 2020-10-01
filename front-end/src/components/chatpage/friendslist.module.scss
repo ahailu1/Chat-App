@@ -1,12 +1,25 @@
 
 .container{
+    &__allgroups{
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        height: 47vh;
+
+    }
+    &__myfriends{
+        height: 49vh;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+    }
     &__requests{
         overflow-y: scroll;
         display: flex;
-        height: 50vh;
+        height: 55vh;
         flex-direction: column;
     &__creategroup{
-        height: 40vh;
+        height: 41vh;
         overflow-y: scroll;
     &.toggled{
         display: none;
@@ -21,10 +34,6 @@ font-size: 0.65rem;
 }
 &:hover{
     color: #1890ff;
-}
-&__key{
-}
-&__pane__container{
 }
 }
 
@@ -93,11 +102,10 @@ font-size: 0.65rem;
     width: 100%;
 }
     &__icon{
-        padding: 0.5rem;
         display: flex;
         justify-content: center;
         color: white;
-        font-size: 3rem;
+        font-size: 2.5rem;
     &:hover{
         cursor: pointer;
         color: #1890ff;
@@ -160,9 +168,7 @@ font-size: 0.65rem;
     }
 }
 .tab{
-    &__title{
-
-    }
+    
 }
 .adderror{
     color: white;
@@ -206,10 +212,6 @@ font-size: 0.65rem;
         width: 70%;
         background-color: orchid;
         color: #0b0d1b;
-    & > h1 {
-    }
-    &:hover{
-    }
 }
 
 }

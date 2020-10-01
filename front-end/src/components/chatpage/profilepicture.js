@@ -1,8 +1,8 @@
-import React, {Component,PureComponent} from 'react';
-import {Row, Col, Form, Input, Button, Layout, Avatar, Upload, icon, message} from 'antd';
+import React, {PureComponent} from 'react';
+import { Avatar, Upload, message} from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import styles from './profilepicture.module.scss';
-import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 class Profilepicture extends PureComponent{
@@ -34,17 +34,14 @@ componentDidMount(){
 }
 loadProfile = async () => {
   let {username, token} = this.props.userData;
-  console.log('got em');
   
   try {
     let getPic = await axios.get(`${this.props.actionUrl}`, {
     headers: { Authorization:'Bearer' + token }});
-    console.log(getPic.data);
     this.setState({profilePath: getPic.data.profilePicture});
   } catch (err) {
      let path = err.response.data.default;
     this.setState({profilePath: 'default--profilepicture.png'});
-     console.log(err);
   }
 }
 uploadButton = () => {
@@ -60,7 +57,6 @@ uploadButton = () => {
 
 handleButton = (e) => {
 e.preventDefault();
-console.log('prevented');
 }
 getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -74,7 +70,6 @@ handleChange = info => {
     return;
   }
   if (info.file.status === 'done') {
-      console.log(info.file.originFileObj);
     this.getBase64(info.file.originFileObj, imageUrl =>
       this.setState({
         imageUrl,
