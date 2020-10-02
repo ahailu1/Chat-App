@@ -6,7 +6,7 @@ import Loginform from './loginForm';
 import Createaccount from './createaccount';
 import axios from 'axios';
 import Description from './description';
-import { UploadOutlined, WechatOutlined, WechatFilled, TeamOutlined, LockOutlined, StarOutlined } from '@ant-design/icons';
+import { WechatFilled, TeamOutlined, LockOutlined } from '@ant-design/icons';
 
 class Homepage extends React.Component{
 constructor(props){
@@ -23,10 +23,10 @@ myFooter = () => {
         <>
           <Col span={6} className = {styles.footer__column__two}>
       <div className = {styles.footer__header__main}>About</div>
-        <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add friends, create groups. Users are allowed to add their friends to 'favourites' and can set a lock to their conversations so that a password must be entered to chat or view conversation history.   </div>
+        <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add/delete friends, and create/delete groups. Users are allowed to add friends to 'favourites' and can set a lock to their conversations so that a password must be entered to chat or view conversation history.   </div>
           
         </Col>    
-        <Col span={6} className = {styles.footer__column__two}>
+        <Col span={4} className = {styles.footer__column__two}>
         <div className = {styles.footer__header__main}>Contact</div>
       <div className = {`${styles.footer__container__contact}`}>
         <div className = {styles.rre}>
@@ -36,7 +36,7 @@ myFooter = () => {
         </div>
       </div>
         </Col>
-      <Col span={6} className = {styles.footer__column__two}>
+      <Col span={7} className = {styles.footer__column__two}>
           <div className = {styles.footer__header__main}>Technologies Used</div>
       <div className = {`${styles.footer__container__technologies}`}>
         
@@ -63,11 +63,13 @@ myFooter = () => {
         </div>
       </div>
       </Col>
-      <Col span={6} className = {styles.footer__column__two}>
+      <Col span={7} className = {`${styles.footer__column__two} ${styles.information}`}>
       <div className = {styles.footer__header__main}>About</div>
         <div className = {styles.footer__container__about}>
-            I am an aspiring Web Developer that has been working on this application over the past 9 months. I started with basic knowlege of PHP and javascript and zero knowledge of Node.js, but decided that 
-            to find a job as a web-developer, I ought to learn tools that are 'in demand.' I created this application because it required an integration of CRUD Operations and REST API-s, which forced me to get both a practical and a knowledge-based understanding of such concepts.
+    I am an aspiring Web Developer that has been working on this application over the past 6 months. 
+    I started with elementary knowledge of both PHP and Javascript and with little knowledge of Node.js and ReactJs.
+    I wanted to learn not only new programming languages, but also concepts such as CRUD operations and Rest-Apis, both of which are prevalent in the world of programming.
+    I figured the best way to learn is to build, which is why I created this program in such a way that integrates those important concepts.
      </div>
           
         </Col> 

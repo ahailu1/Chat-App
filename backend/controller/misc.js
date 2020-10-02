@@ -18,16 +18,20 @@ const fetchDeclined = async (username) => {
 };
 const userUnlock = async (req, res) => {
   let { username,friendname, password, query } = req.body;
+  console.log([username, friendname,password,query]);
   try {
     let response = await loginLock(username, friendname, query);
+    console.log(response);
     let checkPass = Object.values(response[0])[0];
     let match = await bcrypt.compare(password, checkPass);
+    console.log(match);
     let returnVal = match ? true : false;
     return returnVal;
   } catch (err) {
-    res.status(422).send({ error: 'there was an error in setting  your password'});
+    throw new Error('couldnt fetch pass');
   }
 };
+
 
 module.exports = {
   declineReq,

@@ -132,11 +132,15 @@
 
 .footer__column{
     &__two{
-
         flex-direction: column;
         align-items: center;
         display: flex;
-    }
+    &.information{
+        padding: 0 0.75rem 0.75rem 0.65rem;
+        font-size: 0.75rem;
+    & div + div {
+        font-size: 0.75rem;
+    }}}
 }
 .footer__row{
 

@@ -32,6 +32,24 @@ router.post('/unlock', async (req, res) => {
     res.status(422).send({ error: 'couldnt log in' });
   }
 });
+router.put('/removelock', async (req, res) => {
+  let { username,password,friendname, query } = req.body;
+  try {
+    let response = await userUnlock(req, res);
+    console.log(response + 'is the answer');
+    if (response) {
+      console.log('hereaz');
+      console.log([username, query, friendname]);
+      let item = await createLock(username, null, friendname, query, true);
+      console.log(item);
+      res.status(200).send({ message: 'password removed' });
+    } else {
+      res.status(422).send({ errorMsg: 'password is not correct' });
+    }
+  } catch (err) { 
+    res.status(422).send({ errorMsg: 'something occurred. Try again' });
+  }
+});
 
 router.get('/addfriend/:username/:friendname', async (req, res) => {
   const requests = await addFriend(req, res);

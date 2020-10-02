@@ -82,39 +82,84 @@ const loginChat = (e, friendname) => {
     })
 
 }
-
-const handleLock = (e,callback, friendname) => {
+let removeLock = (e, callback, friendname) => {
     e.preventDefault();
-    let mypass = e.target.setpass.value;
-    let confirm = e.target.confirmpass.value;
+    let {username} = props.userData;
+    let password = e.target.removepwd.value;
     let query;
+    if(props.myUsers.indexOf(friendname) !== -1){
+        query = 1
+    } else {
+        query = 2
+    };
+    console.log(password);
+    let config = {
+        method: 'PUT',
+        url: 'http://localhost:5000/chat/friendslist/removelock',
+        data: {
+            username:username,
+            password:password,
+            friendname: friendname,
+            query: query
+        }
+    }
+    axios(config).then(el => {
+        callback(friendname);
+    }).then(el => {
+
+    }).catch(el => {
+        console.log(el.response)
+    });
+};
+
+const handleLock = (e,callback, friendname, rmvlock = false) => {
+    e.preventDefault();
+    let mypass;
+    let myparam;
+    let thisMethod;
+    let query;
+    let setpass;
+    let {username} = props.userData;
+    let confirmpass;
     if(props.myUsers.indexOf(friendname) !== -1){
             query = 1;
     } else {
         query = 2;
     }
-    if(mypass === confirm){
-        passwordOn('');
-        let {username} = props.userData;
+        if(rmvlock){
+            setpass = e.target.removepwd.value;
+            myparam = 'removelock';
+            thisMethod = 'put';
+        } else {
+             setpass = e.target.setpass.value;
+            confirmpass = e.target.confirmpass.value;        
+            mypass = setpass;
+            myparam = 'setlock';
+            thisMethod = 'post';
+        }
         let userInfo = {
-            method: 'POST',
-            url: `http://localhost:5000/chat/friendslist/setlock/`,
+            method: `${thisMethod}`,
+            url: `http://localhost:5000/chat/friendslist/${myparam}/`,
             data: {
                 username: username,
-                password: mypass,
+                password: setpass,
                 friendname: friendname,
                 query: query, 
             }
-        }
+        };
+        if((!rmvlock && setpass === confirmpass && setpass !== '') || rmvlock == true ){
         axios(userInfo).then(el => {
-         callback(friendname);
-        })
-        .then(newData => {
+            console.log(friendname);
             setPass(!isSet);
             toggleAny([]);
             lockOn(false);
+         callback(friendname);
+        })
+        .then(newData => {
         })
         .catch(el => {
+            let err = el.response.data.errormsg;
+            console.log(err);
             passwordOn('couldnt lock chat: error. Try again');
 
         })
@@ -169,9 +214,9 @@ const handleLock = (e,callback, friendname) => {
          
                        <div className = {`${styles.container__button__lock} ${lock && styles.toggled}`}>
                        {!props.isLocked &&
-                        <form method = 'post' className = {`${isSet && styles.isset}`} onSubmit = { (e) => {handleLock(e, props.setLock, props.friendname)} }>                        
+                        <form method = 'post' className = {`${isSet && styles.isset}`} onSubmit = { (e) => {handleLock(e, props.setLock, props.friendname, false)} }>                        
                          <div className = {`${styles.confirm}`}>
-                         <input name = 'setpass' id = 'mypass' type = 'password' placeholder = 'Set Password' className = {styles.input__password} required />
+                         <input name = 'setpass' id = 'mypass' type = 'password' placeholder = 'Enter Password' className = {styles.input__password} required />
                          <input name = 'confirmpass' type = 'password' placeholder = 'Confirm' className = {styles.input__password} required />
                             <p>{error}</p>
                          </div>
@@ -183,9 +228,9 @@ const handleLock = (e,callback, friendname) => {
                         }
                         
                         {props.isLocked &&
-                            <form method = 'post' onSubmit = { (e) => {handleLock(e, props.setLock, props.friendname)} }>                        
+                            <form method = 'post' onSubmit = { (e) => {handleLock(e,props.deleteLock, props.friendname, true)} }>                        
                             <div className = {`${styles.confirm}`}>
-                            <input name = 'setpass' id = 'mypass' type = 'password' placeholder = 'Remove Password' className = {styles.input__password} required />
+                            <input name = 'removepwd' id = 'mypass' type = 'password' placeholder = 'Remove Password' className = {styles.input__password} required />
                                <p>{error}</p>
                             </div>
                             <div className = {`${styles.container__button}`}>

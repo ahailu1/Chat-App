@@ -214,9 +214,14 @@ const createUser = async (username, password) => {
     throw new Error('connection problem');
   }
 };
-let createLock = async (username, password, friendname, query) => {
-  let num = parseInt(query);
-  let userPassword = bcrypt.hashSync(password, saltRounds);
+let createLock = async (username, password, friendname, query, removelock = false) => {
+  const num = parseInt(query);
+  let userPassword;
+  if (!removelock) {
+    userPassword = bcrypt.hashSync(password, saltRounds);
+  } else {
+    userPassword = password;
+  }
   const queryOne = 'update friend_status set username_password = $1 where friendname = $2 AND username = $3';
   const queryTwo = 'update friend_status set friendname_password = $1 where username = $2 AND friendname = $3';
   const values = [userPassword, username, friendname];
@@ -244,7 +249,7 @@ let loginLock = async (username, friendname, query) => {
   }
 }
 
-let removeLock = async (username, friendname,password, query) => {
+let removeLock = async (username, friendname, password, query) => {
   let userPassword = bcrypt.hashSync(password, saltRounds);
   const queryOne = 'update friend_status set username_password = $1 where friendname = $2';
   const queryTwo = 'update friend_status set friendname_password = $1 where username = $2';

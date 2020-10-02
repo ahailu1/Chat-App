@@ -71,6 +71,7 @@
 }
 &__content{
     display: flex;
+
 }
 
 }
@@ -87,13 +88,11 @@
 .tab{
     &__card{
         width: 80%;
-        border: solid white;
         box-shadow: 0 0 3px 0 black;
         background-color:rgb(221, 221, 221);
         height: 100%;
     }
     &__pane{
-        border: solid orange;
     
     }
     &__container{

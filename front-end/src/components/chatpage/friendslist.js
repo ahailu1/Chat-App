@@ -23,11 +23,14 @@ constructor(props){
         addError: '',
         membersOnly: [],
         createError: '',
-        name: '',
+        group_id: '',
+        group_name: '',
+        group_description: '',
     }
     this.setLock = this.setLock.bind(this);
     this.deletePending = this.deletePending.bind(this); 
     this.deleteFriend = this.deleteFriend.bind(this);
+    this.removeLock = this.removeLock.bind(this);
 }
 componentDidMount = () => {
     this.getLocked();
@@ -37,7 +40,7 @@ componentDidMount = () => {
 }
 handleFriendInput = (e) => {
     let friendname = e;
-   this.setState({friendName: friendname });    
+   this.setState({friendName: friendname, addError: '' });    
 }
 handleFilter = () => {
     const { Option } = Select;
@@ -169,7 +172,7 @@ deleteGroup = (username,groupId) => {
 
 handleInputChange = (e) => {
  let myGroupId = e;
-this.setState({groupId: myGroupId });    
+this.setState({groupId: myGroupId,joinGroupError: '' });    
 }
 
 handleJoinGroup = () => {
@@ -226,8 +229,7 @@ listGroups = () => {
           <>
       <div className = {styles.container__dropdown}>
       <AutoComplete name = 'myautocomplete' placeholder="Search users" onChange = {this.handleInputChange} className = {styles.container__autocomplete} filterOption={(inputValue, option) =>
-        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
-      }>
+        option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1}>
       {this.state.allGroups.length > 0 && this.state.allGroups.map(el => {
           
           return <Option key = {el.group_id} value = {el.group_id} className = {styles.container__options}>
@@ -267,7 +269,6 @@ listGroups = () => {
     
         });
     }
-
     declineRequest = async (friendname) => {
     const {username} = this.props.userData;
     const request = await axios.get(`http://localhost:5000/chat/friendslist/declinerequest/${username}/${friendname}`);
@@ -304,10 +305,15 @@ setLock = (friendname) => {
 initGroup = () => {
 this.setState({toggleGroup: !this.state.toggleGroup});
 }
-handleChange = (e) => {
-    let name = e.target.name;
+handleChange = (e, boolean = false) => {
+    if(boolean){
+        let item = e.target.name;
+        let value = '';
+        this.setState({[item]: ''});
+    } else {let name = e.target.name;
     let value = e.target.value;
-    this.setState({[name]: value});
+    this.setState({[e.target.name]: e.target.value});
+    }
 }
 groupInput = () => {
     return(
@@ -316,16 +322,19 @@ groupInput = () => {
         <PlusCircleOutlined className = {styles.group__icon} onClick = {this.initGroup} />
                     </div>
                     <div className = {`${styles.group__container__form} ${this.state.toggleGroup && styles.toggled} `}>
-                    <form onSubmit = {this.insertGroup}>
-                <input type = 'text' name = 'group_name' className = {styles.form__input} placeholder = 'Group Name' onChange = {this.handleChange} maxLength = {20} value = {this.state.name} required />
-                <input type = 'text' name = 'group_id' className = {styles.form__input} placeholder = 'Group ID' onChange = {this.handleChange} value = {this.state.name} maxLength = {20} required/>
+                    <form onSubmit = {this.insertGroup} id = 'group__form'>
+                <input type = 'text' name = 'group_name' className = {styles.form__input} placeholder = 'Group Name' onChange = {this.handleChange} maxLength = {20} value = {this.state.group_name} required />
+                <input type = 'text' name = 'group_id' className = {styles.form__input} placeholder = 'Group ID' onChange = {this.handleChange} value = {this.state.group_id} maxLength = {20} required/>
                 <p className = {`${styles.create__error}`}>{this.state.createError}</p>
-                <textarea type = 'text' name = 'group_description' className = {`${styles.form__input} ${styles.textarea}`} value = {this.state.name} onChange = {this.handleChange} placeholder = 'Group Description'></textarea>
+                <textarea type = 'text' name = 'group_description' className = {`${styles.form__input} ${styles.textarea}`} value = {this.state.group_description} onChange = {this.handleChange} placeholder = 'Group Description'></textarea>
                 <Button type = 'primary' size = 'medium' htmlType = 'submit' className = {styles.group__button}>Create Group </Button>
                 </form>
                 </div>
                 </>
     )
+}
+clearForm = () => {
+    document.getElementById('group__form').reset()
 }
 insertGroup = (e) => {
     e.preventDefault();
@@ -362,6 +371,9 @@ let error = "could create group. Please enter unique group ID";
                 createError: 'Group Created', 
                 group_id: '',
                 myGroups: newGroup,
+                group_id: '',
+                group_name: '',
+                group_description: ''
             }
         });
 }).catch(err => {
@@ -392,6 +404,20 @@ getLocked = () => {
         }
     })
 }
+removeLock = (friendname) => {
+    this.setState((prev) => {
+            let filterLock = prev.locked;
+            console.log(friendname + 'ishere');
+            console.log(filterLock);
+            filterLock = filterLock.filter(el => {
+                return el !== friendname
+            });
+            console.log(filterLock);
+            return {
+                locked: filterLock
+            }
+    });
+}
 
 render(){
     let createGroupChat = this.props;
@@ -403,6 +429,7 @@ render(){
         userData: this.props.userData,
         myLock : this.state.locked,
         setLock :this.setLock,
+        deleteLock : this.removeLock,
         error: this.state.error,
        thisicon: (func, param) => { return <StarFilled className = {`${styles.myicon} ${param && styles.toggled}`} onClick ={func} id = 'star' /> },
     }
@@ -463,7 +490,7 @@ render(){
             <div className = {styles.container__myfriends}>
                     { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
                     return <Friendrequests setDelete = {() => {this.deleteFriend(username, el)}} {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
-                    return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                    return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
                         }} />
                         })
                     }

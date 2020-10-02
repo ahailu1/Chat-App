@@ -65,7 +65,7 @@ render(){
     
     <Dropdown overlay = {this.myMenu} className = {styles.container__dropdown}>
       <a className= {styles.dropdown__item} onClick = {(e) => e.preventDefault()} >
-        Hello, {this.props.userData.username} <DownOutlined />
+        Logout<DownOutlined />
       </a>
     </Dropdown>
 }

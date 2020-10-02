@@ -133,6 +133,8 @@ font-size: 0.65rem;
         width: 25%;
     }
 &__error{
+    text-transform: capitalize;
+
     color: white;
     font-size: 0.75rem;
     margin: 0.5rem;
@@ -171,6 +173,8 @@ font-size: 0.65rem;
     
 }
 .adderror{
+    text-align: center;
+    text-transform: capitalize;
     color: white;
     font-size: 0.85rem;
 }
