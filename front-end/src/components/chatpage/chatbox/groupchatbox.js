@@ -28,7 +28,7 @@ class Groupchatbox extends React.Component{
 
     getMsgHistory = () => {
         let {groupId} = this.props;
-        axios.get(`http://localhost:5000/chat/groups/chathistory/${groupId}`).then(el => {
+        axios.get(`https://instachatter.com/chat/groups/chathistory/${groupId}`).then(el => {
         let msgHistory = el.data.msgHistory;
         console.log(msgHistory);
         this.setState({msgHistory: msgHistory, loadHistory: false});
@@ -40,7 +40,7 @@ class Groupchatbox extends React.Component{
     getGroupInfo = () => {
         this.setState({loadingFriends: true});
         let {groupId} = this.props;
-        axios.get(`http://localhost:5000/chat/groups/groupinfo/${groupId}`)
+        axios.get(`https://instachatter.com/chat/groups/groupinfo/${groupId}`)
         .then((el) => {
         
             let arr = el.data.groupMembers;
@@ -62,7 +62,7 @@ class Groupchatbox extends React.Component{
     getMessage = (msgBox) => {
         let {groupId} = this.props;
         
-        let socket = io('http://localhost:5000');
+        let socket = io('https://instachatter.com');
         socket.on(groupId, (data) => {
             this.setState(prev => {
                 let myMessages = prev.myMessages;
@@ -139,7 +139,7 @@ class Groupchatbox extends React.Component{
     */
    checkGroupProfile = () => {
        let {groupId} = this.props;
-    axios.get(`http://localhost:5000/chat/groups/profilepicture/${groupId}`).then(el => {
+    axios.get(`https://instachatter.com/chat/groups/profilepicture/${groupId}`).then(el => {
         let profilePicture = el.data.profilePicture;
         this.setState({groupProfile: profilePicture});
     }).catch(el => {
@@ -150,7 +150,7 @@ class Groupchatbox extends React.Component{
     render(){
         let msgBox = this.msgBox;
         let { groupName } = this.props;
-        let socket = io('http://localhost:5000');
+        let socket = io('https://instachatter.com');
 
         const { TextArea } = Input;
         return (

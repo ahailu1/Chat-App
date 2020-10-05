@@ -1,7 +1,11 @@
 .container__profile{
     display: flex;
     align-items: center;
-    margin: 5rem 0 3rem 0;
+    margin: 1rem 0 3rem 0;
+    box-shadow: 0 0 3px 0px#1890ff;
+    border-radius: 0.5rem; 
+    padding: 2rem;
+    width: 50%;
 flex-direction: column;
 &.toggled{
     margin: 0 0 0 0;

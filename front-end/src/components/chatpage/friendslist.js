@@ -91,7 +91,7 @@ if(val){
 }
 
 fetchAllGroups = () => {
-    axios.get('http://localhost:5000/chat/groups/allgroups').then(el => {
+    axios.get('https://instachatter.com/chat/groups/allgroups').then(el => {
     let groupMemberName = el.data.map((el) => {
         el = el.group_id;
         return el;
@@ -103,7 +103,7 @@ fetchAllGroups = () => {
 }
 getmyGroup = () => {
     let {username} = this.props.userData;
-    axios.get(`http://localhost:5000/chat/groups/mygroups/${username}`).then(res => {
+    axios.get(`https://instachatter.com/chat/groups/mygroups/${username}`).then(res => {
         let groupInfo = res.data.groupData;
     this.setState({myGroups: groupInfo, loading: false});
     }).catch(res => {
@@ -117,7 +117,7 @@ getJoinedGroups = () => {
     this.setState({loadJoined: true});
 
     let {username} = this.props.userData;
-    axios.get(`http://localhost:5000/chat/groups/joinedgroups/${username}`).then(res => {
+    axios.get(`https://instachatter.com/chat/groups/joinedgroups/${username}`).then(res => {
         let groupInfo = res.data;
     this.setState({joinedGroups: groupInfo, loadJoined: false});
     }).catch(res => {
@@ -125,7 +125,7 @@ getJoinedGroups = () => {
     })
 }
 leaveGroup = (username,groupId) => {   
-   axios.get(`http://localhost:5000/chat/groups/leavegroup/${groupId}/${username}`)
+   axios.get(`https://instachatter.com/chat/groups/leavegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filteredGroups = prev.joinedGroups;
@@ -142,7 +142,7 @@ leaveGroup = (username,groupId) => {
     })
 }
 deleteGroup = (username,groupId) => {   
-   axios.get(`http://localhost:5000/chat/groups/deletegroup/${groupId}/${username}`)
+   axios.get(`https://instachatter.com/chat/groups/deletegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filterMyGroups = prev.myGroups;
@@ -194,7 +194,7 @@ handleJoinGroup = () => {
         })
         
     } else {
-        axios.get(`http://localhost:5000/chat/groups/join/${groupId}/${username}`).then(res => {
+        axios.get(`https://instachatter.com/chat/groups/join/${groupId}/${username}`).then(res => {
        
             this.setState((prev) => {
                 //get all groups
@@ -255,7 +255,7 @@ listGroups = () => {
     } else {
         query = 2;
     }
-        axios.delete('http://localhost:5000/chat/friendslist/deletefriend', { 
+        axios.delete('https://instachatter.com/chat/friendslist/deletefriend', { 
             data: { 
                 username:username, friendname:friendname, query: query 
             } 
@@ -271,12 +271,12 @@ listGroups = () => {
     }
     declineRequest = async (friendname) => {
     const {username} = this.props.userData;
-    const request = await axios.get(`http://localhost:5000/chat/friendslist/declinerequest/${username}/${friendname}`);
+    const request = await axios.get(`https://instachatter.com/chat/friendslist/declinerequest/${username}/${friendname}`);
     this.props.friendStatus();
     }   
     deletePending = async (friendname) => {
         const {username} = this.props.userData;
-        const request = await axios.get(`http://localhost:5000/chat/friendslist/deletepending/${username}/${friendname}`).then(() => {
+        const request = await axios.get(`https://instachatter.com/chat/friendslist/deletepending/${username}/${friendname}`).then(() => {
             this.props.friendStatus();
         }).catch((err) => {
             alert('there was a problem');
@@ -284,7 +284,7 @@ listGroups = () => {
     }   
     confirmFriend = (friendName) => {
         const {username} = this.props.userData;
-        axios.get(`http://localhost:5000/chat/friendslist/confirm/${username}/${friendName}`).then(data => {
+        axios.get(`https://instachatter.com/chat/friendslist/confirm/${username}/${friendName}`).then(data => {
                     this.props.friendStatus();
         }).catch(er => {
             alert('friend not addadsaded');
@@ -362,7 +362,7 @@ let error = "could create group. Please enter unique group ID";
     } else if(validValue){
             this.setState({createError: 'please enter only numbers, letters and underscores .'})
     } else {
-    axios.post('http://localhost:5000/chat/groups/creategroup', data).then(el => {
+    axios.post('https://instachatter.com/chat/groups/creategroup', data).then(el => {
         
         this.setState((prev) => {
             let newGroup = prev.myGroups;

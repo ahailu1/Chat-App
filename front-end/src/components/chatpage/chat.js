@@ -85,7 +85,7 @@ addFriend = async (friendname) => {
                 } else if(this.state.friends.some(el => el === friendName)) {
                     alert('name already added');
                 } else {
-                    axios.get(`http://localhost:5000/chat/friendslist/addfriend/${username}/${friendName}`).then(() => {
+                    axios.get(`https://instachatter.com/chat/friendslist/addfriend/${username}/${friendName}`).then(() => {
 
                         this.setState((prev) => {
                             let pending = prev.pending.concat(friendName);
@@ -164,7 +164,7 @@ toggleFavourite = (myfriendname, boolean) => {
     }
     // if my username is the friendname then set state to six
     //if my username is the username then set te state to 5
-    axios.get(`http://localhost:5000/chat/friendslist/setfavourites/${username}/${friendname}/${boolean}/${reverse}`).then(
+    axios.get(`https://instachatter.com/chat/friendslist/setfavourites/${username}/${friendname}/${boolean}/${reverse}`).then(
         this.setState(prev => {
             let myFavourites;
             let favourites = prev.favourites;
@@ -188,7 +188,7 @@ toggleFavourite = (myfriendname, boolean) => {
 friendStatus = async () => {
         let [pending, requests, declined, favourites, friends, remainder,myList ] = [[], [], [], [], [], [], []];
             const {username} = this.props.userData;
-            const request = await axios.get(`http://localhost:5000/chat/friendslist/friendstatus/${username}`);
+            const request = await axios.get(`https://instachatter.com/chat/friendslist/friendstatus/${username}`);
             const data = request.data;
             data.forEach((el) => {
                  if(el.friendname === username && myList.indexOf(el.username) == -1){
@@ -299,7 +299,7 @@ render(){
     const userData = cookie.get('userData');
     let {username} = userData;
     const {Sider,Content} = Layout;
-    const socket = io('http://localhost:5000');
+    const socket = io('https://instachatter.com');
     let friendsList = {
         toggleFavourite: this.toggleFavourite,
         loading: true,
@@ -324,7 +324,7 @@ render(){
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
         <div className = {styles.sidebar__profilepicture__container}>
-        <Profilepicture className = {styles.profilepicture} userData = {userData} actionUrl = {`http://localhost:5000/chat/${username}`} setSize = {100}/>
+        <Profilepicture className = {styles.profilepicture} userData = {userData} actionUrl = {`https://instachatter.com/chat/${username}`} setSize = {100}/>
         <Popover className = {styles.popover} content = {instructions} title = 'Info'><a href = '#'>{username}</a></Popover>
         </div>
         {this.state.loading != true ? <Friendslist {...friendsList} removeFriend = {this.removeFriend} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}

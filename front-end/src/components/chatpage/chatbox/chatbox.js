@@ -29,7 +29,7 @@ class Chatbox extends React.Component {
 
     getFriends = async () => {
             const {username} = this.props.userData;
-            const request = await axios.get(`http://localhost:5000/chat/friendslist/getfriends/${username}`);
+            const request = await axios.get(`https://instachatter.com/chat/friendslist/getfriends/${username}`);
             const data = request.data;
             }
 
@@ -77,7 +77,7 @@ if(this.props.initMessage != false){
 getHistory = () => {
     const { username } = this.props.userData;
     console.log(username + 'hello');
-let response = axios.get(`http://localhost:5000/chat/chatbox/${username}/${this.props.friendName}`)
+let response = axios.get(`https://instachatter.com/chat/chatbox/${username}/${this.props.friendName}`)
     .then((res) => {
         res.data.forEach((el) => {
         })

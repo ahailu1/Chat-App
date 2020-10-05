@@ -1,10 +1,9 @@
 import React from 'react';
-import {Row, Col, Form, Input, Button} from 'antd';
+import {Row, Col} from 'antd';
 import {LinkedinOutlined, GithubOutlined, PhoneOutlined, MailOutlined} from '@ant-design/icons';
 import styles from './homepage.module.scss';
 import Loginform from './loginForm';
 import Createaccount from './createaccount';
-import axios from 'axios';
 import Description from './description';
 import { WechatFilled, TeamOutlined, LockOutlined } from '@ant-design/icons';
 
@@ -21,12 +20,12 @@ myFooter = () => {
     return(
 
         <>
-          <Col span={6} className = {styles.footer__column__two}>
+          <Col xs={24} sm={16} md={12} lg={6}className = {styles.footer__column__two}>
       <div className = {styles.footer__header__main}>About</div>
         <div className = {styles.footer__container__about}>This is a chat application that allows you to create an account, add/delete friends, and create/delete groups. Users are allowed to add friends to 'favourites' and can set a lock to their conversations so that a password must be entered to chat or view conversation history.   </div>
           
         </Col>    
-        <Col span={4} className = {styles.footer__column__two}>
+        <Col xs={24} sm={16} md={12} lg={4} className = {styles.footer__column__two}>
         <div className = {styles.footer__header__main}>Contact</div>
       <div className = {`${styles.footer__container__contact}`}>
         <div className = {styles.rre}>
@@ -36,7 +35,7 @@ myFooter = () => {
         </div>
       </div>
         </Col>
-      <Col span={7} className = {styles.footer__column__two}>
+      <Col xs={24} sm={16} md={12} lg={7} className = {styles.footer__column__two}>
           <div className = {styles.footer__header__main}>Technologies Used</div>
       <div className = {`${styles.footer__container__technologies}`}>
         
@@ -63,7 +62,7 @@ myFooter = () => {
         </div>
       </div>
       </Col>
-      <Col span={7} className = {`${styles.footer__column__two} ${styles.information}`}>
+      <Col xs={24} sm={16} md={12} lg={7} className = {`${styles.footer__column__two} ${styles.information}`}>
       <div className = {styles.footer__header__main}>About</div>
         <div className = {styles.footer__container__about}>
     I am an aspiring Web Developer that has been working on this application over the past 6 months. 
