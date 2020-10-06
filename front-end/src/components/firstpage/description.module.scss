@@ -25,25 +25,7 @@
             padding-right: 3rem;
             font-size: 4rem;
             color:  #001529;
-            animation: animateicon 3s infinite ease-in-out;
-        }
-        @keyframes animateicon{
-            0%{
-                transform: translateX(0.25rem);
-            }
-            25%{
-                transform: translateX(2rem);
-            }
-            50%{
-                transform: translateX(1rem);
-
-            }
-            100%{
-                transition: all ease-in-out 0.5s;
-                transform: translateX(0.25rem);
-
-            }
-        }        //font-size: 7rem;
+        }      //font-size: 7rem;
         //background-color: #001529;
 
     }

@@ -22,7 +22,7 @@ class Loginform extends React.Component{
           this.setState({loading: true, error: ''});
         const data = {
             method: 'POST',
-            url: 'http://localhost:5000/api/loginuser',
+            url: 'https://instachatter.com/api/loginuser',
             data: {
                 login__user: true,
             username__login: e.target.username.value,

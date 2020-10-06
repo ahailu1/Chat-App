@@ -56,7 +56,7 @@ class Createaccount extends React.Component{
           e.preventDefault();
         const data = {
             method: 'POST',
-            url: 'http://localhost:5000/api/createaccount',
+            url: 'https://instachatter.com/api/createaccount',
             data: {
             username: e.target.username.value,
             password: e.target.password.value,
