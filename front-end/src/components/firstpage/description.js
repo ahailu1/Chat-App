@@ -6,7 +6,7 @@ const Description = (props) => {
 
     
     return(
-        <div className = {styles.container}>
+        <div className = {`${styles.container} ${styles.toggled}`}>
              <div className = {styles.container__icon}>{props.icon}</div>
         <div className = {styles.container__text}>
           <div className = {styles.heading}>{props.heading}</div>

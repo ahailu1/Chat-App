@@ -5,7 +5,7 @@ import styles from './homepage.module.scss';
 import Loginform from './loginForm';
 import Createaccount from './createaccount';
 import Description from './description';
-import { WechatFilled, TeamOutlined, LockOutlined } from '@ant-design/icons';
+import { WechatFilled, TeamOutlined, LockFilled } from '@ant-design/icons';
 
 class Homepage extends React.Component{
 constructor(props){
@@ -83,9 +83,9 @@ render(){
         icon: <WechatFilled/> 
     }
     const secondDescription = {
-        paragraph: 'Add a lock to your chat so that you need to enter a password to initiate conversations',
-        heading: 'Add A lock to your chat',
-        icon: <LockOutlined/> 
+        paragraph: 'Add a lock to your so that no one can view your conversations without a password',
+        heading: 'Lock your chat',
+        icon: <LockFilled/> 
     }
     const thirdDescription = {
         paragraph: 'all conversation history is saved so that when you log out and then log back in, your conversation is still there',
@@ -99,7 +99,7 @@ render(){
           
 <Col flex={5} className = {styles.container__column}>
             
-            <div className = {styles.container__header}>Welcome to Instant Chat
+            <div className = {styles.container__header}>Welcome to Instachatter
             <br/>
             <p>This is a platform that allows you to add friends and start chatting immediately</p>
             </div>
@@ -112,12 +112,14 @@ render(){
 </Row>
 <Row className = {styles.container__row__two}>
 
-<Col flex={5} className = {styles.container__column__two}>
+<Col xs={0} sm={0} md={12} lg={12} xl={12} className = {styles.container__column__two}>
+   
+</Col>
+<Col xs={24} sm={24} md={12} lg={12} xl={12} className = {styles.container__column__three}>
+<Description {...firstDescription}/>
+<Description {...secondDescription}/>
 
-   <Description {...firstDescription}/>
-    <Description {...secondDescription}/>
     <Description {...thirdDescription}/>
-
 </Col>
 </Row>
 <Row className = {styles.footer__row}>

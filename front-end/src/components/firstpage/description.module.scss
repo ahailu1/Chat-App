@@ -2,70 +2,73 @@
 .container{
     
     @media(min-width:320px){
-        padding: 0.5rem;
-    box-shadow: 0 0 3px 0 grey;
-    margin: 1.5rem 1rem 0 0;
-    //box-shadow: grey 0 0 3px 1px;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 0.5rem;
+        box-shadow: 0 0 3px 0 grey;
+        margin: 1rem 0 1rem 0;
+        padding: 1rem;
+        display: flex;
+
         }
         @media(min-width:768px){
-            height: 100%;
             box-shadow: none;
-            width: 30%;
         }
         @media(min-width:1024px){
-            box-shadow: 0 0 3px 0 grey;
-            border-top: solid #1890ff 3px;
-
-            border-bottom: solid #1890ff 3px;
-            border-radius: 0;
-            width: 30%;
-            height: 95%;
-
+            display: flex;
+            width: 80%;
+            
         }
     &__icon{
         @media(min-width:320px){
+            width: 30%;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            padding-right: 3rem;
             font-size: 4rem;
+            color:  #001529;
+            animation: animateicon 3s infinite ease-in-out;
         }
-        //font-size: 7rem;
+        @keyframes animateicon{
+            0%{
+                transform: translateX(0.25rem);
+            }
+            25%{
+                transform: translateX(2rem);
+            }
+            50%{
+                transform: translateX(1rem);
+
+            }
+            100%{
+                transition: all ease-in-out 0.5s;
+                transform: translateX(0.25rem);
+
+            }
+        }        //font-size: 7rem;
         //background-color: #001529;
 
-        color: #001529;    }
+    }
     &__text{
-        font-size: 1.5rem;
-        font-family: 'Open Sans', sans-serif;
-        text-align: center;
 
     }
 }
 .heading{
     @media(min-width: 320px){
         font-family: montserrat, sans-serif;
-        color: #1890ff;   
+        color:  #001529;
+        font-weight: 600;
         font-size: 1.25rem;
-    
+
     }
     @media(min-width:768px){
         font-size: 1.55rem;
     }
     @media(min-width:1024px){
-        font-size: 1.75rem;
     }
 }
 .paragraph{
     @media(min-width:320px){
-        color:#001529 ;   
-        padding: 0.5rem;
-        font-size: 1rem;
-        font-family: 'Open Sans', sans-serif;
-        text-align: left;
     }
         @media(min-width:768px){
-        font-size: 1.25rem;
+        font-size:0.95rem;
         }
 }

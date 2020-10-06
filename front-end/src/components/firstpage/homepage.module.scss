@@ -1,5 +1,4 @@
 
-
 .container{
         &__header{
             @media(min-width: 320px){
@@ -77,8 +76,9 @@
     }
     &__row{
         @media(min-width:320px){
-        background-color: #001529;
-            display: flex;
+       // background-color: #001529;
+       background-color: white;
+       display: flex;
         background-image: url('../../images/mybackground.svg');
         background-size: cover;
         background-attachment: fixed;
@@ -93,38 +93,21 @@
             background-attachment: fixed;
             background-position: bottom 0% right 62%;
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
-            height: 90vh;
+            height: 80vh;
                    }
     &__two{
         @media(min-width: 320px){
-            height: auto;
-            display: flex;
-            }
+            position: relative;
+        }
             @media(min-width:768px){
-                min-height: 40vh;
+                height: auto;
             }
             @media(min-width: 1024px){
-                padding: 2rem;
-                height: auto;
-
-
+                min-height: 75vh;
+                z-index: 5;
             }
-    }
-    /*
-    &:after{
-        background-image: none;
-        opacity: 0.75;
-        clip-path: none;
-        display: flex;
-        content: '';
-        height: 100%;
-        width: 100%;
-        top: 0;
-        left:0;
-        background-color:green;
-        position: absolute;
-    }
-    */
+          
+        }
 }
     &__column{
 
@@ -140,19 +123,30 @@
             }
     &__two{
         @media(min-width: 320px){
-            display: flex;
-            padding: 1rem;
-            justify-content: space-evenly;
-            flex-direction: column;
-            height: 100%;
+            padding: 2rem;
+            background-image: url('../../images/thiswork.svg');
+            display: none;
+            background-repeat: no-repeat;
+            background-position: center;
         }
         @media(min-width: 768px){
-            flex-direction: row;
+            display: flex;
         }
         @media(min-width: 1024px){
-            padding: 2rem;
-            height: auto;
-            flex-direction: row;
+            display: flex;
+        }
+    }
+    &__three{
+        @media(min-width: 320px){
+        }
+        @media(min-width: 768px){
+        }
+        @media(min-width: 1024px){
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 0 0 5rem;
         }
     }
     }
