@@ -46,7 +46,7 @@ let fetchGroup = () => {
             <div className = {`${styles.container__groupdata__avatar} ${props.joinedGroups && styles.toggled}`}>   
                 <div className = {styles.container__groupdata__avatar__container}>
                 { props.setProfile ? <Profilepicture actionUrl = {`http://localhost:5000/chat/groups/profilepicture/${props.groupId}`} userData = {props.userData} toggled = {true} setSize = {50}/>
-                 : <Avatar src = {`/images/${props.groupId}--profilepicture.png`} size = {64}>U</Avatar>  
+                 : <Avatar src = {`https://instachatter.com/images/${props.groupId}--profilepicture.png`} size = {64}>U</Avatar>  
                 }
                 </div>
                 {props.description &&

@@ -17,12 +17,12 @@ router.post('/:username', upload.single('avatar'), async (req, res) => {
   await uploadPic(req, res);
 });
 
-router.get('/:username', getToken, async (req, res, next) => {
-  const err = jwt.verify(req.token, 'secret-key');
-  let pathaz = path.resolve(__dirname, '../../front-end/public/images');
+router.get('/:username', async (req, res, next) => {
+  // const err = jwt.verify(req.token, 'secret-key');
+  let pathaz = path.resolve(__dirname, '../../front-end/src/images');
   let username = `${req.params.username}--profilepicture.png`;
   let defaultUsername = 'default--profilepicture.png';
-  let defaultPath = path.join(pathaz, `/public/images/${defaultUsername}`);
+  let defaultPath = path.join(pathaz, `/src/images/${defaultUsername}`);
   let profilePath = path.join(pathaz, `/${username}`);
   // check if path exists. if it does, send the route to the path, otherwise send the route to the default profile picture;
   fs.access(profilePath, fs.constants.F_OK, (err) => {

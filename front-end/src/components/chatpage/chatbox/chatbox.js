@@ -5,6 +5,7 @@ import styles from './chatbox.module.scss'
 import io from 'socket.io-client';
 import UserContext from '../../context';
 import axios from 'axios';
+import TextArea from 'antd/lib/input/TextArea';
 
 class Chatbox extends React.Component {
     static contextType = UserContext;
@@ -16,7 +17,9 @@ class Chatbox extends React.Component {
             initMessage: false,
             toggled: false,
             msgHistory : [],
-            friends : []
+            friends : [],
+            globalVar : "http://localhost:5000",
+            mymsg : "",
         }
         this.getMessage = this.getMessage.bind(this);
 
@@ -29,7 +32,7 @@ class Chatbox extends React.Component {
 
     getFriends = async () => {
             const {username} = this.props.userData;
-            const request = await axios.get(`https://instachatter.com/chat/friendslist/getfriends/${username}`);
+            const request = await axios.get(`${this.state.globalVar}/chat/friendslist/getfriends/${username}`);
             const data = request.data;
             }
 
@@ -41,7 +44,7 @@ class Chatbox extends React.Component {
         return (
             <>
             <div className = {styles.container__avatar}>
-                <Avatar shape = 'circle' size = {150} src = {`/images/${username}--profilepicture.png`} />
+                <Avatar shape = 'circle' size = {125} src = {`${this.state.globalVar}/images/${username}--profilepicture.png`} className = {styles.avataraz}>U</Avatar>
             </div>
             <div className = {styles.container__username}>
             </div>
@@ -77,7 +80,7 @@ if(this.props.initMessage != false){
 getHistory = () => {
     const { username } = this.props.userData;
     console.log(username + 'hello');
-let response = axios.get(`https://instachatter.com/chat/chatbox/${username}/${this.props.friendName}`)
+let response = axios.get(`${this.state.globalVar}/chat/chatbox/${username}/${this.props.friendName}`)
     .then((res) => {
         res.data.forEach((el) => {
         })
@@ -90,7 +93,10 @@ messageHistory = (el, index) => {
     let newTime = el.timezone;
     newTime = new Date(el.timezone).toLocaleString();
     return (
+        
         <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
+      <Avatar className = {styles.message__sent__avatar} src = {`${this.state.globalVar}/images/${el.sender}/--profilepicture.png`}>U</Avatar>
+
         <div className = {styles.container__history__message}> 
         
         <div className = {styles.container__history__format}>  
@@ -103,7 +109,11 @@ messageHistory = (el, index) => {
             )
     
 }
-
+handleText = (e) => {
+    let myval = e.target.value;
+    console.log(myval);
+    this.setState({mymsg: myval});
+}
 
 sendMessage = (e) => {
 e.preventDefault();
@@ -124,7 +134,8 @@ const data = {
 // insert messages into database
 this.setState( (prev) => {
     return{
-        messages: prev.messages.concat(data)
+        messages: prev.messages.concat(data),
+        mymsg: "",
     }
 });
 
@@ -134,8 +145,7 @@ socket.emit('message', data);
 
 
 render() {
-let {msgHistory} = this.state
-
+let {msgHistory, mymsg} = this.state
 return(
 
     <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
@@ -171,7 +181,7 @@ return(
     <div className = {styles.container__form}>
     <form className = {styles.form} onSubmit = {this.sendMessage}>
     <div className = {styles.container__message}>
-    <div className = {styles.container__input}>   <textarea type = 'text' name = 'message' className = {styles.input} />    </div>
+    <div className = {styles.container__input}>   <TextArea type = 'text' name = 'message' className = {styles.input} onChange = {this.handleText} value = {mymsg} />    </div>
     <div className = {styles.container__button}><Button type = 'default' htmlType = 'submit' className = {styles.button}>Send</Button></div>
         </div>
     </form>

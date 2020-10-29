@@ -13,6 +13,8 @@ class Createaccount extends React.Component{
             errPassword: [],
             errConfirmPwd: [],
             loading: null,
+            globalVar : "http://localhost:5000",
+
             
         }
     }
@@ -27,12 +29,12 @@ class Createaccount extends React.Component{
                 <div className = {styles.error__input}>{this.state.errUsername.length > 0 && this.state.errUsername.map(el => {return el}) } </div>
                 </div>
                 <div className = {styles.container__password}>
-                <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+                <input type = 'password' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
                 <div className = {styles.error__input}>{this.state.errPassword.length > 0 && this.state.errPassword.map(el => {return el}) } </div>
         
                 </div>
                 <div className = {styles.container__password}>
-                <input type = 'text' name = 'confirm__password' placeholder = 'confirm' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+                <input type = 'password' name = 'confirm__password' placeholder = 'confirm' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
                     <div className = {styles.error__input}>{this.state.errConfirmPwd.length > 0 && this.state.errConfirmPwd.map(el => {return el}) } </div>
                 </div>
                 <div className = {styles.container__password}>
@@ -56,7 +58,7 @@ class Createaccount extends React.Component{
           e.preventDefault();
         const data = {
             method: 'POST',
-            url: 'https://instachatter.com/api/createaccount',
+            url: `${this.state.globalVar}/api/createaccount`,
             data: {
             username: e.target.username.value,
             password: e.target.password.value,

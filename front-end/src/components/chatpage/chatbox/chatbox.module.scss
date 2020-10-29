@@ -1,3 +1,4 @@
+
 .container{
     &__profile{
         display: flex;
@@ -73,14 +74,17 @@ background-color: whitesmoke;
     height: auto;
     border-radius: 0.35rem;
     color: white;
+
     background-color: #052d52;
     font-size: 1rem;
     display: flex;
-    flex-direction: column;
     &.toggled{
     margin: 0.5rem 0 0.5rem 1.25rem;
     width: 85%;
     background-color: #0084ff;
+}
+&__avatar{
+    margin: 0 1rem 0 0;
 }
 }
 

@@ -72,7 +72,7 @@ router.get('/groupinfo/:groupname', async (req, res) => {
   }
 });
 router.get('/profilepicture/:groupId', async (req, res, next) => {
-  let pathaz = path.resolve(__dirname, '../../front-end/public/images');
+  let pathaz = path.resolve(__dirname, '../../front-end/src/images');
   let groupId = `${req.params.groupId}--profilepicture.png`;
   let defaultUsername = 'default--profilepicture.png';
   let profilePath = path.join(pathaz, `/${groupId}`);

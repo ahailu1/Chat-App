@@ -10,7 +10,9 @@ class Loginform extends React.Component{
         this.state = {
             name: null,
             loading: null,
-            error: ''
+            error: '',
+            globalVar : "http://localhost:5000",
+
         }
     }
     userInput = (e) => {
@@ -22,21 +24,18 @@ class Loginform extends React.Component{
           this.setState({loading: true, error: ''});
         const data = {
             method: 'POST',
-            url: 'https://instachatter.com/api/loginuser',
+            url: `${this.state.globalVar}/api/loginuser`,
             data: {
                 login__user: true,
             username__login: e.target.username.value,
             password__login: e.target.password.value,
             },
         }
-
-
         axios(data).then(res => {
             this.setState({loading: false});
             let {data} = res;
             this.props.handleLogin(data);
             this.props.history.push(`/chat/${data.username}`);
-
         }).catch((e) => {
             let {error} = e.response.data.error;
             console.log(e.response.data.error.error);
@@ -54,7 +53,7 @@ loginForm = () => {
             
             </div>
             <div className = {styles.container__password}>
-            <input type = 'text' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
+            <input type = 'password' name = 'password' placeholder = 'password' className = {styles.input__password} onChange = {this.handleInput} value = {this.state.name}/>
             <p>{this.state.error !== '' && this.state.error }</p>
             </div>
             <div className = {styles.container__button}>

@@ -5,14 +5,15 @@ const router = express.Router();
 const path = require('path');
 const authenticate = require('../controller/createuser');
 const loginAuthenticate = require('../controller/loginuser');
-const {getAll} = require('../models/createUser');
+const { getAll } = require('../models/createUser');
 const getToken = require('../middleware/session');
 router.post('/createaccount', async (req, res, next) => {
   let isValidated = await authenticate(req, res);
   if (isValidated.authenticated === true) {
     const { username } = isValidated;
     const token = await jwt.sign({ user: username }, 'secret-key');
-    res.status(200).send({ username,
+    res.status(200).send({
+      username,
       token,
       authenticated: true,
     });

@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './groupchatbox.module.scss';
-import {Input, Button,Spin, Avatar} from 'antd';
+import {Input, Button,Spin, Avatar, TextArea} from 'antd';
 import {TeamOutlined} from '@ant-design/icons'
 import io from 'socket.io-client';
 import axios from 'axios';
@@ -16,6 +16,8 @@ class Groupchatbox extends React.Component{
             msgHistory: [],
             loadHistory : true,
             historyMsg: '',
+            globalVar : "http://localhost:5000",
+            mymsg : "",
         }
         this.msgBox = this.msgBox.bind(this);
     }
@@ -28,7 +30,7 @@ class Groupchatbox extends React.Component{
 
     getMsgHistory = () => {
         let {groupId} = this.props;
-        axios.get(`https://instachatter.com/chat/groups/chathistory/${groupId}`).then(el => {
+        axios.get(`${this.state.globalVar}/chat/groups/chathistory/${groupId}`).then(el => {
         let msgHistory = el.data.msgHistory;
         console.log(msgHistory);
         this.setState({msgHistory: msgHistory, loadHistory: false});
@@ -40,7 +42,7 @@ class Groupchatbox extends React.Component{
     getGroupInfo = () => {
         this.setState({loadingFriends: true});
         let {groupId} = this.props;
-        axios.get(`https://instachatter.com/chat/groups/groupinfo/${groupId}`)
+        axios.get(`${this.state.globalVar}/chat/groups/groupinfo/${groupId}`)
         .then((el) => {
         
             let arr = el.data.groupMembers;
@@ -62,7 +64,7 @@ class Groupchatbox extends React.Component{
     getMessage = (msgBox) => {
         let {groupId} = this.props;
         
-        let socket = io('https://instachatter.com');
+        let socket = io(`${this.state.globalVar}`);
         socket.on(groupId, (data) => {
             this.setState(prev => {
                 let myMessages = prev.myMessages;
@@ -100,7 +102,7 @@ class Groupchatbox extends React.Component{
             <>
         <div className = {`${styles.message__container} ${thisUser === myUsername && styles.toggled}`}>   
                     <div className = {styles.message__container__sent}>
-                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`/images/${thisUser}--profilepicture.png`}>U</Avatar> </div>
+                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`${this.state.globalVar}/images/${thisUser}--profilepicture.png`}>U</Avatar> </div>
                     <div className = {styles.message__format}>
                     <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${thisUser && styles.toggled}`}>{thisUser}</p><p className = {`${styles.message__time}`}>{thisTime}</p></div>
         <div className = {styles.message__actualmessage}>{thisMessage}</div>
@@ -110,7 +112,11 @@ class Groupchatbox extends React.Component{
                     </>
         )
         }
-
+        handleText = (e) => {
+            let myval = e.target.value;
+            console.log(myval);
+            this.setState({mymsg: myval});
+        }
   sendMessage = (e) => {
     e.preventDefault();
     let val = e.target.mymsg.value;
@@ -122,8 +128,10 @@ class Groupchatbox extends React.Component{
         groupId : this.props.groupId,
         username : username,
         time: time,
-    }
+    };
     socket.emit('groupMessage', msgInfo);
+    this.setState({mymsg: ""});
+
 }
 /*
     checkProfile = (username) => {
@@ -137,9 +145,11 @@ class Groupchatbox extends React.Component{
         })
     }
     */
+  
+
    checkGroupProfile = () => {
        let {groupId} = this.props;
-    axios.get(`https://instachatter.com/chat/groups/profilepicture/${groupId}`).then(el => {
+    axios.get(`${this.state.globalVar}/chat/groups/profilepicture/${groupId}`).then(el => {
         let profilePicture = el.data.profilePicture;
         this.setState({groupProfile: profilePicture});
     }).catch(el => {
@@ -150,8 +160,8 @@ class Groupchatbox extends React.Component{
     render(){
         let msgBox = this.msgBox;
         let { groupName } = this.props;
-        let socket = io('https://instachatter.com');
-
+        let socket = io(`${this.state.globalVar}`);
+        let {mymsg} = this.state;
         const { TextArea } = Input;
         return (
             <div className = {styles.container__groupchatbox}>
@@ -178,16 +188,16 @@ class Groupchatbox extends React.Component{
                     </div>
                     </div> 
                 <div className = {styles.container__messagebox}>
-                    <form onSubmit = {this.sendMessage} className = {styles.form}>
-                <TextArea className = {styles.textarea} name = 'mymsg' />
-                <Button type = 'default' size = 'large' className = {styles.button} htmlType = 'submit'>Send</Button>
+                    <form onSubmit = {this.sendMessage} className = {styles.form} htmlType = "submit">
+                <TextArea className = {styles.textarea} type = "text" name = 'mymsg' value = {mymsg} onChange = {this.handleText} />
+                <Button type = 'default' size = 'large' className = {styles.button} htmlType = "submit">Send</Button>
                 </form>
                     </div>
                 </div>
 
                 <div className = {styles.container__groupinformation}>
                        <div className = {styles.container__groupinformation__wrapper}>
-                       <div className = {styles.group__image__container}><Avatar size = {85} shape = 'circle' className = {styles.group__image} src = {`/images/${this.state.groupProfile}`} alt = 'profilepicture' />
+                       <div className = {styles.group__image__container}><Avatar size = {85} shape = 'circle' className = {styles.group__image} src = {`${this.state.globalVar}/images/${this.state.groupProfile}`} alt = 'profilepicture' />
                        <p className = {styles.title}>{this.props.groupName}</p>
                        </div>
                     <div className = {styles.group__name}><p className = {styles.title__description}>{this.props.description} </p></div>
@@ -200,7 +210,7 @@ class Groupchatbox extends React.Component{
                            { this.state.loadingFriends ? <Spin/> : 
                            this.state.groupMembers.map((el, index) => {
                             return <div className = {styles.username__container}>
-                                <Avatar key = {`${index}---isthekey`} shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`}>U </Avatar>
+                                <Avatar key = {`${index}---isthekey`} shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}--profilepicture.png`}>U </Avatar>
                                 <p className = {styles.username}>{el}</p>
                                 </div>
                             

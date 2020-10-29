@@ -26,6 +26,7 @@ constructor(props){
         group_id: '',
         group_name: '',
         group_description: '',
+        globalVar : "http://localhost:5000",
     }
     this.setLock = this.setLock.bind(this);
     this.deletePending = this.deletePending.bind(this); 
@@ -91,7 +92,7 @@ if(val){
 }
 
 fetchAllGroups = () => {
-    axios.get('https://instachatter.com/chat/groups/allgroups').then(el => {
+    axios.get(`${this.state.globalVar}/chat/groups/allgroups`).then(el => {
     let groupMemberName = el.data.map((el) => {
         el = el.group_id;
         return el;
@@ -103,7 +104,7 @@ fetchAllGroups = () => {
 }
 getmyGroup = () => {
     let {username} = this.props.userData;
-    axios.get(`https://instachatter.com/chat/groups/mygroups/${username}`).then(res => {
+    axios.get(`${this.state.globalVar}/chat/groups/mygroups/${username}`).then(res => {
         let groupInfo = res.data.groupData;
     this.setState({myGroups: groupInfo, loading: false});
     }).catch(res => {
@@ -117,7 +118,7 @@ getJoinedGroups = () => {
     this.setState({loadJoined: true});
 
     let {username} = this.props.userData;
-    axios.get(`https://instachatter.com/chat/groups/joinedgroups/${username}`).then(res => {
+    axios.get(`${this.state.globalVar}/chat/groups/joinedgroups/${username}`).then(res => {
         let groupInfo = res.data;
     this.setState({joinedGroups: groupInfo, loadJoined: false});
     }).catch(res => {
@@ -125,7 +126,7 @@ getJoinedGroups = () => {
     })
 }
 leaveGroup = (username,groupId) => {   
-   axios.get(`https://instachatter.com/chat/groups/leavegroup/${groupId}/${username}`)
+   axios.get(`${this.state.globalVar}/chat/groups/leavegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filteredGroups = prev.joinedGroups;
@@ -142,7 +143,7 @@ leaveGroup = (username,groupId) => {
     })
 }
 deleteGroup = (username,groupId) => {   
-   axios.get(`https://instachatter.com/chat/groups/deletegroup/${groupId}/${username}`)
+   axios.get(`${this.state.globalVar}/chat/groups/deletegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filterMyGroups = prev.myGroups;
@@ -194,7 +195,7 @@ handleJoinGroup = () => {
         })
         
     } else {
-        axios.get(`https://instachatter.com/chat/groups/join/${groupId}/${username}`).then(res => {
+        axios.get(`${this.state.globalVar}/chat/groups/join/${groupId}/${username}`).then(res => {
        
             this.setState((prev) => {
                 //get all groups
@@ -404,6 +405,21 @@ getLocked = () => {
         }
     })
 }
+checkImage = (username) => {
+    let {token} = this.props.userData;
+    axios.get(`http://localhost:5000/chat/${username}`, {
+        headers: { Authorization:'Bearer' + token }})
+        .then(el => {
+        let data = el.data.profilePicture;
+        console.log(data);
+        return `../../images/${data}`;        
+    }).catch(err => {
+        let path = err.response.data.default;
+        console.log(path);
+        return `../../images/${path}`;
+    })
+}
+
 removeLock = (friendname) => {
     this.setState((prev) => {
             let filterLock = prev.locked;
@@ -490,7 +506,7 @@ render(){
             <div className = {styles.container__myfriends}>
                     { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
                     return <Friendrequests setDelete = {() => {this.deleteFriend(username, el)}} {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
-                    return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
+                    return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/defaultprofile.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
                         }} />
                         })
                     }
@@ -507,7 +523,7 @@ render(){
 
                     { this.props.requests.map((el, index) => {
                         return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
+                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/defaultprofile.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
                         }
                         </div>
             </TabPane>
@@ -522,7 +538,7 @@ render(){
 
                     {this.props.pending.map( (el, index) => {
                         return <Friendrequests {...pending} displayIcon = {()=> false} friendname = {el} setDelete = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U </Avatar>                
+                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U </Avatar>                
                                 }} />
                     })}
                     </div>
@@ -537,7 +553,7 @@ render(){
                                 <div className = {styles.container__requests}>
                     {this.props.favourites.map(el => {
                         return <Friendrequests {...favourite} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} friendname = {el} createChat = {() => { this.props.createChat(el)}} friendName = {el} setDelete = {() => {this.props.toggleFavourite(el, false) }} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = 'large' src = {`/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                            return  <Avatar shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}/--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
                                 }} />
                     })}
                     </div>

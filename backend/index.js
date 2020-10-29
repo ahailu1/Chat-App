@@ -28,7 +28,16 @@ app.use('/chat', chat);
 app.use('/chat/friendslist', friendsList);
 app.use('/chat/chatbox', chatbox);
 app.use('/chat/groups', groupchat);
-
+app.use(express.static('public'));
+/*
+app.get('/*', (req, res) => {
+  res.status(200).sendFile('/var/www/front-end/build', (err) => {
+    if (err) {
+      res.status(500).send({errorMsg: 'this wont work'});
+    }
+  });
+});
+*/
 client.on('connect', () => {
   console.log('connected redis server');
 });

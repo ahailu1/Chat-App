@@ -94,7 +94,7 @@ render(){
         beforeUpload={this.beforeUpload}
         onChange={this.handleChange}
       >
-                {this.state.profilePath ? <Avatar className = {styles.image} src={`/images/${this.state.profilePath}`} alt="avatar" size = {this.props.setSize} /> : this.uploadButton()}
+  <Avatar className = {styles.image} src={`https://instachatter.com/images/${username}--profilepicture.png`} alt="avatar" size = {this.props.setSize} />
     </Upload>
      </div>
     )
