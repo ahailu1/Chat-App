@@ -25,7 +25,7 @@ export default class App extends React.Component {
     }
 
     getUsers = () => {
-        axios.get('http://localhost:5000/api/allusers').then(res => {
+        axios.get('https://instachatter.com/api/allusers').then(res => {
         let source = {'value': 'anything'};
         let arr = res.data.map((el, index) => {
             //copy object value
@@ -59,7 +59,7 @@ handleLogout = () => {
         offline: true,
         username: username
     }
-    const socket = io('http://localhost:5000');
+    const socket = io('https://instachatter.com');
     cookie.remove('userData');
     socket.disconnect();
     this.setState(() => {
@@ -74,7 +74,7 @@ handleAuthentication = () => {
     const userData = cookie.get('userData');
     if(userData !== undefined) {
         let { token, username } = userData;
-    axios.get('http://localhost:5000/api/authenticate', {
+    axios.get('https://instachatter.com/api/authenticate', {
         headers: {
             Authorization:'Bearer' + token
         }

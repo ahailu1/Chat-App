@@ -29,7 +29,7 @@ class Chat extends React.Component{
         fullList: [],
         loading: null,
         groupIdArr: [],
-        globalVar : "http://localhost:5000",
+        globalVar : "https://instachatter.com",
         }
 
     this.createChat = this.createChat.bind(this);

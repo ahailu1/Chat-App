@@ -26,7 +26,7 @@ constructor(props){
         group_id: '',
         group_name: '',
         group_description: '',
-        globalVar : "http://localhost:5000",
+        globalVar : "https://instachatter.com",
     }
     this.setLock = this.setLock.bind(this);
     this.deletePending = this.deletePending.bind(this); 
@@ -403,20 +403,6 @@ getLocked = () => {
         return{
             locked: myArr
         }
-    })
-}
-checkImage = (username) => {
-    let {token} = this.props.userData;
-    axios.get(`http://localhost:5000/chat/${username}`, {
-        headers: { Authorization:'Bearer' + token }})
-        .then(el => {
-        let data = el.data.profilePicture;
-        console.log(data);
-        return `../../images/${data}`;        
-    }).catch(err => {
-        let path = err.response.data.default;
-        console.log(path);
-        return `../../images/${path}`;
     })
 }
 

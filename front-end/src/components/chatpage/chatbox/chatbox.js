@@ -18,7 +18,7 @@ class Chatbox extends React.Component {
             toggled: false,
             msgHistory : [],
             friends : [],
-            globalVar : "http://localhost:5000",
+            globalVar : "https://instachatter.com",
             mymsg : "",
         }
         this.getMessage = this.getMessage.bind(this);

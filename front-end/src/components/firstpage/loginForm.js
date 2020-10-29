@@ -11,7 +11,7 @@ class Loginform extends React.Component{
             name: null,
             loading: null,
             error: '',
-            globalVar : "http://localhost:5000",
+            globalVar : "https://instachatter.com",
 
         }
     }

@@ -16,7 +16,7 @@ class Groupchatbox extends React.Component{
             msgHistory: [],
             loadHistory : true,
             historyMsg: '',
-            globalVar : "http://localhost:5000",
+            globalVar : "https://instachatter.com",
             mymsg : "",
         }
         this.msgBox = this.msgBox.bind(this);

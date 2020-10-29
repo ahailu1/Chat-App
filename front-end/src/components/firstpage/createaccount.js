@@ -13,7 +13,7 @@ class Createaccount extends React.Component{
             errPassword: [],
             errConfirmPwd: [],
             loading: null,
-            globalVar : "http://localhost:5000",
+            globalVar : "https://instachatter.com",
 
             
         }
