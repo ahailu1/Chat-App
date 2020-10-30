@@ -146,6 +146,7 @@ socket.emit('message', data);
 
 render() {
 let {msgHistory, mymsg} = this.state
+let {username} = this.props.userData;
 return(
 
     <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
@@ -165,7 +166,7 @@ return(
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
-        <div className = {styles.container__history__message}> 
+        <div className = {styles.container__history__message}>
             <div className = {styles.container__history__format}>  
                 <div className = {styles.sender}> {el.sender} </div>
                 <div className = {styles.time}> {el.time} </div>

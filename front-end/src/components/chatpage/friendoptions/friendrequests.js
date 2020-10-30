@@ -5,6 +5,7 @@ import {Button} from 'antd';
 import axios from 'axios';
 
 const Friendrequest = (props) => {
+    const [globalVar] = useState('https://instachatter.com');
     const [msgLock, msgOn] = useState(false);
     const [lock, lockOn] = useState(false);
 const [star, favouriteOn] = useState(false);
@@ -65,7 +66,7 @@ const loginChat = (e, friendname) => {
     let val = e.target.loginpwd.value;
     let config = {
         method: 'POST',
-        url: 'http://localhost:5000/chat/friendslist/unlock',
+        url: `${globalVar}/chat/friendslist/unlock`,
         data: {
         username: username,
         friendname: friendname,
@@ -95,7 +96,7 @@ let removeLock = (e, callback, friendname) => {
     console.log(password);
     let config = {
         method: 'PUT',
-        url: 'http://localhost:5000/chat/friendslist/removelock',
+        url: `${globalVar}/chat/friendslist/removelock`,
         data: {
             username:username,
             password:password,
@@ -139,7 +140,7 @@ const handleLock = (e,callback, friendname, rmvlock = false) => {
         }
         let userInfo = {
             method: `${thisMethod}`,
-            url: `http://localhost:5000/chat/friendslist/${myparam}/`,
+            url: `${globalVar}/chat/friendslist/${myparam}/`,
             data: {
                 username: username,
                 password: setpass,
