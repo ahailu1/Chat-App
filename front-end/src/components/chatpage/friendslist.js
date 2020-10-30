@@ -494,7 +494,7 @@ render(){
             <div className = {styles.container__myfriends}>
                     { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
                     return <Friendrequests setDelete = {() => {this.deleteFriend(username, el)}} {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
-                    return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/defaultprofile.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
+                    return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
                         }} />
                         })
                     }
@@ -511,7 +511,7 @@ render(){
 
                     { this.props.requests.map((el, index) => {
                         return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/defaultprofile.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
+                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
                         }
                         </div>
             </TabPane>
@@ -541,7 +541,7 @@ render(){
                                 <div className = {styles.container__requests}>
                     {this.props.favourites.map(el => {
                         return <Friendrequests {...favourite} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} friendname = {el} createChat = {() => { this.props.createChat(el)}} friendName = {el} setDelete = {() => {this.props.toggleFavourite(el, false) }} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}/--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                            return  <Avatar shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
                                 }} />
                     })}
                     </div>

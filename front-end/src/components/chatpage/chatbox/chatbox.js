@@ -152,7 +152,6 @@ return(
     <div className = {`${styles.container__chatbox} ${this.props.toggled.includes(this.props.friendName) && styles.toggled}`} >
 
     <div className = {styles.container__sent}>
-<Avatar className = {styles.message__sent__avatar} src = {`${this.state.globalVar}/images/${this.props.friendName}--profilepicture.png`}>U</Avatar>
 
         <div className = {styles.container__chat}>
             <div className = {styles.container__wrapper0}>
@@ -168,6 +167,7 @@ return(
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
+<Avatar className = {styles.message__sent__avatar} src = {`${this.state.globalVar}/images/${el.sender}--profilepicture.png`}>U</Avatar>
         
         <div className = {styles.container__history__message}>
             <div className = {styles.container__history__format}>  
