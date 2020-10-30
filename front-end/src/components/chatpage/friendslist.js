@@ -387,6 +387,8 @@ getLocked = () => {
     let {username} = this.props.userData;
     let data = this.props.fullList;
     let arr = [];
+    console.log(data);
+    console.log("right here bapaa")
     data.forEach((el) => {
         if(parseInt(el.state) === 3){
                 if(el.username === username && (el.friendname_password !== null || el.friendname_password)){

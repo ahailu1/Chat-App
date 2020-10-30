@@ -94,7 +94,7 @@ render(){
         beforeUpload={this.beforeUpload}
         onChange={this.handleChange}
       >
-  <Avatar className = {styles.image} src={`https://instachatter.com/images/${username}--profilepicture.png`} alt="avatar" size = {this.props.setSize} />
+  <Avatar className = {styles.image} src={`http://instachatter.com/images/${username}--profilepicture.png`} alt="avatar" size = {this.props.setSize} />
     </Upload>
      </div>
     )

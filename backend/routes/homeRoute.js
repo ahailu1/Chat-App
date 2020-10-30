@@ -24,6 +24,7 @@ router.post('/createaccount', async (req, res, next) => {
 router.post('/loginuser', async (req, res, next) => {
   const { username__login: username, password__login: password } = req.body;
   const test = await loginAuthenticate(username, password);
+  console.log("here buddyaaa");
   if (test.validated) {
     const token = await jwt.sign({ user: username }, 'secret-key');
     res.status(200).json({

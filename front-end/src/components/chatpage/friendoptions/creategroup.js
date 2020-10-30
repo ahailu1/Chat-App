@@ -9,7 +9,7 @@ const Creategroup = (props) => {
 const [creategroup, toggleDisplay] = useState(false);    
 const [deleteIcon, changeDelete] = useState(false);    
 const [chatIcon, changeChat] = useState(false);    
-
+const [globalVar] = useState("https://instachatter.com");
 
 const toggleDelete = () => {
     changeDelete(!deleteIcon)
@@ -45,8 +45,8 @@ let fetchGroup = () => {
             
             <div className = {`${styles.container__groupdata__avatar} ${props.joinedGroups && styles.toggled}`}>   
                 <div className = {styles.container__groupdata__avatar__container}>
-                { props.setProfile ? <Profilepicture actionUrl = {`http://localhost:5000/chat/groups/profilepicture/${props.groupId}`} userData = {props.userData} toggled = {true} setSize = {50}/>
-                 : <Avatar src = {`https://instachatter.com/images/${props.groupId}--profilepicture.png`} size = {64}>U</Avatar>  
+                { props.setProfile ? <Profilepicture actionUrl = {`${globalVar}/chat/groups/profilepicture/${props.groupId}`} userData = {props.userData} toggled = {true} setSize = {50}/>
+                 : <Avatar src = {`${globalVar}/images/${props.groupId}--profilepicture.png`} size = {64}>U</Avatar>  
                 }
                 </div>
                 {props.description &&

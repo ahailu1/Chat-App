@@ -30,7 +30,7 @@ class Loginform extends React.Component{
             username__login: e.target.username.value,
             password__login: e.target.password.value,
             },
-        }
+        };
         axios(data).then(res => {
             this.setState({loading: false});
             let {data} = res;

@@ -81,7 +81,7 @@ class Createaccount extends React.Component{
                     errConfirmPwd = errConfirmPwd.concat(el.msg);
                 }
             })
-            this.setState({errConfirmPwd, errUsername, errPassword})
+            this.setState({errConfirmPwd, errUsername, errPassword, loading: false})
     
          })        
         }

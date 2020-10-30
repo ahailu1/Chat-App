@@ -187,10 +187,14 @@ toggleFavourite = (myfriendname, boolean) => {
 }
 
 friendStatus = async () => {
-        let [pending, requests, declined, favourites, friends, remainder,myList ] = [[], [], [], [], [], [], []];
+    this.setState({loading: true});
+        
+    try {
+    let [pending, requests, declined, favourites, friends, remainder,myList ] = [[], [], [], [], [], [], []];
             const {username} = this.props.userData;
             const request = await axios.get(`${this.state.globalVar}/chat/friendslist/friendstatus/${username}`);
-            const data = request.data;
+            const data = await request.data;
+            
             data.forEach((el) => {
                  if(el.friendname === username && myList.indexOf(el.username) == -1){
                         myList.push(el.username);
@@ -228,6 +232,9 @@ friendStatus = async () => {
                         loading: false
                     }
             });
+        } catch (err) {
+            this.setState({loading: false});
+        }
         }
 
 loadingPage = () => {

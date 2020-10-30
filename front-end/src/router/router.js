@@ -13,7 +13,9 @@ export default class App extends React.Component {
         this.state = {
             userData: null,
             loggedIn: false,
-            users: []
+            users: [],
+            globalVar : "https://instachatter.com",
+
         }
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
@@ -25,7 +27,7 @@ export default class App extends React.Component {
     }
 
     getUsers = () => {
-        axios.get('https://instachatter.com/api/allusers').then(res => {
+        axios.get(`${this.state.globalVar}/api/allusers`).then(res => {
         let source = {'value': 'anything'};
         let arr = res.data.map((el, index) => {
             //copy object value
@@ -59,7 +61,7 @@ handleLogout = () => {
         offline: true,
         username: username
     }
-    const socket = io('https://instachatter.com');
+    const socket = io(`${this.state.globalVar}`);
     cookie.remove('userData');
     socket.disconnect();
     this.setState(() => {
@@ -74,7 +76,7 @@ handleAuthentication = () => {
     const userData = cookie.get('userData');
     if(userData !== undefined) {
         let { token, username } = userData;
-    axios.get('https://instachatter.com/api/authenticate', {
+    axios.get(`${this.state.globalVar}/api/authenticate`, {
         headers: {
             Authorization:'Bearer' + token
         }
@@ -107,7 +109,7 @@ handleAuthentication = () => {
 
 render(){
 
-const socket = io('http://localhost:5000');
+const socket = io(`${this.state.globalVar}`);
 let users = this.state.users;
 let {userData} = this.state;
 let props = this.state;
