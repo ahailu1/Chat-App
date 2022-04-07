@@ -1,33 +1,23 @@
+const mypath = require("path");
+const dotEnv = require("dotenv").config({
+  path: `${mypath.resolve('../', ".env")}`,
+});
 const fs = require('fs');
-const config = {
-  user: 'alexh',
-  host: 'ch86kevt1xeu294g',
-  database: 'instachatdb',
-  password: 'ch86kevt1xeu294g',
-  port: 25060,
-};
-
+let config = {
+  PGHOST: process.env.PGUSER,
+  PGUSER: process.env.PGHOST,
+  PGPASSWORD: process.env.PGPASSWORD,
+  PGDATABASE: process.env.PGDATABASE,
+  PGPORT: process.env.PGPORT
+ }
 const { Pool, Client } = require('pg');
-
 
 
 
 let connection = () => {
 
-  const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'instantchat',
-    password: 'm3gn16t5k3jti',
-    port: 5432,
-  });
-  let client = new Client({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'instantchat',
-    password: 'm3gn16t5k3jti',
-    port: 5432,
-  });
+  const pool = new Pool(config);
+  let client = new Client(config);
   let connect = pool.connect();
 
   return pool;

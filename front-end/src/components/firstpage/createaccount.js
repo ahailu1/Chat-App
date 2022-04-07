@@ -12,10 +12,7 @@ class Createaccount extends React.Component{
             errUsername: [],
             errPassword: [],
             errConfirmPwd: [],
-            loading: null,
-            globalVar : "https://instachatter.com",
-
-            
+            loading: null,            
         }
     }
 
@@ -58,7 +55,7 @@ class Createaccount extends React.Component{
           e.preventDefault();
         const data = {
             method: 'POST',
-            url: `${this.state.globalVar}/api/createaccount`,
+            url: `${process.env.REACT_APP_CHAT_URL}/api/createaccount`,
             data: {
             username: e.target.username.value,
             password: e.target.password.value,

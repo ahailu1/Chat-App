@@ -1,8 +1,12 @@
 const cors = require('cors');
 const express = require('express');
-let redis = require('redis');
+
+//let redis = require('redis');
 const app = express();
 const path = require('path');
+const dotEnv = require("dotenv").config({
+  Path: `${path.resolve(__dirname, ".env")}`,
+});
 const socketio = require('socket.io');
 const http = require('http');
 const bodyParser = require('body-parser');
@@ -17,11 +21,11 @@ const { insertGroupMessage } = require('./models/createUser');
 const friendsList = require('./routes/friendslist');
 
 //  const sessionInit = require('./middleware/session.js');
-let client = redis.createClient();
+//let client = redis.createClient();
 app.set('port', (process.env.Port || 5000));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: '*' }));
 
 app.use('/api', homeRoute);
 app.use('/chat', chat);
@@ -38,13 +42,9 @@ app.get('/*', (req, res) => {
   });
 });
 */
-client.on('connect', () => {
+/*client.on('connect', () => {
   console.log('connected redis server');
-});
-
-client.lrange('messagedata', 0, -1, (err, res) => {
-});
-
+});*/
 io.on('connect', (socket) => {
   socket.on('message', ({ room, message, sender, recipient, time }) => {
     let response = {
@@ -66,5 +66,6 @@ io.on('connect', (socket) => {
   }); 
 });
 server.listen(app.get('port') || 5000, () => {
+  console.log(process.env.PGHOST + 'IS THE HOST')
   console.log(`server is listening  on ${app.get('port')}`);
 });

@@ -27,7 +27,7 @@ export default class App extends React.Component {
     }
 
     getUsers = () => {
-        axios.get(`${this.state.globalVar}/api/allusers`).then(res => {
+        axios.get(`${process.env.REACT_APP_CHAT_URL}/api/allusers`).then(res => {
         let source = {'value': 'anything'};
         let arr = res.data.map((el, index) => {
             //copy object value
@@ -61,7 +61,7 @@ handleLogout = () => {
         offline: true,
         username: username
     }
-    const socket = io(`${this.state.globalVar}`);
+    const socket = io(`${process.env.REACT_APP_CHAT_URL}`);
     cookie.remove('userData');
     socket.disconnect();
     this.setState(() => {
@@ -76,7 +76,7 @@ handleAuthentication = () => {
     const userData = cookie.get('userData');
     if(userData !== undefined) {
         let { token, username } = userData;
-    axios.get(`${this.state.globalVar}/api/authenticate`, {
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/api/authenticate`, {
         headers: {
             Authorization:'Bearer' + token
         }
@@ -109,7 +109,7 @@ handleAuthentication = () => {
 
 render(){
 
-const socket = io(`${this.state.globalVar}`);
+const socket = io(`${process.env.REACT_APP_CHAT_URL}`);
 let users = this.state.users;
 let {userData} = this.state;
 let props = this.state;

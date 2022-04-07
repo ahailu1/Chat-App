@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+    frontend:
+        build: ./front-end
+        expose:
+            - 3000
+        ports: 
+            - "3000:3000"
+        stdin_open: true
+        volumes:
+            - ./front-end:/var/www/frontend
+        restart: always
+        links:
+            - backend
+    backend:
+        build: ./backend
+        expose: 
+            - 3000
+        ports: 
+            - "5000:5000"
+        volumes: 
+            - ./backend:/var/www/api
+        environment:
+            - DOCKER_IP=host.docker.internal
+        restart: always
+
+

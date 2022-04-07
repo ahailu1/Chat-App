@@ -16,7 +16,6 @@ class Groupchatbox extends React.Component{
             msgHistory: [],
             loadHistory : true,
             historyMsg: '',
-            globalVar : "https://instachatter.com",
             mymsg : "",
         }
         this.msgBox = this.msgBox.bind(this);
@@ -30,7 +29,7 @@ class Groupchatbox extends React.Component{
 
     getMsgHistory = () => {
         let {groupId} = this.props;
-        axios.get(`${this.state.globalVar}/chat/groups/chathistory/${groupId}`).then(el => {
+        axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/chathistory/${groupId}`).then(el => {
         let msgHistory = el.data.msgHistory;
         console.log(msgHistory);
         this.setState({msgHistory: msgHistory, loadHistory: false});
@@ -42,7 +41,7 @@ class Groupchatbox extends React.Component{
     getGroupInfo = () => {
         this.setState({loadingFriends: true});
         let {groupId} = this.props;
-        axios.get(`${this.state.globalVar}/chat/groups/groupinfo/${groupId}`)
+        axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/groupinfo/${groupId}`)
         .then((el) => {
         
             let arr = el.data.groupMembers;
@@ -64,7 +63,7 @@ class Groupchatbox extends React.Component{
     getMessage = (msgBox) => {
         let {groupId} = this.props;
         
-        let socket = io(`${this.state.globalVar}`);
+        let socket = io(`${process.env.REACT_APP_CHAT_URL}`);
         socket.on(groupId, (data) => {
             this.setState(prev => {
                 let myMessages = prev.myMessages;
@@ -102,7 +101,7 @@ class Groupchatbox extends React.Component{
             <>
         <div className = {`${styles.message__container} ${thisUser === myUsername && styles.toggled}`}>   
                     <div className = {styles.message__container__sent}>
-                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`${this.state.globalVar}/images/${thisUser}--profilepicture.png`}>U</Avatar> </div>
+                    <div className = {styles.message__image}> <Avatar size = 'large' src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${thisUser}--profilepicture.png`}>U</Avatar> </div>
                     <div className = {styles.message__format}>
                     <div className = {styles.message__timestamp}><p className = {`${styles.message__username} ${thisUser && styles.toggled}`}>{thisUser}</p><p className = {`${styles.message__time}`}>{thisTime}</p></div>
         <div className = {styles.message__actualmessage}>{thisMessage}</div>
@@ -149,7 +148,7 @@ class Groupchatbox extends React.Component{
 
    checkGroupProfile = () => {
        let {groupId} = this.props;
-    axios.get(`${this.state.globalVar}/chat/groups/profilepicture/${groupId}`).then(el => {
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/profilepicture/${groupId}`).then(el => {
         let profilePicture = el.data.profilePicture;
         this.setState({groupProfile: profilePicture});
     }).catch(el => {
@@ -160,7 +159,7 @@ class Groupchatbox extends React.Component{
     render(){
         let msgBox = this.msgBox;
         let { groupName } = this.props;
-        let socket = io(`${this.state.globalVar}`);
+        let socket = io(`${process.env.REACT_APP_CHAT_URL}`);
         let {mymsg} = this.state;
         const { TextArea } = Input;
         return (
@@ -197,7 +196,7 @@ class Groupchatbox extends React.Component{
 
                 <div className = {styles.container__groupinformation}>
                        <div className = {styles.container__groupinformation__wrapper}>
-                       <div className = {styles.group__image__container}><Avatar size = {85} shape = 'circle' className = {styles.group__image} src = {`${this.state.globalVar}/images/${this.state.groupProfile}`} alt = 'profilepicture' />
+                       <div className = {styles.group__image__container}><Avatar size = {85} shape = 'circle' className = {styles.group__image} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${this.state.groupProfile}`} alt = 'profilepicture' />
                        <p className = {styles.title}>{this.props.groupName}</p>
                        </div>
                     <div className = {styles.group__name}><p className = {styles.title__description}>{this.props.description} </p></div>
@@ -210,7 +209,7 @@ class Groupchatbox extends React.Component{
                            { this.state.loadingFriends ? <Spin/> : 
                            this.state.groupMembers.map((el, index) => {
                             return <div className = {styles.username__container}>
-                                <Avatar key = {`${index}---isthekey`} shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}--profilepicture.png`}>U </Avatar>
+                                <Avatar key = {`${index}---isthekey`} shape = 'circle' size = 'large' src = {`${process.env.REACT_APP_CHAT_URL}/${el}--profilepicture.png`}>U </Avatar>
                                 <p className = {styles.username}>{el}</p>
                                 </div>
                             

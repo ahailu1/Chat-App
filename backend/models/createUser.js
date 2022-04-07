@@ -4,6 +4,8 @@ const connection = Connection();
 const saltRounds = 5;
 
 const createGroup = async (object) => {
+  //alter table my_groups add primary key(group_id);
+  //alter table my_groups add constraint fk_my_groups foreign KEY(group_creator) references users(username);
   let { groupName, groupId, groupDescription, groupCreator } = object;
   let query = 'insert into my_groups(group_name, group_id, group_creator, description,creation_date) values ($1, $2, $3, $4, LOCALTIMESTAMP)';
   let values = [groupName, groupId, groupCreator, groupDescription];
@@ -12,7 +14,7 @@ const createGroup = async (object) => {
     return true;
   } catch (err) {
     console.log('some sorta group add error');
-    throw new Error('couldnt add group')
+    throw new Error('couldnt add group');
   }
 };
 const insertGroupMessage = async (data) => {
@@ -26,6 +28,7 @@ const insertGroupMessage = async (data) => {
   }
 };
 const fetchGroupMessage = async (groupId) => {
+  //alter table group_chat_messages add constraint group_id_fk foreign key(group_id) references my_groups(group_id) on delete cascade;
   let query = "select group_member_username, group_id, group_message, time_sent::timestamp at time zone 'edt' from group_chat_messages where group_id = $1 order by time_sent asc";
   let values = [groupId];
   try {
@@ -96,6 +99,7 @@ const leaveGroup = async (username, groupId) => {
   }
 };
 const deleteGroup = async (username, groupId) => {
+  //alter table group_members add constraint group_members_fk_restraint foreign key(group_id) references my_groups(group_id) on delete cascade;
   let query = 'delete from my_groups where group_creator = $1 and group_id = $2';
   let values = [username, groupId];
   try {
@@ -104,7 +108,9 @@ const deleteGroup = async (username, groupId) => {
     throw new Error({ message: 'couldnt delete group' });
   }
 };
+
 const friendStatus = async (username) => {
+  //create table friend_status(username varchar,friendname varchar,state int,username_password varchar,friendname_password varchar,username_isfavourite varchar, friendname_isfavourite varchar, constraint friend_status_composite_pkey primary key(username, friendname), constraint friend_status_username_fk foreign key(username) references users(username), constraint friend_status_friendname_fk foreign key(friendname) references users(username));
   let query = 'SELECT * from friend_status WHERE (username = $1) or (friendname = $2)';
   let values = [username, username];
   try {

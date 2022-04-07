@@ -11,7 +11,6 @@ class Loginform extends React.Component{
             name: null,
             loading: null,
             error: '',
-            globalVar : "https://instachatter.com",
 
         }
     }
@@ -24,7 +23,7 @@ class Loginform extends React.Component{
           this.setState({loading: true, error: ''});
         const data = {
             method: 'POST',
-            url: `${this.state.globalVar}/api/loginuser`,
+            url: `${process.env.REACT_APP_CHAT_URL}/api/loginuser`,
             data: {
                 login__user: true,
             username__login: e.target.username.value,

@@ -29,7 +29,6 @@ class Chat extends React.Component{
         fullList: [],
         loading: null,
         groupIdArr: [],
-        globalVar : "https://instachatter.com",
         }
 
     this.createChat = this.createChat.bind(this);
@@ -53,6 +52,7 @@ handleFilter = () => {
 
       let arr = [];
       friends.forEach((el) => {
+          alert(el);
         arr.push(el.friendname)
       });
       return (
@@ -86,7 +86,7 @@ addFriend = async (friendname) => {
                 } else if(this.state.friends.some(el => el === friendName)) {
                     alert('name already added');
                 } else {
-                    axios.get(`${this.state.globalVar}/chat/friendslist/addfriend/${username}/${friendName}`).then(() => {
+                    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/addfriend/${username}/${friendName}`).then(() => {
 
                         this.setState((prev) => {
                             let pending = prev.pending.concat(friendName);
@@ -165,7 +165,7 @@ toggleFavourite = (myfriendname, boolean) => {
     }
     // if my username is the friendname then set state to six
     //if my username is the username then set te state to 5
-    axios.get(`${this.state.globalVar}/chat/friendslist/setfavourites/${username}/${friendname}/${boolean}/${reverse}`).then(
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/setfavourites/${username}/${friendname}/${boolean}/${reverse}`).then(
         this.setState(prev => {
             let myFavourites;
             let favourites = prev.favourites;
@@ -190,12 +190,19 @@ friendStatus = async () => {
     this.setState({loading: true});
         
     try {
-    let [pending, requests, declined, favourites, friends, remainder,myList ] = [[], [], [], [], [], [], []];
-            const {username} = this.props.userData;
-            const request = await axios.get(`${this.state.globalVar}/chat/friendslist/friendstatus/${username}`);
+    let pending = [];
+    let requests = [];
+    let declined = [];
+    let favourites = [];
+    let friends = [];
+    let remainder = [];
+    let myList = [];
+    const {username} = this.props.userData;
+            const request = await axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/friendstatus/${username}`);
             const data = await request.data;
             
             data.forEach((el) => {
+                console.log(el);
                  if(el.friendname === username && myList.indexOf(el.username) == -1){
                         myList.push(el.username);
                      }   
@@ -206,6 +213,7 @@ friendStatus = async () => {
                     if(friends.indexOf(res) == -1) {
 
                         friends.push(res);
+                        console.log(friends);
                     } 
                 } else if(el.state == '1' && el.username === username){
                     pending.push(el.friendname);
@@ -220,6 +228,7 @@ friendStatus = async () => {
                 }
                 }
             });
+            console.log(friends);
             this.setState((prev) => {
                     return {
                         friends: friends,
@@ -307,7 +316,7 @@ render(){
     const userData = cookie.get('userData');
     let {username} = userData;
     const {Sider,Content} = Layout;
-    const socket = io(`${this.state.globalVar}`);
+    const socket = io(`${process.env.REACT_APP_CHAT_URL}`);
     let friendsList = {
         toggleFavourite: this.toggleFavourite,
         loading: true,
@@ -332,10 +341,10 @@ render(){
         <Layout className = {styles.container__layout}>
         <Sider width = {450}  className = {styles.sidebar}>
         <div className = {styles.sidebar__profilepicture__container}>
-        <Profilepicture className = {styles.profilepicture} userData = {userData} actionUrl = {`${this.state.globalVar}/chat/${username}`} setSize = {100}/>
+        <Profilepicture className = {styles.profilepicture} userData = {userData} actionUrl = {`${process.env.REACT_APP_CHAT_URL}/chat/${username}`} setSize = {100}/>
         <Popover className = {styles.popover} content = {instructions} title = 'Info'><a href = '#'>{username}</a></Popover>
         </div>
-        {this.state.loading != true ? <Friendslist userData = {userData} {...friendsList} removeFriend = {this.removeFriend} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
+        {this.state.loading != true ? <Friendslist userData = {userData} {...friendsList} friends = {friendsList.friends} removeFriend = {this.removeFriend} createGroupChat = {this.createGroupChat}/> : <this.loadingPage/>}
         </Sider>
         <Layout>
         <Content className = {styles.container__content}>

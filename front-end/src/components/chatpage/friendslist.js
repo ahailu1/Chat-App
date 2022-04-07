@@ -26,7 +26,6 @@ constructor(props){
         group_id: '',
         group_name: '',
         group_description: '',
-        globalVar : "https://instachatter.com",
     }
     this.setLock = this.setLock.bind(this);
     this.deletePending = this.deletePending.bind(this); 
@@ -60,7 +59,6 @@ handleFilter = () => {
           return <Option key = {el.value} > <div className = {styles.container__options}><div className = {styles.container__username}>{el.value}</div><div className = {styles.container__icon}>pending</div> </div></Option> 
             }else if(declined.indexOf(el.value) !== -1){
               return <Option key = {el.value} > <div className = {styles.container__options}><div className = {styles.container__username}>{el.value}</div><div className = {styles.container__icon}>pending</div> </div></Option> 
-
             } else {
              return <Option key = {el.value}> <div className = {styles.container__options}><div className = {styles.container__username}>{el.value}</div><div className = {styles.container__icon}><UserAddOutlined/></div> </div></Option>
             }
@@ -92,7 +90,7 @@ if(val){
 }
 
 fetchAllGroups = () => {
-    axios.get(`${this.state.globalVar}/chat/groups/allgroups`).then(el => {
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/allgroups`).then(el => {
     let groupMemberName = el.data.map((el) => {
         el = el.group_id;
         return el;
@@ -104,7 +102,7 @@ fetchAllGroups = () => {
 }
 getmyGroup = () => {
     let {username} = this.props.userData;
-    axios.get(`${this.state.globalVar}/chat/groups/mygroups/${username}`).then(res => {
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/mygroups/${username}`).then(res => {
         let groupInfo = res.data.groupData;
     this.setState({myGroups: groupInfo, loading: false});
     }).catch(res => {
@@ -118,7 +116,7 @@ getJoinedGroups = () => {
     this.setState({loadJoined: true});
 
     let {username} = this.props.userData;
-    axios.get(`${this.state.globalVar}/chat/groups/joinedgroups/${username}`).then(res => {
+    axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/joinedgroups/${username}`).then(res => {
         let groupInfo = res.data;
     this.setState({joinedGroups: groupInfo, loadJoined: false});
     }).catch(res => {
@@ -126,7 +124,7 @@ getJoinedGroups = () => {
     })
 }
 leaveGroup = (username,groupId) => {   
-   axios.get(`${this.state.globalVar}/chat/groups/leavegroup/${groupId}/${username}`)
+   axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/leavegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filteredGroups = prev.joinedGroups;
@@ -143,7 +141,7 @@ leaveGroup = (username,groupId) => {
     })
 }
 deleteGroup = (username,groupId) => {   
-   axios.get(`${this.state.globalVar}/chat/groups/deletegroup/${groupId}/${username}`)
+   axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/deletegroup/${groupId}/${username}`)
     .then(res => {
             this.setState((prev) => {
         let filterMyGroups = prev.myGroups;
@@ -195,7 +193,7 @@ handleJoinGroup = () => {
         })
         
     } else {
-        axios.get(`${this.state.globalVar}/chat/groups/join/${groupId}/${username}`).then(res => {
+        axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/groups/join/${groupId}/${username}`).then(res => {
        
             this.setState((prev) => {
                 //get all groups
@@ -256,7 +254,7 @@ listGroups = () => {
     } else {
         query = 2;
     }
-        axios.delete('https://instachatter.com/chat/friendslist/deletefriend', { 
+        axios.delete(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/deletefriend`, { 
             data: { 
                 username:username, friendname:friendname, query: query 
             } 
@@ -272,12 +270,12 @@ listGroups = () => {
     }
     declineRequest = async (friendname) => {
     const {username} = this.props.userData;
-    const request = await axios.get(`https://instachatter.com/chat/friendslist/declinerequest/${username}/${friendname}`);
+    const request = await axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/declinerequest/${username}/${friendname}`);
     this.props.friendStatus();
     }   
     deletePending = async (friendname) => {
         const {username} = this.props.userData;
-        const request = await axios.get(`https://instachatter.com/chat/friendslist/deletepending/${username}/${friendname}`).then(() => {
+        const request = await axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/deletepending/${username}/${friendname}`).then(() => {
             this.props.friendStatus();
         }).catch((err) => {
             alert('there was a problem');
@@ -285,7 +283,7 @@ listGroups = () => {
     }   
     confirmFriend = (friendName) => {
         const {username} = this.props.userData;
-        axios.get(`https://instachatter.com/chat/friendslist/confirm/${username}/${friendName}`).then(data => {
+        axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/confirm/${username}/${friendName}`).then(data => {
                     this.props.friendStatus();
         }).catch(er => {
             alert('friend not addadsaded');
@@ -363,7 +361,7 @@ let error = "could create group. Please enter unique group ID";
     } else if(validValue){
             this.setState({createError: 'please enter only numbers, letters and underscores .'})
     } else {
-    axios.post('https://instachatter.com/chat/groups/creategroup', data).then(el => {
+    axios.post(`${process.env.REACT_APP_CHAT_URL}/chat/groups/creategroup`, data).then(el => {
         
         this.setState((prev) => {
             let newGroup = prev.myGroups;
@@ -491,10 +489,14 @@ render(){
         {
            this.handleFilter()
         }
+        {
+            console.log(this.props.friends)
+        }
             <div className = {styles.container__myfriends}>
-                    { this.props.friends.length > 0  && this.props.friends.map((el, index) => {    
+                    { this.props.friends.length > 0  && this.props.friends.map((el, index) => { 
+                        console.log(el);   
                     return <Friendrequests setDelete = {() => {this.deleteFriend(username, el)}} {...friendsList} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} setFunction = {() => {this.props.toggleFavourite(el, true)}} friendname = {el} key = {index} createChat = { () => { this.props.createChat(el) }} avatar = {() => {
-                    return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
+                    return  <Avatar shape = 'circle' size = {55} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U</Avatar>                
                         }} />
                         })
                     }
@@ -511,7 +513,7 @@ render(){
 
                     { this.props.requests.map((el, index) => {
                         return <Friendrequests {...requests} setDelete = {() => {this.declineRequest(el); alert('hello')}} setFunction = {() => {this.confirmFriend(el)}} friendname = {el} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
+                            return  <Avatar shape = 'circle' size = {55} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} /> } } /> })
                         }
                         </div>
             </TabPane>
@@ -526,7 +528,7 @@ render(){
 
                     {this.props.pending.map( (el, index) => {
                         return <Friendrequests {...pending} displayIcon = {()=> false} friendname = {el} setDelete = { () => {this.deletePending(el) }} key = {index} createChat = {() => { this.props.createChat(el)}} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = {55} src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U </Avatar>                
+                            return  <Avatar shape = 'circle' size = {55} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`}>U </Avatar>                
                                 }} />
                     })}
                     </div>
@@ -541,7 +543,7 @@ render(){
                                 <div className = {styles.container__requests}>
                     {this.props.favourites.map(el => {
                         return <Friendrequests {...favourite} isLocked = {this.state.locked.indexOf(el) == -1 ? false : true} friendname = {el} createChat = {() => { this.props.createChat(el)}} friendName = {el} setDelete = {() => {this.props.toggleFavourite(el, false) }} avatar = {() => {
-                            return  <Avatar shape = 'circle' size = 'large' src = {`${this.state.globalVar}/images/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
+                            return  <Avatar shape = 'circle' size = 'large' src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${el}--profilepicture.png`} className = {styles.container__avatar} className = {`${styles.avatar}`} />                
                                 }} />
                     })}
                     </div>

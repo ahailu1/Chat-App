@@ -18,7 +18,6 @@ class Chatbox extends React.Component {
             toggled: false,
             msgHistory : [],
             friends : [],
-            globalVar : "https://instachatter.com",
             mymsg : "",
         }
         this.getMessage = this.getMessage.bind(this);
@@ -32,7 +31,7 @@ class Chatbox extends React.Component {
 
     getFriends = async () => {
             const {username} = this.props.userData;
-            const request = await axios.get(`${this.state.globalVar}/chat/friendslist/getfriends/${username}`);
+            const request = await axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/friendslist/getfriends/${username}`);
             const data = request.data;
             }
 
@@ -44,7 +43,7 @@ class Chatbox extends React.Component {
         return (
             <>
             <div className = {styles.container__avatar}>
-                <Avatar shape = 'circle' size = {125} src = {`${this.state.globalVar}/images/${username}--profilepicture.png`} className = {styles.avataraz}>U</Avatar>
+                <Avatar shape = 'circle' size = {125} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${username}--profilepicture.png`} className = {styles.avataraz}>U</Avatar>
             </div>
             <div className = {styles.container__username}>
             </div>
@@ -80,7 +79,7 @@ if(this.props.initMessage != false){
 getHistory = () => {
     const { username } = this.props.userData;
     console.log(username + 'hello');
-let response = axios.get(`${this.state.globalVar}/chat/chatbox/${username}/${this.props.friendName}`)
+let response = axios.get(`${process.env.REACT_APP_CHAT_URL}/chat/chatbox/${username}/${this.props.friendName}`)
     .then((res) => {
         res.data.forEach((el) => {
         })
@@ -95,7 +94,7 @@ messageHistory = (el, index) => {
     return (
         
         <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
-      <Avatar className = {styles.message__sent__avatar} src = {`${this.state.globalVar}/images/${el.sender}--profilepicture.png`}>U</Avatar>
+      <Avatar className = {styles.message__sent__avatar} src = {`${process.env.REACT_APP_CHAT_URL}/${el.sender}--profilepicture.png`}>U</Avatar>
 
         <div className = {styles.container__history__message}> 
         
@@ -167,7 +166,7 @@ return(
         <div className = {styles.sent}>
          {this.state.messages.length > 0 && this.state.messages.map ((el, index) => {
         return <div className = {`${styles.message__sent} ${el.sender == this.props.friendName && styles.toggled}`} key = {index} >
-<Avatar className = {styles.message__sent__avatar} src = {`${this.state.globalVar}/images/${el.sender}--profilepicture.png`}>U</Avatar>
+<Avatar className = {styles.message__sent__avatar} src = {`${process.env.REACT_APP_CHAT_IMAGE_URL}/${el.sender}--profilepicture.png`}>U</Avatar>
         
         <div className = {styles.container__history__message}>
             <div className = {styles.container__history__format}>  
