@@ -5,7 +5,7 @@
         display: flex;
         text-align: left;
         padding: 4rem 0 0 5rem;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 2px;
         text-transform: capitalize;
         font-size: 2rem;
@@ -13,13 +13,14 @@
         //font-family: 'Open Sans', sans-serif;
         width: 100%;
         flex-direction: column;
-        font-family: montserrat, sans-serif;
+        font-family: sans-serif;
     }
             @media(min-width:768px){
                 font-size: 3rem;
             }
             @media(min-width:1024px){
                 width: 40%;
+                font-size: 4.75rem;
             }
     & p{
         @media(min-width: 320px){
@@ -94,6 +95,7 @@
             background-position: bottom 0% right 62%;
             clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
             height: 80vh;
+            padding: 4rem 0 4rem 0;
                    }
     &__two{
         @media(min-width: 320px){
@@ -104,7 +106,6 @@
             }
             @media(min-width: 1024px){
                 min-height: 75vh;
-                z-index: 5;
             }
           
         }
@@ -123,7 +124,7 @@
             }
     &__two{
         @media(min-width: 320px){
-            padding: 2rem;
+            padding: 4rem 2rem 4rem 2rem;
             background-image: url('../../images/thiswork.svg');
             display: none;
             background-repeat: no-repeat;

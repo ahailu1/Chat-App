@@ -99,9 +99,9 @@ render(){
           
 <Col flex={5} className = {styles.container__column}>
             
-            <div className = {styles.container__header}>Welcome to Instachatter
+            <div className = {styles.container__header}>Welcome to my Chat Application
             <br/>
-            <p>This is a platform that allows you to add friends and start chatting immediately</p>
+            <p>This is a platform that allows you to add friends, create groups, and start chatting immediately</p>
             </div>
 
     <div className = {styles.container__form}>
