@@ -53,6 +53,7 @@ class Createaccount extends React.Component{
         
         handleForm =  (e) => {
           e.preventDefault();
+          console.log(`${process.env.REACT_APP_CHAT_URL}/api/createaccount`)
         const data = {
             method: 'POST',
             url: `${process.env.REACT_APP_CHAT_URL}/api/createaccount`,
