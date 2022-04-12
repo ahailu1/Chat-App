@@ -20,7 +20,7 @@
             }
             @media(min-width:1024px){
                 width: 40%;
-                font-size: 4.75rem;
+                font-size: 3.5rem;
             }
     & p{
         @media(min-width: 320px){
@@ -71,8 +71,8 @@
             height: 60%;
             }
             @media(min-width: 1024px){
-                width: 60%;
-                height: 70%;
+                height: 100%;
+                width: 60%; 
             }
     }
     &__row{
@@ -93,8 +93,8 @@
         @media (min-width: 1024px){
             background-attachment: fixed;
             background-position: bottom 0% right 62%;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
-            height: 80vh;
+            //clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+            height: 100vh;
             padding: 4rem 0 4rem 0;
                    }
     &__two{
@@ -105,7 +105,7 @@
                 height: auto;
             }
             @media(min-width: 1024px){
-                min-height: 75vh;
+                min-height: 105vh;
             }
           
         }
@@ -120,7 +120,6 @@
         @media(min-width:768px){
             display: flex;
             justify-content: center;
-            
             }
     &__two{
         @media(min-width: 320px){

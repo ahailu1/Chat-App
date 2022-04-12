@@ -65,10 +65,11 @@ myFooter = () => {
       <Col xs={24} sm={16} md={12} lg={7} className = {`${styles.footer__column__two} ${styles.information}`}>
       <div className = {styles.footer__header__main}>About</div>
         <div className = {styles.footer__container__about}>
-    I am an aspiring Web Developer that has been working on this application over the past 6 months. 
+    I am an aspiring Web Developer and this is my very first web-application. 
     I started with elementary knowledge of both PHP and Javascript and with little knowledge of Node.js and ReactJs.
-    I wanted to learn not only new programming languages, but also concepts such as CRUD operations and Rest-Apis, both of which are prevalent in the world of programming.
+    I wanted to learn not only new programming languages, but also things such as CRUD operations and Rest-Apis, both of which are prevalent in the world of programming.
     I figured the best way to learn is to build, which is why I created this program in such a way that integrates those important concepts.
+    I've kept this application in my portfolio to show where I started and how far i've come as shown in my other projects.
      </div>
           
         </Col> 
