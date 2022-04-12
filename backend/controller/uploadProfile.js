@@ -18,7 +18,7 @@ const uploadPic = async (req, res, group = false) => {
     let username = `${req.params.username}--profilepicture.png`;
     const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
     let check = path.resolve(path.join(__dirname, '../public/images'));
-    await fs.writeFile(path.join(check, `/${username}`), buffer, (err) => {
+    await fs.writeFile(`/srv/profile`, buffer, (err) => {
       if (err) {
         res.status(422).send({ errorMsg: 'couldnt uplod picture' });
       } else {
@@ -29,7 +29,7 @@ const uploadPic = async (req, res, group = false) => {
     const buffer = await sharp(req.file.buffer).resize({ width: 350, height: 350 }).png().toBuffer();
     let groupId = `${req.params.groupId}--profilepicture.png`;
     let check = path.resolve(path.join(__dirname, '../public/images'));
-    await fs.writeFile(path.join(check, `/${groupId}`), buffer, (req, res, err) => {
+    await fs.writeFile(`/srv/profile`, buffer, (req, res, err) => {
       if (err) {
         res.status(422).send({ errorMsg: 'couldnt uplod picture' });
       }
